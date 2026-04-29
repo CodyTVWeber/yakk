@@ -141,22 +141,22 @@ def load_voicemode_env():
 # Provider Configuration
 #############
 
-# Comma-separated list of TTS endpoints
-# VOICEMODE_TTS_BASE_URLS=http://127.0.0.1:8880/v1,https://api.openai.com/v1
+# Comma-separated list of TTS endpoints (local Kokoro only)
+# VOICEMODE_TTS_BASE_URLS=http://127.0.0.1:8880/v1
 
-# Comma-separated list of STT endpoints
-# VOICEMODE_STT_BASE_URLS=http://127.0.0.1:2022/v1,https://api.openai.com/v1
+# Comma-separated list of STT endpoints (local Whisper only)
+# VOICEMODE_STT_BASE_URLS=http://127.0.0.1:2022/v1
 
 # STT prompt for vocabulary biasing - helps Whisper recognize names and technical terms
 # Use when specific words are consistently misrecognized
 # Example: VOICEMODE_STT_PROMPT=tmux, Tali, kubectl, VoiceMode
 # VOICEMODE_STT_PROMPT=
 
-# Comma-separated list of preferred voices
-# VOICEMODE_VOICES=af_sky,alloy
+# Comma-separated list of preferred voices (Kokoro voices)
+# VOICEMODE_VOICES=af_sky
 
 # Comma-separated list of preferred models
-# VOICEMODE_TTS_MODELS=tts-1,tts-1-hd,gpt-4o-mini-tts
+# VOICEMODE_TTS_MODELS=tts-1
 
 # Prefer local providers over cloud (true/false)
 # VOICEMODE_PREFER_LOCAL=true
@@ -405,12 +405,6 @@ TTS \\bAPI\\b A P I # API as individual letters
 # plaintext stores in ~/.voicemode/credentials (chmod 600)
 # VOICEMODE_CREDENTIAL_STORE=keyring
 
-#############
-# API Keys (set these in your environment for security)
-#############
-
-# OpenAI API key for cloud TTS/STT
-# OPENAI_API_KEY=your-key-here
 '''
         with open(default_path, 'w') as f:
             f.write(default_config)
@@ -560,9 +554,6 @@ AUTO_FOCUS_PANE = env_bool("VOICEMODE_AUTO_FOCUS_PANE", False)
 
 # ==================== SERVICE CONFIGURATION ====================
 
-# OpenAI configuration
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-
 # Helper function to parse comma-separated lists
 def parse_comma_list(env_var: str, fallback: str) -> list:
     """Parse comma-separated list from environment variable."""
@@ -570,10 +561,10 @@ def parse_comma_list(env_var: str, fallback: str) -> list:
     return [item.strip() for item in value.split(",") if item.strip()]
 
 # New provider endpoint lists configuration
-TTS_BASE_URLS = parse_comma_list("VOICEMODE_TTS_BASE_URLS", "http://127.0.0.1:8880/v1,https://api.openai.com/v1")
-STT_BASE_URLS = parse_comma_list("VOICEMODE_STT_BASE_URLS", "http://127.0.0.1:2022/v1,https://api.openai.com/v1")
-TTS_VOICES = parse_comma_list("VOICEMODE_VOICES", "af_sky,alloy")
-TTS_MODELS = parse_comma_list("VOICEMODE_TTS_MODELS", "tts-1,tts-1-hd,gpt-4o-mini-tts")
+TTS_BASE_URLS = parse_comma_list("VOICEMODE_TTS_BASE_URLS", "http://127.0.0.1:8880/v1")
+STT_BASE_URLS = parse_comma_list("VOICEMODE_STT_BASE_URLS", "http://127.0.0.1:2022/v1")
+TTS_VOICES = parse_comma_list("VOICEMODE_VOICES", "af_sky")
+TTS_MODELS = parse_comma_list("VOICEMODE_TTS_MODELS", "tts-1")
 STT_MODEL = os.getenv("VOICEMODE_STT_MODEL", "whisper-1")
 STT_MODELS = parse_comma_list("VOICEMODE_STT_MODELS", "")
 
@@ -629,10 +620,10 @@ def reload_configuration():
     
     # Update global configuration variables
     global TTS_VOICES, TTS_MODELS, TTS_BASE_URLS, STT_BASE_URLS, STT_MODEL, STT_MODELS
-    TTS_BASE_URLS = parse_comma_list("VOICEMODE_TTS_BASE_URLS", "http://127.0.0.1:8880/v1,https://api.openai.com/v1")
-    STT_BASE_URLS = parse_comma_list("VOICEMODE_STT_BASE_URLS", "http://127.0.0.1:2022/v1,https://api.openai.com/v1")
-    TTS_VOICES = parse_comma_list("VOICEMODE_VOICES", "af_sky,alloy")
-    TTS_MODELS = parse_comma_list("VOICEMODE_TTS_MODELS", "tts-1,tts-1-hd,gpt-4o-mini-tts")
+    TTS_BASE_URLS = parse_comma_list("VOICEMODE_TTS_BASE_URLS", "http://127.0.0.1:8880/v1")
+    STT_BASE_URLS = parse_comma_list("VOICEMODE_STT_BASE_URLS", "http://127.0.0.1:2022/v1")
+    TTS_VOICES = parse_comma_list("VOICEMODE_VOICES", "af_sky")
+    TTS_MODELS = parse_comma_list("VOICEMODE_TTS_MODELS", "tts-1")
     STT_MODEL = os.getenv("VOICEMODE_STT_MODEL", "whisper-1")
     STT_MODELS = parse_comma_list("VOICEMODE_STT_MODELS", "")
 

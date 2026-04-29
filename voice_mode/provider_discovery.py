@@ -20,7 +20,7 @@ import httpx
 from openai import AsyncOpenAI
 
 from . import config
-from .config import TTS_BASE_URLS, STT_BASE_URLS, OPENAI_API_KEY
+from .config import TTS_BASE_URLS, STT_BASE_URLS
 
 logger = logging.getLogger("voicemode")
 
@@ -154,7 +154,7 @@ class ProviderRegistry:
         try:
             # Create OpenAI client for the endpoint
             client = AsyncOpenAI(
-                api_key=OPENAI_API_KEY or "dummy-key-for-local",
+                api_key="dummy-key-for-local",
                 base_url=base_url,
                 timeout=10.0
             )
@@ -170,24 +170,16 @@ class ProviderRegistry:
                 # Not all endpoints support /v1/models, that's OK
                 # For STT endpoints, we'll do a more specific health check
                 if service_type == "stt":
-                    # Try a minimal transcription request to check if endpoint is alive
+                    # Check if local whisper server responds
                     try:
-                        # For local whisper, check if it responds to basic requests
-                        if "127.0.0.1" in base_url or "127.0.0.1" in base_url:
-                            # Local whisper doesn't need auth, just check connectivity
-                            import httpx
-                            async with httpx.AsyncClient(timeout=5.0) as http_client:
-                                response = await http_client.get(base_url.rstrip('/v1'))
-                                if response.status_code == 200:
-                                    logger.debug(f"Local whisper endpoint {base_url} is responding")
-                                    models = _default_stt_models(base_url)
-                                else:
-                                    raise Exception(f"Whisper endpoint returned status {response.status_code}")
-                        else:
-                            # For OpenAI, models.list failure likely means auth issue
-                            # We'll still mark it as healthy since the endpoint exists
-                            models = _default_stt_models(base_url)
-                            logger.debug(f"Assuming OpenAI whisper endpoint {base_url} is available")
+                        import httpx
+                        async with httpx.AsyncClient(timeout=5.0) as http_client:
+                            response = await http_client.get(base_url.rstrip('/v1'))
+                            if response.status_code == 200:
+                                logger.debug(f"Local whisper endpoint {base_url} is responding")
+                                models = _default_stt_models(base_url)
+                            else:
+                                raise Exception(f"Whisper endpoint returned status {response.status_code}")
                     except Exception as health_error:
                         logger.debug(f"STT health check failed for {base_url}: {health_error}")
                         raise health_error
@@ -230,10 +222,6 @@ class ProviderRegistry:
     
     async def _discover_voices(self, base_url: str, client: AsyncOpenAI) -> List[str]:
         """Discover available voices for a TTS endpoint."""
-        # If it's OpenAI, use known voices (they don't expose a voices endpoint)
-        if "openai.com" in base_url:
-            return ["alloy", "echo", "fable", "nova", "onyx", "shimmer"]
-        
         # Try standard OpenAI-compatible voices endpoint
         try:
             # Use httpx directly for the voices endpoint

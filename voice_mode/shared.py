@@ -15,7 +15,6 @@ import sounddevice as sd
 from .config import (
     DEBUG, DEBUG_DIR, SAVE_AUDIO, AUDIO_DIR,
     AUDIO_FEEDBACK_ENABLED,
-    OPENAI_API_KEY,
     AUTO_START_KOKORO, PREFER_LOCAL,
     SAMPLE_RATE, CHANNELS,
     audio_operation_lock, service_processes,

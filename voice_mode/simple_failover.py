@@ -8,10 +8,9 @@ Connection refused errors are instant, so there's no performance penalty.
 import logging
 from typing import Optional, Tuple, Dict, Any
 from openai import AsyncOpenAI
-from .openai_error_parser import OpenAIErrorParser
 from .provider_discovery import is_local_provider
 
-from .config import TTS_BASE_URLS, STT_BASE_URLS, OPENAI_API_KEY, STT_PROMPT, WHISPER_LANGUAGE
+from .config import TTS_BASE_URLS, STT_BASE_URLS, STT_PROMPT, WHISPER_LANGUAGE
 from .provider_discovery import detect_provider_type, EndpointInfo
 from .providers import _select_stt_model_for_endpoint
 
@@ -59,7 +58,6 @@ async def simple_tts_failover(
 
         # Create client for this endpoint
         provider_type = detect_provider_type(base_url)
-        api_key = OPENAI_API_KEY if provider_type == "openai" else (OPENAI_API_KEY or "dummy-key-for-local")
 
         # Select appropriate voice and model for this provider
         selected_model = model
@@ -69,34 +67,15 @@ async def simple_tts_failover(
             selected_voice = voice
             selected_model = clone_profile.model
             logger.info(f"Clone voice '{voice}': model={selected_model}")
-        elif provider_type == "openai":
-            # Map Kokoro voices to OpenAI equivalents, or use OpenAI default
-            openai_voices = ["alloy", "echo", "fable", "nova", "onyx", "shimmer"]
-            if voice in openai_voices:
-                selected_voice = voice
-            else:
-                # Map common Kokoro voices to OpenAI equivalents
-                voice_mapping = {
-                    "af_sky": "nova",
-                    "af_sarah": "nova",
-                    "af_alloy": "alloy",
-                    "am_adam": "onyx",
-                    "am_echo": "echo",
-                    "am_onyx": "onyx",
-                    "bm_fable": "fable"
-                }
-                selected_voice = voice_mapping.get(voice, "alloy")  # Default to alloy
-                logger.info(f"Mapped voice {voice} to {selected_voice} for OpenAI")
         else:
-            selected_voice = voice  # Use original voice for Kokoro
+            selected_voice = voice  # Use original voice for local providers
 
-        # Disable retries for local endpoints - they either work or don't
-        max_retries = 0 if is_local_provider(base_url) else 2
+        # Local endpoints — no retries, they either work or don't
         client = AsyncOpenAI(
-            api_key=api_key,
+            api_key="dummy-key-for-local",
             base_url=base_url,
-            timeout=30.0,  # Reasonable timeout
-            max_retries=max_retries
+            timeout=30.0,
+            max_retries=0
         )
 
         # Create clients dict for text_to_speech
@@ -143,26 +122,13 @@ async def simple_tts_failover(
         if last_exception:
             error_message = str(last_exception)
             logger.error(f"TTS failed for {base_url}: {error_message}")
-            logger.debug(f"Exception type: {type(last_exception).__name__}")  # Debug logging
 
-            # Parse OpenAI errors for better user feedback
-            error_details = None
-            if provider_type == "openai":
-                error_details = OpenAIErrorParser.parse_error(last_exception, endpoint=f"{base_url}/audio/speech")
-                # Log the user-friendly error message
-                if error_details and error_details.get('title'):
-                    logger.error(f"  {error_details['title']}: {error_details.get('message', '')}")
-                    if error_details.get('suggestion'):
-                        logger.info(f"  💡 {error_details['suggestion']}")
-
-            # Add to attempted endpoints with error details
             attempted_endpoints.append({
                 'endpoint': f"{base_url}/audio/speech",
                 'provider': provider_type,
                 'voice': selected_voice,
                 'model': model,
                 'error': error_message,
-                'error_details': error_details  # Include parsed error details
             })
 
             # Continue to next endpoint
@@ -234,16 +200,12 @@ async def simple_stt_failover(
             else:
                 logger.warning(f"STT: Primary failed, attempting fallback #{i}: {base_url} ({provider_type})")
 
-            # Create client for this endpoint
-            api_key = OPENAI_API_KEY if provider_type == "openai" else (OPENAI_API_KEY or "dummy-key-for-local")
-
-            # Disable retries for local endpoints - they either work or don't
-            max_retries = 0 if is_local_provider(base_url) else 2
+            # Create client for this endpoint — local services only
             client = AsyncOpenAI(
-                api_key=api_key,
+                api_key="dummy-key-for-local",
                 base_url=base_url,
                 timeout=60.0,  # Allow time for slower transcriptions
-                max_retries=max_retries
+                max_retries=0
             )
 
             # Resolve the per-endpoint STT model: OpenAI override -> caller-passed
@@ -309,24 +271,12 @@ async def simple_stt_failover(
             error_str = str(e)
             provider_type = detect_provider_type(base_url)
 
-            # Parse OpenAI errors for better user feedback
-            error_details = None
-            if provider_type == "openai":
-                full_endpoint = f"{base_url}/audio/transcriptions" if not base_url.endswith("/v1") else f"{base_url}/audio/transcriptions"
-                error_details = OpenAIErrorParser.parse_error(e, endpoint=full_endpoint)
-                # Log the user-friendly error message
-                if error_details.get('title'):
-                    logger.error(f"  {error_details['title']}: {error_details.get('message', '')}")
-                    if error_details.get('suggestion'):
-                        logger.info(f"  💡 {error_details['suggestion']}")
-
-            # Track connection/auth errors
-            full_endpoint = f"{base_url}/audio/transcriptions" if not base_url.endswith("/v1") else f"{base_url}/audio/transcriptions"
+            # Track connection errors
+            full_endpoint = f"{base_url}/audio/transcriptions"
             connection_errors.append({
                 "endpoint": full_endpoint,
                 "provider": provider_type,
                 "error": error_str,
-                "error_details": error_details  # Include parsed error details
             })
 
             # Log failure with appropriate level based on whether we have fallbacks

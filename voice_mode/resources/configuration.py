@@ -11,7 +11,7 @@ from ..config import (
     BASE_DIR, DEBUG, SAVE_ALL, SAVE_AUDIO, SAVE_TRANSCRIPTIONS,
     AUDIO_FEEDBACK_ENABLED, PREFER_LOCAL, ALWAYS_TRY_LOCAL, AUTO_START_KOKORO,
     # Service settings
-    OPENAI_API_KEY, TTS_BASE_URLS, STT_BASE_URLS, TTS_VOICES, TTS_MODELS,
+    TTS_BASE_URLS, STT_BASE_URLS, TTS_VOICES, TTS_MODELS,
     # Whisper settings
     WHISPER_MODEL, WHISPER_PORT, WHISPER_LANGUAGE, WHISPER_MODEL_PATH,
     # Kokoro settings
@@ -77,8 +77,6 @@ async def all_configuration() -> str:
     lines.append(f"  STT Endpoints: {', '.join(STT_BASE_URLS)}")
     lines.append(f"  TTS Voices: {', '.join(TTS_VOICES)}")
     lines.append(f"  TTS Models: {', '.join(TTS_MODELS)}")
-    if OPENAI_API_KEY:
-        lines.append(f"  OpenAI API Key: {mask_sensitive(OPENAI_API_KEY, 'openai_api_key')}")
     lines.append("")
     
     # Audio Settings
@@ -301,8 +299,6 @@ async def environment_variables() -> str:
         ("VOICEMODE_EVENT_LOG_ENABLED", "Enable event logging (true/false)"),
         ("VOICEMODE_EVENT_LOG_DIR", "Directory for event logs"),
         ("VOICEMODE_EVENT_LOG_ROTATION", "Log rotation policy (daily/weekly/monthly)"),
-        # API Keys
-        ("OPENAI_API_KEY", "OpenAI API key for cloud TTS/STT"),
     ]
     
     result = []
@@ -398,9 +394,6 @@ async def environment_template() -> str:
         f"export VOICEMODE_EVENT_LOG_ENABLED=\"{str(EVENT_LOG_ENABLED).lower()}\"",
         f"export VOICEMODE_EVENT_LOG_DIR=\"{EVENT_LOG_DIR}\"",
         f"export VOICEMODE_EVENT_LOG_ROTATION=\"{EVENT_LOG_ROTATION}\"",
-        "",
-        "# API Keys (masked for security)",
-        f"# export OPENAI_API_KEY=\"{mask_sensitive(OPENAI_API_KEY, 'api_key')}\"",
     ]
     
     return "\n".join(template_lines)

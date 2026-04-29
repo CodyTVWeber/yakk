@@ -325,9 +325,6 @@ async def list_config_keys() -> str:
             ("VOICEMODE_KOKORO_CACHE_DIR", "Directory for Kokoro cache"),
             ("VOICEMODE_KOKORO_DEFAULT_VOICE", "Default Kokoro voice (e.g., af_sky)"),
         ]),
-        ("API Keys", [
-            ("OPENAI_API_KEY", "OpenAI API key for cloud TTS/STT"),
-        ]),
     ]
     
     lines = ["Available Configuration Keys", "=" * 50, ""]

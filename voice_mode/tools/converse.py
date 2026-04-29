@@ -36,7 +36,6 @@ from voice_mode.config import (
     VAD_DEBUG,
     SAVE_AUDIO,
     AUDIO_DIR,
-    OPENAI_API_KEY,
     PREFER_LOCAL,
     AUDIO_FEEDBACK_ENABLED,
     service_processes,
@@ -351,8 +350,8 @@ def should_wait(text: str) -> bool:
 # Track last session end time for measuring AI thinking time
 last_session_end_time = None
 
-# Initialize OpenAI clients - now using provider registry for endpoint discovery
-openai_clients = get_openai_clients(OPENAI_API_KEY or "dummy-key-for-local", None, None)
+# Initialize OpenAI clients - using dummy key for local services
+openai_clients = get_openai_clients("dummy-key-for-local", None, None)
 
 # Provider-specific clients are now created dynamically by the provider registry
 
@@ -438,7 +437,6 @@ async def get_tts_config(provider: Optional[str] = None, voice: Optional[str] = 
 
     # Map provider names to base URLs
     provider_urls = {
-        'openai': 'https://api.openai.com/v1',
         'kokoro': 'http://127.0.0.1:8880/v1'
     }
 
@@ -449,7 +447,7 @@ async def get_tts_config(provider: Optional[str] = None, voice: Optional[str] = 
 
     # Use first available endpoint from config
     if not base_url:
-        base_url = TTS_BASE_URLS[0] if TTS_BASE_URLS else 'https://api.openai.com/v1'
+        base_url = TTS_BASE_URLS[0] if TTS_BASE_URLS else 'http://127.0.0.1:8880/v1'
 
     provider_type = detect_provider_type(base_url)
 
@@ -471,7 +469,6 @@ async def get_stt_config(provider: Optional[str] = None):
     # Map provider names to base URLs
     provider_urls = {
         'whisper-local': 'http://127.0.0.1:2022/v1',
-        'openai-whisper': 'https://api.openai.com/v1'
     }
 
     # Convert provider name to URL if it's a known provider
@@ -481,7 +478,7 @@ async def get_stt_config(provider: Optional[str] = None):
 
     # Use first available endpoint from config
     if not base_url:
-        base_url = STT_BASE_URLS[0] if STT_BASE_URLS else 'https://api.openai.com/v1'
+        base_url = STT_BASE_URLS[0] if STT_BASE_URLS else 'http://127.0.0.1:2022/v1'
 
     provider_type = detect_provider_type(base_url)
 
@@ -489,7 +486,7 @@ async def get_stt_config(provider: Optional[str] = None):
     return {
         'base_url': base_url,
         'model': 'whisper-1',
-        'provider': 'whisper-local' if '127.0.0.1' in base_url or 'localhost' in base_url else 'openai-whisper',
+        'provider': 'whisper-local',
         'provider_type': provider_type
     }
 
@@ -635,7 +632,7 @@ async def speech_to_text(
 
     # Determine compression based on STT_COMPRESS mode
     # Options: auto (default), always, never
-    primary_endpoint = STT_BASE_URLS[0] if STT_BASE_URLS else 'https://api.openai.com/v1'
+    primary_endpoint = STT_BASE_URLS[0] if STT_BASE_URLS else 'http://127.0.0.1:2022/v1'
     is_local = is_local_provider(primary_endpoint)
 
     if STT_COMPRESS == "never":
@@ -1547,16 +1544,8 @@ consult the MCP resources listed above.
                                 error_lines.append(f"  - {endpoint_or_provider}: {attempt['error']}")
 
                         result = "\n".join(error_lines)
-                    # Check if we have config info that might indicate why it failed
-                    elif tts_config and 'openai.com' in tts_config.get('base_url', ''):
-                        # Check if API key is missing for OpenAI
-                        from voice_mode.config import OPENAI_API_KEY
-                        if not OPENAI_API_KEY:
-                            result = "Error: Could not speak message. OpenAI API key is not set. Please set OPENAI_API_KEY environment variable or use local services (Kokoro TTS)."
-                        else:
-                            result = "Error: Could not speak message. TTS request to OpenAI failed. Please check your API key and network connection."
                     else:
-                        result = "Error: Could not speak message. All TTS providers failed. Check that local services are running or set OPENAI_API_KEY for cloud fallback."
+                        result = "Error: Could not speak message. All TTS providers failed. Check that Kokoro is running (voicemode service start kokoro)."
                     return result
 
                 # If speak-only mode, return success after TTS

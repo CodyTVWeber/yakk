@@ -182,21 +182,12 @@ class MfpService:
         """
         self._ensure_cache_dir()
 
-        try:
-            content = self._fetcher.fetch(MFP_RSS_URL)
-            # Update cache on successful fetch
-            self._rss_cache_file.write_text(content)
-            return content
-        except RuntimeError:
-            if force_refresh:
-                raise
+        # Remote RSS fetching disabled in local-only mode — use cache only
+        if self._rss_cache_file.exists():
+            return self._rss_cache_file.read_text()
 
-            # Network failed, try cache
-            if self._rss_cache_file.exists():
-                return self._rss_cache_file.read_text()
-
-            raise RuntimeError(
-                f"Cannot fetch RSS feed and no cache exists at {self._rss_cache_file}"
+        raise RuntimeError(
+            f"DJ remote RSS fetch disabled (local-only mode). No cache at {self._rss_cache_file}"
             )
 
     def _parse_episodes(self, rss_content: str) -> dict[int, MfpEpisode]:

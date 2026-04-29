@@ -1,110 +1,24 @@
 """Backend implementations for transcription."""
 
-import os
-import json
 import subprocess
 import tempfile
 from pathlib import Path
-from typing import Dict, Any, Optional, List
+from typing import Optional
 import httpx
 
-from voice_mode.config import OPENAI_API_KEY
 from .types import TranscriptionResult
 
 
-async def transcribe_with_openai(
-    audio_path: Path,
-    word_timestamps: bool = False,
-    language: Optional[str] = None,
-    model: str = "whisper-1"
-) -> TranscriptionResult:
-    """
-    Transcribe using OpenAI API with optional word-level timestamps.
-    """
-    
-    # Import OpenAI client
-    from openai import AsyncOpenAI
-    
-    # Get API key from VoiceMode config
-    api_key = OPENAI_API_KEY or os.environ.get("OPENAI_API_KEY")
-    
-    if not api_key:
-        return TranscriptionResult(
-            text="",
-            language="",
-            segments=[],
-            backend="openai",
-            success=False,
-            error="OpenAI API key not configured. Set OPENAI_API_KEY environment variable."
-        )
-    
-    # Initialize async client (automatically respects OPENAI_BASE_URL env var)
-    client = AsyncOpenAI(api_key=api_key)
-    
-    # Prepare timestamp granularities
-    timestamp_granularities = ["segment"]
-    if word_timestamps:
-        timestamp_granularities.append("word")
-    
-    try:
-        # Open and transcribe the audio file
-        with open(audio_path, "rb") as audio_file:
-            transcription = await client.audio.transcriptions.create(
-                model=model,
-                file=audio_file,
-                response_format="verbose_json",
-                timestamp_granularities=timestamp_granularities,
-                language=language
-            )
-        
-        # Convert response to dictionary
-        result = transcription.model_dump() if hasattr(transcription, 'model_dump') else transcription.dict()
-        
-        # Format response
-        formatted = TranscriptionResult(
-            text=result.get("text", ""),
-            language=result.get("language", ""),
-            duration=result.get("duration", 0),
-            segments=[],
-            backend="openai",
-            model=model,
-            success=True
-        )
-        
-        # Process segments
-        for segment in result.get("segments", []):
-            seg_data = {
-                "id": segment.get("id"),
-                "text": segment.get("text", "").strip(),
-                "start": segment.get("start", 0),
-                "end": segment.get("end", 0)
-            }
-            formatted["segments"].append(seg_data)
-        
-        # Handle word timestamps - OpenAI returns them at the top level
-        if word_timestamps and "words" in result:
-            formatted["words"] = [
-                {
-                    "word": w.get("word", ""),
-                    "start": w.get("start", 0),
-                    "end": w.get("end", 0)
-                }
-                for w in result.get("words", [])
-            ]
-        else:
-            formatted["words"] = []
-        
-        return formatted
-        
-    except Exception as e:
-        return TranscriptionResult(
-            text="",
-            language="",
-            segments=[],
-            backend="openai",
-            success=False,
-            error=str(e)
-        )
+async def transcribe_with_openai(*args, **kwargs) -> TranscriptionResult:
+    """OpenAI backend removed — local-only mode."""
+    return TranscriptionResult(
+        text="",
+        language="",
+        segments=[],
+        backend="openai",
+        success=False,
+        error="OpenAI backend is disabled in local-only mode. Use whisper-cpp backend."
+    )
 
 
 async def transcribe_with_whisperx(

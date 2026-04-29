@@ -9,7 +9,7 @@ import logging
 from typing import Dict, Optional, List, Any, Tuple
 from openai import AsyncOpenAI
 
-from .config import TTS_VOICES, TTS_MODELS, TTS_BASE_URLS, STT_BASE_URLS, STT_MODEL, STT_MODELS, OPENAI_API_KEY, get_voice_preferences
+from .config import TTS_VOICES, TTS_MODELS, TTS_BASE_URLS, STT_BASE_URLS, STT_MODEL, STT_MODELS, get_voice_preferences
 from .provider_discovery import provider_registry, EndpointInfo, is_local_provider
 
 logger = logging.getLogger("voicemode")
@@ -58,7 +58,7 @@ async def get_tts_client_and_voice(
         # Disable retries for local endpoints - they either work or don't
         max_retries = 0 if is_local_provider(base_url) else 2
         client = AsyncOpenAI(
-            api_key=OPENAI_API_KEY or "dummy-key-for-local",
+            api_key="dummy-key-for-local",
             base_url=base_url,
             max_retries=max_retries
         )
@@ -93,7 +93,7 @@ async def get_tts_client_and_voice(
                 selected_voice = voice
                 selected_model = _select_model_for_endpoint(endpoint_info, model)
 
-                api_key = OPENAI_API_KEY if endpoint_info.provider_type == "openai" else (OPENAI_API_KEY or "dummy-key-for-local")
+                api_key = "dummy-key-for-local"
                 # Disable retries for local endpoints - they either work or don't
                 max_retries = 0 if is_local_provider(url) else 2
                 client = AsyncOpenAI(api_key=api_key, base_url=url, max_retries=max_retries)
@@ -120,7 +120,7 @@ async def get_tts_client_and_voice(
                 selected_voice = preferred_voice
                 selected_model = _select_model_for_endpoint(endpoint_info, model)
 
-                api_key = OPENAI_API_KEY if endpoint_info.provider_type == "openai" else (OPENAI_API_KEY or "dummy-key-for-local")
+                api_key = "dummy-key-for-local"
                 # Disable retries for local endpoints - they either work or don't
                 max_retries = 0 if is_local_provider(url) else 2
                 client = AsyncOpenAI(api_key=api_key, base_url=url, max_retries=max_retries)
@@ -142,7 +142,7 @@ async def get_tts_client_and_voice(
             selected_voice = endpoint_info.voices[0]
             selected_model = _select_model_for_endpoint(endpoint_info, model)
 
-            api_key = OPENAI_API_KEY if endpoint_info.provider_type == "openai" else (OPENAI_API_KEY or "dummy-key-for-local")
+            api_key = "dummy-key-for-local"
             # Disable retries for local endpoints - they either work or don't
             max_retries = 0 if is_local_provider(url) else 2
             client = AsyncOpenAI(api_key=api_key, base_url=url, max_retries=max_retries)
@@ -188,7 +188,7 @@ async def get_stt_client(
         # Disable retries for local endpoints - they either work or don't
         max_retries = 0 if is_local_provider(base_url) else 2
         client = AsyncOpenAI(
-            api_key=OPENAI_API_KEY or "dummy-key-for-local",
+            api_key="dummy-key-for-local",
             base_url=base_url,
             max_retries=max_retries
         )
@@ -203,7 +203,7 @@ async def get_stt_client(
     endpoint_info = endpoints[0]
     selected_model = _select_stt_model_for_endpoint(endpoint_info, model)
     
-    api_key = OPENAI_API_KEY if endpoint_info.provider_type == "openai" else (OPENAI_API_KEY or "dummy-key-for-local")
+    api_key = "dummy-key-for-local"
     # Disable retries for local endpoints - they either work or don't
     max_retries = 0 if is_local_provider(endpoint_info.base_url) else 2
     client = AsyncOpenAI(
@@ -286,9 +286,7 @@ async def is_provider_available(provider_id: str, timeout: float = 2.0) -> bool:
     # Map old provider IDs to base URLs
     provider_map = {
         "kokoro": "http://127.0.0.1:8880/v1",
-        "openai": "https://api.openai.com/v1",
         "whisper-local": "http://127.0.0.1:2022/v1",
-        "openai-whisper": "https://api.openai.com/v1"
     }
     
     base_url = provider_map.get(provider_id)
@@ -305,23 +303,12 @@ async def is_provider_available(provider_id: str, timeout: float = 2.0) -> bool:
 
 def get_provider_by_voice(voice: str) -> Optional[Dict[str, Any]]:
     """Get provider info by voice (compatibility function)."""
-    # Kokoro voices
-    if voice.startswith(('af_', 'am_', 'bf_', 'bm_')):
-        return {
-            "id": "kokoro",
-            "name": "Kokoro TTS",
-            "type": "tts",
-            "base_url": "http://127.0.0.1:8880/v1",
-            "voices": ["af_sky", "af_sarah", "am_adam", "af_river", "am_michael"]
-        }
-    
-    # OpenAI voices
     return {
-        "id": "openai",
-        "name": "OpenAI TTS",
+        "id": "kokoro",
+        "name": "Kokoro TTS",
         "type": "tts",
-        "base_url": "https://api.openai.com/v1",
-        "voices": ["alloy", "nova", "echo", "fable", "onyx", "shimmer"]
+        "base_url": "http://127.0.0.1:8880/v1",
+        "voices": ["af_sky", "af_sarah", "am_adam", "af_river", "am_michael"]
     }
 
 

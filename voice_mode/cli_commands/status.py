@@ -22,7 +22,6 @@ from voice_mode.config import (
     WHISPER_PORT,
     KOKORO_PORT,
     TTS_VOICES,
-    OPENAI_API_KEY,
     env_bool,
 )
 from voice_mode.utils.services.common import find_process_by_port, check_service_status
@@ -376,13 +375,10 @@ def check_kokoro_service() -> ServiceInfo:
 
 
 def check_openai_api() -> Dict[str, Any]:
-    """Check OpenAI API availability."""
-    api_key_set = bool(OPENAI_API_KEY)
+    """OpenAI API not used in local-only mode."""
     return {
-        "status": "available" if api_key_set else "not_configured",
-        "api_key_set": api_key_set,
-        "tts_model": "tts-1-hd",
-        "stt_model": "whisper-1"
+        "status": "disabled",
+        "api_key_set": False,
     }
 
 
