@@ -18,13 +18,13 @@ from typing import Any, Dict, List, Literal, Optional
 
 import click
 
-from voice_mode.config import (
+from yakk.config import (
     WHISPER_PORT,
     KOKORO_PORT,
     TTS_VOICES,
     env_bool,
 )
-from voice_mode.utils.services.common import find_process_by_port, check_service_status
+from yakk.utils.services.common import find_process_by_port, check_service_status
 
 
 class ServiceStatus(str, Enum):
@@ -234,7 +234,7 @@ def check_whisper_service() -> ServiceInfo:
 
             # Check for CoreML
             if platform.machine() == "arm64" and platform.system() == "Darwin":
-                from voice_mode.utils.services.whisper_version import check_coreml_model_exists
+                from yakk.utils.services.whisper_version import check_coreml_model_exists
                 if details.get("model") and check_coreml_model_exists(details["model"]):
                     details["coreml"] = True
 
@@ -248,7 +248,7 @@ def check_whisper_service() -> ServiceInfo:
 
             # Try to get version info
             try:
-                from voice_mode.utils.services.whisper_version import get_whisper_version_info
+                from yakk.utils.services.whisper_version import get_whisper_version_info
                 version_info = get_whisper_version_info()
                 if version_info.get("version"):
                     details["version"] = version_info["version"]
@@ -335,7 +335,7 @@ def check_kokoro_service() -> ServiceInfo:
 
             # Try to get version info
             try:
-                from voice_mode.utils.services.version_info import get_kokoro_version
+                from yakk.utils.services.version_info import get_kokoro_version
                 version_info = get_kokoro_version()
                 if version_info.get("api_version"):
                     details["version"] = version_info["api_version"]
@@ -408,7 +408,7 @@ def get_config_info() -> Dict[str, Any]:
 
 def collect_status_data() -> Dict[str, Any]:
     """Collect all status information."""
-    from voice_mode.version import __version__
+    from yakk.version import __version__
 
     # Check services
     whisper = check_whisper_service()

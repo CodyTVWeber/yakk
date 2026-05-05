@@ -4,8 +4,8 @@ import logging
 from typing import Optional
 import sounddevice as sd
 
-from voice_mode.server import mcp
-from voice_mode.shared import startup_initialization
+from yakk.server import mcp
+from yakk.shared import startup_initialization
 
 logger = logging.getLogger("yakk")
 
@@ -54,8 +54,8 @@ async def voice_status() -> str:
     
     Provides a unified view of the voice infrastructure configuration and health.
     """
-    from voice_mode.provider_discovery import provider_registry
-    from voice_mode.config import TTS_BASE_URLS, STT_BASE_URLS
+    from yakk.provider_discovery import provider_registry
+    from yakk.config import TTS_BASE_URLS, STT_BASE_URLS
     
     try:
         # Ensure registry is initialized
@@ -96,7 +96,7 @@ async def voice_status() -> str:
                 status_lines.append(f"  ⚪ {url} (not discovered)")
         
         # Configuration
-        from voice_mode.config import (
+        from yakk.config import (
             TTS_VOICES, TTS_MODELS,
             PREFER_LOCAL, AUTO_START_KOKORO,
             AUDIO_FEEDBACK_ENABLED

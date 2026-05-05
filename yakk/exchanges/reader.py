@@ -10,8 +10,8 @@ from pathlib import Path
 from typing import Iterator, List, Optional, Union, Dict
 import subprocess
 
-from voice_mode.exchanges.models import Exchange
-from voice_mode.config import BASE_DIR
+from yakk.exchanges.models import Exchange
+from yakk.config import BASE_DIR
 
 
 logger = logging.getLogger(__name__)

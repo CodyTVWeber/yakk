@@ -39,7 +39,7 @@ def get_available_hooks() -> dict:
     Returns dict mapping hook name to parsed JSON content.
     e.g. {'pre-tool-use': {...}, 'post-tool-use': {...}}
     """
-    hooks_dir = files('voice_mode.data.hooks')
+    hooks_dir = files('yakk.data.hooks')
     available = {}
     for resource in hooks_dir.iterdir():
         if resource.name.endswith('.json'):
@@ -97,7 +97,7 @@ def install_hook_receiver() -> Path:
     dest.parent.mkdir(parents=True, exist_ok=True)
 
     # Read bundled script from package data
-    hooks_data = files('voice_mode.data.hooks')
+    hooks_data = files('yakk.data.hooks')
     script_resource = hooks_data.joinpath('yakk-hook-receiver.sh')
     script_content = script_resource.read_text()
 

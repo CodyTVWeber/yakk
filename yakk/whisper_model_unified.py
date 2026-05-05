@@ -8,7 +8,7 @@ from pathlib import Path
 
 def model_name_completion(ctx, args, incomplete):
     """Provide shell completion for model names."""
-    from voice_mode.tools.whisper.models import WHISPER_MODEL_REGISTRY
+    from yakk.tools.whisper.models import WHISPER_MODEL_REGISTRY
     return [name for name in WHISPER_MODEL_REGISTRY.keys() if name.startswith(incomplete)]
 
 
@@ -33,7 +33,7 @@ def whisper_model_unified(model_name, all, no_install, no_activate, no_restart):
     With MODEL_NAME: Sets the active model (auto-installs if needed)
     With --all/-a: Lists all available models with status
     """
-    from voice_mode.tools.whisper.models import (
+    from yakk.tools.whisper.models import (
         WHISPER_MODEL_REGISTRY,
         get_model_directory,
         get_active_model,
@@ -131,7 +131,7 @@ def whisper_model_unified(model_name, all, no_install, no_activate, no_restart):
                 click.echo(f"Model '{model_name}' not installed. Installing...")
 
                 # Import and run the installer
-                import voice_mode.tools.whisper.model_install as install_module
+                import yakk.tools.whisper.model_install as install_module
                 tool = install_module.whisper_model_install
                 install_func = tool.fn if hasattr(tool, 'fn') else tool
 
@@ -175,7 +175,7 @@ def whisper_model_unified(model_name, all, no_install, no_activate, no_restart):
                         click.echo(f"\nRestarting whisper service...")
 
                         # Import and use the restart function
-                        from voice_mode.tools.service import restart_service
+                        from yakk.tools.service import restart_service
                         restart_result = asyncio.run(restart_service("whisper"))
 
                         if "✅" in restart_result or "started" in restart_result.lower():

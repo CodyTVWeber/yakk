@@ -6,7 +6,7 @@ import json
 from datetime import datetime
 from typing import Optional, List
 
-from voice_mode.exchanges.models import Exchange, Conversation
+from yakk.exchanges.models import Exchange, Conversation
 
 
 class ExchangeFormatter:

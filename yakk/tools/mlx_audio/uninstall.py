@@ -15,8 +15,8 @@ import subprocess
 from pathlib import Path
 from typing import Any, Dict, List, Union
 
-from voice_mode.config import BASE_DIR, MLX_AUDIO_PORT
-from voice_mode.utils.services.common import find_process_by_port
+from yakk.config import BASE_DIR, MLX_AUDIO_PORT
+from yakk.utils.services.common import find_process_by_port
 
 MLX_AUDIO_PIP_PACKAGE = "mlx-audio"
 

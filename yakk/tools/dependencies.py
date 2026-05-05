@@ -3,8 +3,8 @@
 import logging
 from typing import Dict, Any
 
-from voice_mode.server import mcp
-from voice_mode.utils.audio_diagnostics import (
+from yakk.server import mcp
+from yakk.utils.audio_diagnostics import (
     check_system_audio_packages,
     check_pulseaudio_status,
     diagnose_audio_setup

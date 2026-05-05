@@ -5,7 +5,7 @@ import subprocess
 from pathlib import Path
 from typing import Optional
 
-from voice_mode.utils.gpu_detection import has_gpu_support as _has_gpu_support
+from yakk.utils.gpu_detection import has_gpu_support as _has_gpu_support
 
 
 def find_kokoro_fastapi() -> Optional[str]:

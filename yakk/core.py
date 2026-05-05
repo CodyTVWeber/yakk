@@ -715,7 +715,7 @@ async def play_chime_end(
 async def play_system_audio(message_key: str, fallback_text: Optional[str] = None, soundfont: str = "default") -> bool:
     """Play a pre-recorded system audio message with fallback to TTS.
 
-    System audio files should be stored in voice_mode/data/soundfonts/{soundfont}/system-messages/
+    System audio files should be stored in yakk/data/soundfonts/{soundfont}/system-messages/
     with the naming pattern: {message_key}.mp3 (or .wav, .opus, .opus, etc.)
 
     Args:
@@ -764,7 +764,7 @@ async def play_system_audio(message_key: str, fallback_text: Optional[str] = Non
     if fallback_text:
         logger.info(f"Using TTS fallback for system message '{message_key}': {fallback_text}")
         # Import here to avoid circular dependency
-        from voice_mode.simple_failover import simple_tts_failover
+        from yakk.simple_failover import simple_tts_failover
         success, metrics, config = await simple_tts_failover(
             text=fallback_text,
             voice="af_sky",  # Use AF Sky for system messages

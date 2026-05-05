@@ -6,7 +6,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Tuple
 
-from voice_mode.exchanges.models import Exchange, Conversation
+from yakk.exchanges.models import Exchange, Conversation
 
 
 class ConversationGrouper:

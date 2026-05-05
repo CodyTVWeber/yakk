@@ -1,6 +1,6 @@
 """Conversation prompts for voice interactions."""
 
-from voice_mode.server import mcp
+from yakk.server import mcp
 
 
 @mcp.prompt()

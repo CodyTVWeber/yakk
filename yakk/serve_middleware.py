@@ -13,7 +13,7 @@ This module provides middleware to restrict access to the Yakk server:
    Validates Bearer tokens for API-style authentication.
 
 Usage:
-    from voice_mode.serve_middleware import (
+    from yakk.serve_middleware import (
         IPAllowlistMiddleware,
         SecretPathMiddleware,
         TokenAuthMiddleware,

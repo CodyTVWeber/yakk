@@ -30,14 +30,14 @@ def load_dependencies() -> dict:
     try:
         # Try importlib.resources first (Python 3.9+)
         from importlib.resources import files
-        yaml_path = files("voice_mode") / "dependencies.yaml"
+        yaml_path = files("yakk") / "dependencies.yaml"
         with yaml_path.open() as f:
             return yaml.safe_load(f)
     except (ImportError, AttributeError):
         # Fallback to pkg_resources
         try:
             import pkg_resources
-            yaml_text = pkg_resources.resource_string("voice_mode", "dependencies.yaml")
+            yaml_text = pkg_resources.resource_string("yakk", "dependencies.yaml")
             return yaml.safe_load(yaml_text)
         except Exception:
             # Last resort: try reading from relative path (development mode)

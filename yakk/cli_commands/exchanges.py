@@ -10,7 +10,7 @@ from typing import Optional
 
 import click
 
-from voice_mode.exchanges import (
+from yakk.exchanges import (
     ExchangeReader, 
     ExchangeFormatter, 
     ExchangeFilter,

@@ -56,7 +56,7 @@ def audio_command(
     """
     async def run():
         # Import here to avoid loading tools at module level
-        from voice_mode.tools.transcription import (
+        from yakk.tools.transcription import (
             transcribe_audio,
             TranscriptionBackend,
             OutputFormat

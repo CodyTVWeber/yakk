@@ -6,7 +6,7 @@ import re
 from datetime import datetime
 from typing import Iterator, Callable, Optional, List
 
-from voice_mode.exchanges.models import Exchange
+from yakk.exchanges.models import Exchange
 
 
 class ExchangeFilter:

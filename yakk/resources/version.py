@@ -1,7 +1,7 @@
 """Version information resource."""
 
-from voice_mode.server import mcp
-from voice_mode.version import __version__, get_git_commit_hash, is_git_repository
+from yakk.server import mcp
+from yakk.version import __version__, get_git_commit_hash, is_git_repository
 import platform
 import sys
 import os
@@ -24,9 +24,9 @@ async def get_version_info() -> str:
         
         # Check if installed via pip editable
         try:
-            import voice_mode
-            if hasattr(voice_mode, "__file__"):
-                module_path = voice_mode.__file__
+            import yakk
+            if hasattr(yakk, "__file__"):
+                module_path = yakk.__file__
                 if "site-packages" not in module_path:
                     lines.append("Installation: Development (editable)")
                 else:

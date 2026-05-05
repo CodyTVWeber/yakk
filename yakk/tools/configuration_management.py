@@ -4,8 +4,8 @@ import os
 import re
 from pathlib import Path
 from typing import Dict, Optional, List
-from voice_mode.server import mcp
-from voice_mode.config import BASE_DIR, reload_configuration, find_yakk_env_files
+from yakk.server import mcp
+from yakk.config import BASE_DIR, reload_configuration, find_yakk_env_files
 import logging
 
 logger = logging.getLogger("yakk")

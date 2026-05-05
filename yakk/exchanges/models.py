@@ -11,7 +11,7 @@ from typing import Optional, Literal, Dict, Any, List
 @dataclass
 class ExchangeMetadata:
     """Metadata for an exchange."""
-    voice_mode_version: str
+    yakk_version: str
     model: Optional[str] = None
     voice: Optional[str] = None
     provider: Optional[str] = None

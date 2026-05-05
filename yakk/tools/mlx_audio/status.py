@@ -8,7 +8,7 @@ import urllib.error
 import urllib.request
 from typing import Any, Dict
 
-from voice_mode.config import MLX_AUDIO_PORT
+from yakk.config import MLX_AUDIO_PORT
 
 logger = logging.getLogger("yakk")
 

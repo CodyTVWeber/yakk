@@ -1,7 +1,7 @@
 """CHANGELOG resource for Voice Mode."""
 
 from pathlib import Path
-from voice_mode.server import mcp
+from yakk.server import mcp
 
 
 @mcp.resource("changelog://voice-mode")

@@ -17,15 +17,15 @@ except ImportError:
     # Python < 3.9 fallback
     from importlib_resources import files
 
-from voice_mode.server import mcp
-from voice_mode.config import SERVICE_AUTO_ENABLE, DEFAULT_WHISPER_MODEL, WHISPER_PORT
-from voice_mode.utils.services.whisper_helpers import download_whisper_model
-from voice_mode.utils.version_helpers import (
+from yakk.server import mcp
+from yakk.config import SERVICE_AUTO_ENABLE, DEFAULT_WHISPER_MODEL, WHISPER_PORT
+from yakk.utils.services.whisper_helpers import download_whisper_model
+from yakk.utils.version_helpers import (
     get_git_tags, get_latest_stable_tag, get_current_version,
     checkout_version, is_version_installed
 )
-from voice_mode.utils.migration_helpers import auto_migrate_if_needed
-from voice_mode.utils.gpu_detection import detect_gpu
+from yakk.utils.migration_helpers import auto_migrate_if_needed
+from yakk.utils.gpu_detection import detect_gpu
 
 logger = logging.getLogger("yakk")
 
@@ -61,7 +61,7 @@ async def update_whisper_service_files(
         template_content = source_template.read_text()
     else:
         try:
-            template_resource = files("voice_mode.templates.scripts").joinpath("start-whisper-server.sh")
+            template_resource = files("yakk.templates.scripts").joinpath("start-whisper-server.sh")
             template_content = template_resource.read_text()
             logger.info("Loaded template from package resources")
         except Exception as e:
@@ -175,7 +175,7 @@ exec "$SERVER_BIN" \\
             logger.info(f"Loading plist template from source: {source_template}")
             plist_content = source_template.read_text()
         else:
-            template_resource = files("voice_mode.templates.launchd").joinpath("com.yakk.whisper.plist")
+            template_resource = files("yakk.templates.launchd").joinpath("com.yakk.whisper.plist")
             plist_content = template_resource.read_text()
             logger.info("Loaded plist template from package resources")
         
@@ -205,7 +205,7 @@ exec "$SERVER_BIN" \\
         
         if auto_enable:
             logger.info("Auto-enabling whisper service...")
-            from voice_mode.tools.service import enable_service
+            from yakk.tools.service import enable_service
             enable_result = await enable_service("whisper")
             if "✅" in enable_result:
                 result["enabled"] = True
@@ -232,7 +232,7 @@ exec "$SERVER_BIN" \\
             service_content = source_template.read_text()
         else:
             try:
-                template_resource = files("voice_mode.templates.systemd").joinpath("yakk-whisper.service")
+                template_resource = files("yakk.templates.systemd").joinpath("yakk-whisper.service")
                 service_content = template_resource.read_text()
                 logger.info("Loaded systemd template from package resources")
             except Exception as e:
@@ -292,7 +292,7 @@ WantedBy=default.target
         
         if auto_enable:
             logger.info("Auto-enabling whisper service...")
-            from voice_mode.tools.service import enable_service
+            from yakk.tools.service import enable_service
             enable_result = await enable_service("whisper")
             if "✅" in enable_result:
                 result["enabled"] = True
@@ -348,7 +348,7 @@ async def whisper_install(
 
         # Check whisper build dependencies (unless skipped)
         if not skip_deps:
-            from voice_mode.utils.dependencies.checker import (
+            from yakk.utils.dependencies.checker import (
                 check_component_dependencies,
                 install_missing_dependencies
             )

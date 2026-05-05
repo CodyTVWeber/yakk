@@ -1,7 +1,7 @@
 """MCP resources for Yakk documentation."""
 
 from pathlib import Path
-from voice_mode.server import mcp
+from yakk.server import mcp
 
 # Base directory for documentation resources
 DOCS_DIR = Path(__file__).parent / "docs"

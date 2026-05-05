@@ -1,6 +1,6 @@
 """Service management prompts for whisper and kokoro."""
 
-from voice_mode.server import mcp
+from yakk.server import mcp
 
 
 @mcp.prompt(name="whisper")
