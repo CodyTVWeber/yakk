@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Minimal help tests for voice-mode.
+"""Minimal help tests for yakk.
 
 Reduced from ~270 parametrized tests to 2 high-value tests (VM-473).
 The original tests were temporary guards for performance/import issues
@@ -17,7 +17,7 @@ class TestHelpBasics:
     def test_help_main_command_sections(self):
         """Test that main help command has all expected sections."""
         result = subprocess.run(
-            [sys.executable, '-m', 'voice_mode', '--help'],
+            [sys.executable, '-m', 'yakk', '--help'],
             capture_output=True,
             text=True,
             timeout=2
@@ -35,7 +35,7 @@ class TestHelpBasics:
     def test_help_no_heavy_imports(self):
         """Verify help doesn't trigger heavy imports."""
         result = subprocess.run(
-            [sys.executable, '-m', 'voice_mode', '--help'],
+            [sys.executable, '-m', 'yakk', '--help'],
             capture_output=True,
             text=True,
             timeout=2,

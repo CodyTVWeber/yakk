@@ -34,7 +34,7 @@ def voices_dir(tmp_path, monkeypatch):
 @pytest.fixture
 def vp(voices_dir):
     """Reload voice_profiles after env vars are set, return the module."""
-    from voice_mode import voice_profiles
+    from yakk import voice_profiles
 
     importlib.reload(voice_profiles)
     return voice_profiles
@@ -44,7 +44,7 @@ def vp(voices_dir):
 def vp_remote(voices_dir, monkeypatch):
     """Same as vp but with YAKK_REMOTE_VOICES_DIR set to /remote/voices."""
     monkeypatch.setenv("YAKK_REMOTE_VOICES_DIR", "/remote/voices")
-    from voice_mode import voice_profiles
+    from yakk import voice_profiles
 
     importlib.reload(voice_profiles)
     return voice_profiles

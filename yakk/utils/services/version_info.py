@@ -15,11 +15,11 @@ from pathlib import Path
 from typing import Dict, Any, Optional
 from datetime import datetime
 
-from voice_mode.config import BASE_DIR
-from voice_mode.utils.services.whisper_helpers import find_whisper_server
-from voice_mode.utils.services.kokoro_helpers import find_kokoro_fastapi
-from voice_mode.utils.services.common import find_process_by_port
-from voice_mode.utils.version_helpers import get_current_version
+from yakk.config import BASE_DIR
+from yakk.utils.services.whisper_helpers import find_whisper_server
+from yakk.utils.services.kokoro_helpers import find_kokoro_fastapi
+from yakk.utils.services.common import find_process_by_port
+from yakk.utils.version_helpers import get_current_version
 
 logger = logging.getLogger("yakk")
 
@@ -196,8 +196,8 @@ async def service_version(
     if service_name is None or service_name == "kokoro":
         result["kokoro"] = get_kokoro_version()
 
-    # Add voice-mode version info
-    result["voice_mode"] = {
+    # Add yakk version info
+    result["yakk"] = {
         "version": "2.15.0",  # This should ideally come from package metadata
         "config_dir": str(BASE_DIR),
         "service_files_version": get_service_files_version()

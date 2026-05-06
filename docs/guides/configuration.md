@@ -2,7 +2,7 @@
 
 Yakk provides flexible configuration through environment variables and configuration files, following standard precedence rules while maintaining sensible defaults.
 
-*Note: The Python package is called `voice-mode` but the preferred command is `yakk`.*
+*Note: The Python package is called `yakk` but the preferred command is `yakk`.*
 
 ## Quick Start
 
@@ -67,7 +67,7 @@ When used as an MCP server, add to your Claude or other MCP client configuration
   "mcpServers": {
     "yakk": {
       "command": "uvx",
-      "args": ["--refresh", "voice-mode"],
+      "args": ["--refresh", "yakk"],
       "env": {
         "OPENAI_API_KEY": "your-key-here"
       }

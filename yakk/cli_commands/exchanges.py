@@ -1,5 +1,5 @@
 """
-Exchanges command group for voice-mode CLI.
+Exchanges command group for yakk CLI.
 """
 
 import sys
@@ -10,7 +10,7 @@ from typing import Optional
 
 import click
 
-from voice_mode.exchanges import (
+from yakk.exchanges import (
     ExchangeReader, 
     ExchangeFormatter, 
     ExchangeFilter,

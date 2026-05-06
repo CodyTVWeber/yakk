@@ -91,7 +91,7 @@ def get_latest_version() -> str | None:
     try:
         # Use PyPI JSON API to get latest version
         result = subprocess.run(
-            ['curl', '-s', 'https://pypi.org/pypi/voice-mode/json'],
+            ['curl', '-s', 'https://pypi.org/pypi/yakk/json'],
             capture_output=True,
             text=True,
             timeout=10
@@ -181,35 +181,35 @@ EPILOG = """
 \b
 Examples:
   # Normal installation
-  voice-mode-install
+  yakk-install
 
   # Non-interactive installation (auto-accept all prompts)
-  voice-mode-install --yes
-  voice-mode-install -y
+  yakk-install --yes
+  yakk-install -y
 
   # Dry run (see what would be installed)
-  voice-mode-install --dry-run
+  yakk-install --dry-run
 
   # Install specific version
-  voice-mode-install --voice-mode-version=5.1.3
+  yakk-install --yakk-version=5.1.3
 
   # Skip service installation
-  voice-mode-install --skip-services
+  yakk-install --skip-services
 
   # Install with specific Whisper model
-  voice-mode-install --yes --model large-v2
+  yakk-install --yes --model large-v2
 """
 
 
 @click.command(epilog=EPILOG, context_settings={'help_option_names': ['-h', '--help']})
 @click.option('-d', '--dry-run', is_flag=True, help='Show what would be installed without installing')
-@click.option('-v', '--voice-mode-version', default=None, help='Specific Yakk version to install')
+@click.option('-v', '--yakk-version', default=None, help='Specific Yakk version to install')
 @click.option('-s', '--skip-services', is_flag=True, help='Skip local service installation')
 @click.option('-y', '--yes', 'non_interactive', is_flag=True, help='Run without prompts (auto-accept all)')
 @click.option('-n', '--non-interactive', is_flag=True, help='Run without prompts (deprecated: use --yes/-y)')
 @click.option('-m', '--model', default='base', help='Whisper model to use (base, small, medium, large-v2)')
 @click.version_option(__version__, '-V', '--version')
-def main(dry_run, voice_mode_version, skip_services, non_interactive, model):
+def main(dry_run, yakk_version, skip_services, non_interactive, model):
     """Yakk Installer - Install Yakk and its system dependencies.
 
     This installer will:
@@ -232,7 +232,7 @@ def main(dry_run, voice_mode_version, skip_services, non_interactive, model):
     if not sys.stdin.isatty() and not non_interactive and not dry_run:
         click.echo("Error: Running in non-interactive environment without --yes flag", err=True)
         click.echo("Use --yes or -y to enable automatic installation", err=True)
-        click.echo("Example: uvx voice-mode-install --yes", err=True)
+        click.echo("Example: uvx yakk-install --yes", err=True)
         sys.exit(1)
 
     # Initialize logger
@@ -287,7 +287,7 @@ def main(dry_run, voice_mode_version, skip_services, non_interactive, model):
                     if non_interactive:
                         print_step("Upgrading Yakk...")
                     elif not click.confirm(f"Upgrade to version {latest_version}?", default=True):
-                        click.echo("\nTo upgrade manually later, run: uv tool install --upgrade voice-mode")
+                        click.echo("\nTo upgrade manually later, run: uv tool install --upgrade yakk")
                         sys.exit(0)
                 elif installed_version and latest_version and installed_version == latest_version:
                     click.echo()
@@ -301,14 +301,14 @@ def main(dry_run, voice_mode_version, skip_services, non_interactive, model):
                     click.echo()
                     if not non_interactive:
                         if not click.confirm("Reinstall Yakk?", default=False):
-                            click.echo("\nTo upgrade manually, run: uv tool install --upgrade voice-mode")
+                            click.echo("\nTo upgrade manually, run: uv tool install --upgrade yakk")
                             sys.exit(0)
             else:
                 click.echo("  Latest version:    (unable to check)")
                 click.echo()
                 if not non_interactive:
                     if not click.confirm("Reinstall/upgrade Yakk?", default=False):
-                        click.echo("\nTo upgrade manually, run: uv tool install --upgrade voice-mode")
+                        click.echo("\nTo upgrade manually, run: uv tool install --upgrade yakk")
                         sys.exit(0)
 
             click.echo()
@@ -364,12 +364,12 @@ def main(dry_run, voice_mode_version, skip_services, non_interactive, model):
         print_step("Installing Yakk...")
         installer = PackageInstaller(platform_info, dry_run=dry_run, non_interactive=non_interactive)
 
-        if installer.install_yakk(version=voice_mode_version):
+        if installer.install_yakk(version=yakk_version):
             print_success("Yakk installed successfully")
-            logger.log_install('yakk', ['voice-mode'], True)
+            logger.log_install('yakk', ['yakk'], True)
         else:
             print_error("Failed to install Yakk")
-            logger.log_install('yakk', ['voice-mode'], False)
+            logger.log_install('yakk', ['yakk'], False)
             if not dry_run:
                 sys.exit(1)
 
@@ -492,7 +492,7 @@ def main(dry_run, voice_mode_version, skip_services, non_interactive, model):
             click.echo("  1. Restart your terminal (or source your shell rc file)")
             click.echo("  2. Run: yakk --help")
             click.echo("  3. Configure with Claude Code:")
-            click.echo("     claude mcp add --scope user yakk -- uvx voice-mode")
+            click.echo("     claude mcp add --scope user yakk -- uvx yakk")
             click.echo()
             click.echo(f"Installation log: {logger.get_log_path()}")
 

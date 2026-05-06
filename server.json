@@ -12,7 +12,7 @@
     {
       "registry_type": "pypi",
       "registry_base_url": "https://pypi.org",
-      "identifier": "voice-mode",
+      "identifier": "yakk",
       "version": "8.6.1",
       "transport": {
         "type": "stdio"

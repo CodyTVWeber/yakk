@@ -1,15 +1,15 @@
-# voice-mode-install
+# yakk-install
 
 A standalone installer package for Yakk that handles system dependency detection and installation.
 
 ## Overview
 
-`voice-mode-install` simplifies the Yakk installation process by:
+`yakk-install` simplifies the Yakk installation process by:
 
 1. **Detecting your platform** - Identifies your OS, distribution, and architecture
 2. **Checking dependencies** - Scans for required system packages
 3. **Installing packages** - Uses your system's package manager (apt, dnf, brew)
-4. **Installing Yakk** - Runs `uv tool install voice-mode`
+4. **Installing Yakk** - Runs `uv tool install yakk`
 5. **Hardware recommendations** - Suggests optimal configuration for your system
 6. **Logging everything** - Saves installation logs for troubleshooting
 
@@ -17,19 +17,19 @@ A standalone installer package for Yakk that handles system dependency detection
 
 ```bash
 # Install and run
-uvx voice-mode-install
+uvx yakk-install
 
 # Dry run (see what would be installed)
-uvx voice-mode-install --dry-run
+uvx yakk-install --dry-run
 
 # Install specific version
-uvx voice-mode-install --voice-mode-version=5.1.3
+uvx yakk-install --yakk-version=5.1.3
 
 # Skip service installation
-uvx voice-mode-install --skip-services
+uvx yakk-install --skip-services
 
 # Non-interactive mode
-uvx voice-mode-install --non-interactive
+uvx yakk-install --non-interactive
 ```
 
 ## Prerequisites
@@ -71,7 +71,7 @@ uvx voice-mode-install --non-interactive
    - macOS: `brew install` (installs Homebrew first if needed)
    - Ubuntu/Debian: `sudo apt install`
    - Fedora: `sudo dnf install`
-5. **Yakk Installation** - Runs `uv tool install voice-mode[==version]`
+5. **Yakk Installation** - Runs `uv tool install yakk[==version]`
 6. **Post-Install** - Configures shell completion and verifies installation
 
 ## Installation Logs
@@ -99,19 +99,19 @@ source ~/.bashrc  # or ~/.zshrc for zsh
 The installer needs sudo access to install system packages. Run:
 ```bash
 sudo -v  # Refresh sudo credentials
-uvx voice-mode-install
+uvx yakk-install
 ```
 
 ### Network errors during installation
 
 - Check your internet connection
-- Try again with: `uvx voice-mode-install`
-- Use `uvx --refresh voice-mode-install` to get the latest installer
+- Try again with: `uvx yakk-install`
+- Use `uvx --refresh yakk-install` to get the latest installer
 
 ### Installation hangs or fails
 
 1. Check the log file: `~/.yakk/install.log`
-2. Try a dry run: `uvx voice-mode-install --dry-run`
+2. Try a dry run: `uvx yakk-install --dry-run`
 3. Report issues with log file attached
 
 ## Development
@@ -128,7 +128,7 @@ uv build
 ```bash
 cd installer/
 uv pip install -e .
-voice-mode-install --dry-run
+yakk-install --dry-run
 ```
 
 ### Project Structure

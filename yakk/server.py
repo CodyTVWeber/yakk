@@ -63,7 +63,7 @@ def main():
         print("="*60)
         print(get_install_instructions())
         print("="*60 + "\n")
-        print("❌ Voice Mode cannot start without FFmpeg.")
+        print("❌ Yakk cannot start without FFmpeg.")
         print("Please install FFmpeg and try again.\n")
         sys.exit(1)
     

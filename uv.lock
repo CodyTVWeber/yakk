@@ -5512,133 +5512,6 @@ wheels = [
 ]
 
 [[package]]
-name = "voice-mode"
-source = { editable = "." }
-dependencies = [
-    { name = "aiohttp" },
-    { name = "audioop-lts", marker = "python_full_version >= '3.13'" },
-    { name = "click" },
-    { name = "fastmcp" },
-    { name = "httpx" },
-    { name = "keyring" },
-    { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "numpy", version = "2.3.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-    { name = "openai" },
-    { name = "psutil" },
-    { name = "pydub" },
-    { name = "pyyaml" },
-    { name = "scipy", version = "1.15.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "scipy", version = "1.16.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-    { name = "simpleaudio" },
-    { name = "sounddevice" },
-    { name = "uv" },
-    { name = "webrtcvad-wheels" },
-    { name = "websockets" },
-]
-
-[package.optional-dependencies]
-coreml = [
-    { name = "ane-transformers" },
-    { name = "coremltools" },
-    { name = "torch" },
-    { name = "transformers" },
-]
-dev = [
-    { name = "build" },
-    { name = "pytest" },
-    { name = "pytest-asyncio" },
-    { name = "pytest-cov" },
-    { name = "pytest-mock" },
-    { name = "twine" },
-]
-docs = [
-    { name = "mkdocs" },
-    { name = "mkdocs-gen-files" },
-    { name = "mkdocs-git-revision-date-localized-plugin" },
-    { name = "mkdocs-material", extra = ["imaging"] },
-    { name = "mkdocs-minify-plugin" },
-    { name = "pymdown-extensions" },
-]
-livekit = [
-    { name = "livekit" },
-    { name = "livekit-agents" },
-    { name = "livekit-plugins-openai" },
-    { name = "livekit-plugins-silero" },
-]
-notebooks = [
-    { name = "gradio" },
-    { name = "jupyter" },
-    { name = "notebook" },
-    { name = "pandas" },
-]
-scripts = [
-    { name = "flask" },
-]
-test = [
-    { name = "coverage", extra = ["toml"] },
-    { name = "pytest" },
-    { name = "pytest-asyncio" },
-    { name = "pytest-cov" },
-    { name = "pytest-mock" },
-    { name = "pytest-timeout" },
-    { name = "pytest-xdist" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "aiohttp" },
-    { name = "ane-transformers", marker = "extra == 'coreml'" },
-    { name = "audioop-lts", marker = "python_full_version >= '3.13'" },
-    { name = "build", marker = "extra == 'dev'", specifier = ">=1.0.0" },
-    { name = "click", specifier = ">=8.0.0" },
-    { name = "coremltools", marker = "extra == 'coreml'", specifier = ">=7.0" },
-    { name = "coverage", extras = ["toml"], marker = "extra == 'test'", specifier = ">=7.4.0" },
-    { name = "fastmcp", specifier = ">=2.3.2,<3" },
-    { name = "flask", marker = "extra == 'scripts'", specifier = ">=3.0.0" },
-    { name = "gradio", marker = "extra == 'notebooks'", specifier = ">=4.0.0" },
-    { name = "httpx" },
-    { name = "jupyter", marker = "extra == 'notebooks'", specifier = ">=1.0.0" },
-    { name = "keyring", specifier = ">=25.0.0" },
-    { name = "livekit", marker = "extra == 'livekit'", specifier = ">=0.13.1" },
-    { name = "livekit-agents", marker = "extra == 'livekit'", specifier = ">=0.10.2" },
-    { name = "livekit-plugins-openai", marker = "extra == 'livekit'", specifier = ">=0.10.1" },
-    { name = "livekit-plugins-silero", marker = "extra == 'livekit'", specifier = ">=0.6.5" },
-    { name = "mkdocs", marker = "extra == 'docs'", specifier = ">=1.5.0" },
-    { name = "mkdocs-gen-files", marker = "extra == 'docs'", specifier = ">=0.5.0" },
-    { name = "mkdocs-git-revision-date-localized-plugin", marker = "extra == 'docs'", specifier = ">=1.2.0" },
-    { name = "mkdocs-material", extras = ["imaging"], marker = "extra == 'docs'", specifier = ">=9.0.0" },
-    { name = "mkdocs-minify-plugin", marker = "extra == 'docs'", specifier = ">=0.7.0" },
-    { name = "notebook", marker = "extra == 'notebooks'", specifier = ">=7.0.0" },
-    { name = "numpy" },
-    { name = "openai", specifier = ">=1.0.0" },
-    { name = "pandas", marker = "extra == 'notebooks'", specifier = ">=2.0.0" },
-    { name = "psutil", specifier = ">=5.9.0" },
-    { name = "pydub" },
-    { name = "pymdown-extensions", marker = "extra == 'docs'", specifier = ">=10.0" },
-    { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.0.0" },
-    { name = "pytest", marker = "extra == 'test'", specifier = ">=8.0.0" },
-    { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=0.23.0" },
-    { name = "pytest-asyncio", marker = "extra == 'test'", specifier = ">=0.23.0" },
-    { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=4.1.0" },
-    { name = "pytest-cov", marker = "extra == 'test'", specifier = ">=4.1.0" },
-    { name = "pytest-mock", marker = "extra == 'dev'", specifier = ">=3.10.0" },
-    { name = "pytest-mock", marker = "extra == 'test'", specifier = ">=3.10.0" },
-    { name = "pytest-timeout", marker = "extra == 'test'", specifier = ">=2.2.0" },
-    { name = "pytest-xdist", marker = "extra == 'test'", specifier = ">=3.5.0" },
-    { name = "pyyaml", specifier = ">=6.0.0" },
-    { name = "scipy" },
-    { name = "simpleaudio" },
-    { name = "sounddevice" },
-    { name = "torch", marker = "extra == 'coreml'", specifier = ">=2.0.0" },
-    { name = "transformers", marker = "extra == 'coreml'" },
-    { name = "twine", marker = "extra == 'dev'", specifier = ">=4.0.0" },
-    { name = "uv", specifier = ">=0.4.0" },
-    { name = "webrtcvad-wheels", specifier = ">=2.0.14" },
-    { name = "websockets", specifier = ">=12.0" },
-]
-provides-extras = ["coreml", "dev", "docs", "livekit", "notebooks", "scripts", "test"]
-
-[[package]]
 name = "watchdog"
 version = "6.0.0"
 source = { registry = "https://pypi.org/simple" }
@@ -5947,6 +5820,133 @@ sdist = { url = "https://files.pythonhosted.org/packages/41/53/2e0253c5efd69c965
 wheels = [
     { url = "https://files.pythonhosted.org/packages/ca/51/5447876806d1088a0f8f71e16542bf350918128d0a69437df26047c8e46f/widgetsnbextension-4.0.14-py3-none-any.whl", hash = "sha256:4875a9eaf72fbf5079dc372a51a9f268fc38d46f767cbf85c43a36da5cb9b575", size = 2196503, upload-time = "2025-04-10T13:01:23.086Z" },
 ]
+
+[[package]]
+name = "yakk"
+source = { editable = "." }
+dependencies = [
+    { name = "aiohttp" },
+    { name = "audioop-lts", marker = "python_full_version >= '3.13'" },
+    { name = "click" },
+    { name = "fastmcp" },
+    { name = "httpx" },
+    { name = "keyring" },
+    { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "numpy", version = "2.3.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+    { name = "openai" },
+    { name = "psutil" },
+    { name = "pydub" },
+    { name = "pyyaml" },
+    { name = "scipy", version = "1.15.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "scipy", version = "1.16.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+    { name = "simpleaudio" },
+    { name = "sounddevice" },
+    { name = "uv" },
+    { name = "webrtcvad-wheels" },
+    { name = "websockets" },
+]
+
+[package.optional-dependencies]
+coreml = [
+    { name = "ane-transformers" },
+    { name = "coremltools" },
+    { name = "torch" },
+    { name = "transformers" },
+]
+dev = [
+    { name = "build" },
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
+    { name = "pytest-cov" },
+    { name = "pytest-mock" },
+    { name = "twine" },
+]
+docs = [
+    { name = "mkdocs" },
+    { name = "mkdocs-gen-files" },
+    { name = "mkdocs-git-revision-date-localized-plugin" },
+    { name = "mkdocs-material", extra = ["imaging"] },
+    { name = "mkdocs-minify-plugin" },
+    { name = "pymdown-extensions" },
+]
+livekit = [
+    { name = "livekit" },
+    { name = "livekit-agents" },
+    { name = "livekit-plugins-openai" },
+    { name = "livekit-plugins-silero" },
+]
+notebooks = [
+    { name = "gradio" },
+    { name = "jupyter" },
+    { name = "notebook" },
+    { name = "pandas" },
+]
+scripts = [
+    { name = "flask" },
+]
+test = [
+    { name = "coverage", extra = ["toml"] },
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
+    { name = "pytest-cov" },
+    { name = "pytest-mock" },
+    { name = "pytest-timeout" },
+    { name = "pytest-xdist" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "aiohttp" },
+    { name = "ane-transformers", marker = "extra == 'coreml'" },
+    { name = "audioop-lts", marker = "python_full_version >= '3.13'" },
+    { name = "build", marker = "extra == 'dev'", specifier = ">=1.0.0" },
+    { name = "click", specifier = ">=8.0.0" },
+    { name = "coremltools", marker = "extra == 'coreml'", specifier = ">=7.0" },
+    { name = "coverage", extras = ["toml"], marker = "extra == 'test'", specifier = ">=7.4.0" },
+    { name = "fastmcp", specifier = ">=2.3.2,<3" },
+    { name = "flask", marker = "extra == 'scripts'", specifier = ">=3.0.0" },
+    { name = "gradio", marker = "extra == 'notebooks'", specifier = ">=4.0.0" },
+    { name = "httpx" },
+    { name = "jupyter", marker = "extra == 'notebooks'", specifier = ">=1.0.0" },
+    { name = "keyring", specifier = ">=25.0.0" },
+    { name = "livekit", marker = "extra == 'livekit'", specifier = ">=0.13.1" },
+    { name = "livekit-agents", marker = "extra == 'livekit'", specifier = ">=0.10.2" },
+    { name = "livekit-plugins-openai", marker = "extra == 'livekit'", specifier = ">=0.10.1" },
+    { name = "livekit-plugins-silero", marker = "extra == 'livekit'", specifier = ">=0.6.5" },
+    { name = "mkdocs", marker = "extra == 'docs'", specifier = ">=1.5.0" },
+    { name = "mkdocs-gen-files", marker = "extra == 'docs'", specifier = ">=0.5.0" },
+    { name = "mkdocs-git-revision-date-localized-plugin", marker = "extra == 'docs'", specifier = ">=1.2.0" },
+    { name = "mkdocs-material", extras = ["imaging"], marker = "extra == 'docs'", specifier = ">=9.0.0" },
+    { name = "mkdocs-minify-plugin", marker = "extra == 'docs'", specifier = ">=0.7.0" },
+    { name = "notebook", marker = "extra == 'notebooks'", specifier = ">=7.0.0" },
+    { name = "numpy" },
+    { name = "openai", specifier = ">=1.0.0" },
+    { name = "pandas", marker = "extra == 'notebooks'", specifier = ">=2.0.0" },
+    { name = "psutil", specifier = ">=5.9.0" },
+    { name = "pydub" },
+    { name = "pymdown-extensions", marker = "extra == 'docs'", specifier = ">=10.0" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.0.0" },
+    { name = "pytest", marker = "extra == 'test'", specifier = ">=8.0.0" },
+    { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=0.23.0" },
+    { name = "pytest-asyncio", marker = "extra == 'test'", specifier = ">=0.23.0" },
+    { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=4.1.0" },
+    { name = "pytest-cov", marker = "extra == 'test'", specifier = ">=4.1.0" },
+    { name = "pytest-mock", marker = "extra == 'dev'", specifier = ">=3.10.0" },
+    { name = "pytest-mock", marker = "extra == 'test'", specifier = ">=3.10.0" },
+    { name = "pytest-timeout", marker = "extra == 'test'", specifier = ">=2.2.0" },
+    { name = "pytest-xdist", marker = "extra == 'test'", specifier = ">=3.5.0" },
+    { name = "pyyaml", specifier = ">=6.0.0" },
+    { name = "scipy" },
+    { name = "simpleaudio" },
+    { name = "sounddevice" },
+    { name = "torch", marker = "extra == 'coreml'", specifier = ">=2.0.0" },
+    { name = "transformers", marker = "extra == 'coreml'" },
+    { name = "twine", marker = "extra == 'dev'", specifier = ">=4.0.0" },
+    { name = "uv", specifier = ">=0.4.0" },
+    { name = "webrtcvad-wheels", specifier = ">=2.0.14" },
+    { name = "websockets", specifier = ">=12.0" },
+]
+provides-extras = ["coreml", "dev", "docs", "livekit", "notebooks", "scripts", "test"]
 
 [[package]]
 name = "yarl"

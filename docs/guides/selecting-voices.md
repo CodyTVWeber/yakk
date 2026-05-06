@@ -1,6 +1,6 @@
 # Selecting Voices
 
-Voice Mode supports multiple TTS providers with different voices. This guide helps you choose and configure voices for the best experience.
+Yakk supports multiple TTS providers with different voices. This guide helps you choose and configure voices for the best experience.
 
 ## Available Voices
 
@@ -22,7 +22,7 @@ Voice Mode supports multiple TTS providers with different voices. This guide hel
 
 ## Voice Selection Strategy
 
-Voice Mode uses a **voice-first selection algorithm**:
+Yakk uses a **voice-first selection algorithm**:
 
 1. **Try each preferred voice** in order from `YAKK_VOICES`
 2. **Find first healthy endpoint** that supports that voice

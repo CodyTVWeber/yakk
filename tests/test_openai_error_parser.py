@@ -4,7 +4,7 @@ Tests for OpenAI error parsing functionality.
 
 import pytest
 from unittest.mock import Mock, MagicMock, PropertyMock
-from voice_mode.openai_error_parser import OpenAIErrorParser
+from yakk.openai_error_parser import OpenAIErrorParser
 
 
 class TestOpenAIErrorParser:

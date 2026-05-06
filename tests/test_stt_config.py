@@ -1,7 +1,7 @@
 """Tests for STT_MODEL / STT_MODELS config and reload_configuration() round-trip.
 
 Covers VM-1100 acceptance criteria:
-  - `from voice_mode.config import STT_MODEL, STT_MODELS` succeeds.
+  - `from yakk.config import STT_MODEL, STT_MODELS` succeeds.
   - reload_configuration() picks up changes to YAKK_STT_MODEL /
     YAKK_STT_MODELS without a process restart.
 """
@@ -12,8 +12,8 @@ import pytest
 
 
 def test_import_stt_model_and_stt_models():
-    """Smoke test: STT_MODEL and STT_MODELS are importable from voice_mode.config."""
-    from voice_mode.config import STT_MODEL, STT_MODELS
+    """Smoke test: STT_MODEL and STT_MODELS are importable from yakk.config."""
+    from yakk.config import STT_MODEL, STT_MODELS
 
     assert isinstance(STT_MODEL, str)
     assert isinstance(STT_MODELS, list)
@@ -27,7 +27,7 @@ def isolated_reload(monkeypatch):
     ~/.yakk/yakk.env. We patch that to a no-op so tests only see
     values set in os.environ.
     """
-    import voice_mode.config as cfg
+    import yakk.config as cfg
 
     monkeypatch.setattr(cfg, "load_yakk_env", lambda: None)
     monkeypatch.delenv("YAKK_STT_MODEL", raising=False)

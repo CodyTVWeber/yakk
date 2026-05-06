@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VOICE MODE BBS v3.0</title>
+    <title>YAKK BBS v3.0</title>
     <style>
         @font-face {
             font-family: 'DOS';
@@ -300,9 +300,9 @@
         </nav>
 
         <div class="connecting">
-            <span class="bright-green">ATDT 1-800-VOICE-MODE</span><br>
+            <span class="bright-green">ATDT 1-800-YAKK</span><br>
             <span class="yellow">CONNECT 2400</span><br>
-            <span class="bright-cyan">Welcome to VOICE MODE BBS <span class="dots"></span></span>
+            <span class="bright-cyan">Welcome to YAKK BBS <span class="dots"></span></span>
         </div>
 
         <div id="manifest" class="page active">
@@ -320,7 +320,7 @@ CODE SHOULD LISTEN.
             <div class="box">
                 <div class="box-header">═[ THESIS ]═</div>
                 <div class="box-content">
-                    <p>Voice Mode transforms AI assistants from text-based tools into conversational partners. Through the Model Context Protocol, we enable Claude, ChatGPT, and other LLMs to engage in natural voice interactions.</p>
+                    <p>Yakk transforms AI assistants from text-based tools into conversational partners. Through the Model Context Protocol, we enable Claude, ChatGPT, and other LLMs to engage in natural voice interactions.</p>
                     <p class="bright-cyan">No more typing. No more reading. Just conversation.</p>
                 </div>
             </div>
@@ -359,7 +359,7 @@ CODE SHOULD LISTEN.
 ├─────────────────────────────────────────────────────────────────┤
 │                        PROTOCOL LAYER                           │
 ├─────────────────────────────────────────────────────────────────┤
-│ MCP CLIENT ◀──▶ VOICE MODE SERVER ◀──▶ OPENAI-COMPATIBLE API  │
+│ MCP CLIENT ◀──▶ YAKK SERVER ◀──▶ OPENAI-COMPATIBLE API  │
 ├─────────────────────────────────────────────────────────────────┤
 │                        SERVICE LAYER                            │
 ├─────────────────────────────────────────────────────────────────┤
@@ -437,9 +437,9 @@ TTS_BASE_URL            # Custom TTS endpoint
 TTS_API_KEY             # TTS authentication
 TTS_MODEL               # TTS model selection
 TTS_VOICE               # Voice selection
-VOICE_MODE_DEBUG         # Enable debug logging
-VOICE_MODE_SAVE_AUDIO    # Save audio files
-VOICE_MODE_AUDIO_DIR     # Audio save directory
+YAKK_DEBUG         # Enable debug logging
+YAKK_SAVE_AUDIO    # Save audio files
+YAKK_AUDIO_DIR     # Audio save directory
                     </div>
                 </div>
             </div>
@@ -452,15 +452,15 @@ VOICE_MODE_AUDIO_DIR     # Audio save directory
                     <p class="bright-cyan">Select your preferred installation method:</p>
                     <div class="code-block">
                         <div class="code-header">[1] CLAUDE CODE (RECOMMENDED)</div>
-$ claude mcp add --scope user voice-mode uvx voice-mode
+$ claude mcp add --scope user yakk uvx yakk
                     </div>
                     <div class="code-block">
                         <div class="code-header">[2] UV PACKAGE MANAGER</div>
-$ uvx voice-mode
+$ uvx yakk
                     </div>
                     <div class="code-block">
                         <div class="code-header">[3] PYTHON PIP</div>
-$ pip install voice-mode
+$ pip install yakk
                     </div>
                 </div>
             </div>
@@ -495,14 +495,14 @@ WebRTC powered, low latency
                 <div class="box-content">
                     <div class="code-block">
                         <div class="code-header">CLAUDE DESKTOP</div>
-1. Install Voice Mode via Claude Code
+1. Install Yakk via Claude Code
 2. Start Claude Desktop application
 3. Use /converse command in chat
 4. Speak naturally when prompted
                     </div>
                     <div class="code-block">
                         <div class="code-header">CUSTOM MCP CLIENT</div>
-1. Add voice-mode to MCP server list
+1. Add yakk to MCP server list
 2. Configure transport (stdio/sse)
 3. Call voice tools via MCP protocol
 4. Handle audio streams appropriately
@@ -563,7 +563,7 @@ check_audio_devices()
                     </div>
                     <div class="code-block">
                         <div class="code-header">ENABLE DEBUG MODE</div>
-export VOICE_MODE_DEBUG=true
+export YAKK_DEBUG=true
 # Enables verbose logging
 # Shows all API calls
 # Displays timing information
@@ -601,7 +601,7 @@ KOKORO.TAR            12M     2025-06-21 TTS models
         <footer class="footer">
             <pre class="dark-gray">
 ╔════════════════════════════════════════════════════════════════════════╗
-║ VOICE MODE BBS │ <a href="https://getyakk.com">GETYAKK.COM</a> │ <a href="https://github.com/mbailey/yakk">GITHUB</a> │ <a href="https://discord.gg/gVHPPK5U">DISCORD</a>        ║
+║ YAKK BBS │ <a href="https://getyakk.com">GETYAKK.COM</a> │ <a href="https://github.com/mbailey/yakk">GITHUB</a> │ <a href="https://discord.gg/gVHPPK5U">DISCORD</a>        ║
 ║ MIT LICENSE │ A <a href="https://failmode.com">FAILMODE</a> PROJECT │ SYSOP: MBAILEY                       ║
 ║ BUILT FOR HUMANS WHO PREFER SPEAKING TO TYPING                        ║
 ╚════════════════════════════════════════════════════════════════════════╝

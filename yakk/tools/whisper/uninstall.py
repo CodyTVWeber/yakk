@@ -8,9 +8,9 @@ import logging
 from pathlib import Path
 from typing import Dict, Any, Union
 
-from voice_mode.server import mcp
-from voice_mode.config import BASE_DIR
-from voice_mode.utils.services.common import find_process_by_port
+from yakk.server import mcp
+from yakk.config import BASE_DIR
+from yakk.utils.services.common import find_process_by_port
 
 logger = logging.getLogger("yakk")
 

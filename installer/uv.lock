@@ -104,7 +104,7 @@ wheels = [
 ]
 
 [[package]]
-name = "voice-mode-install"
+name = "yakk-install"
 version = "7.0.1"
 source = { editable = "." }
 dependencies = [

@@ -93,7 +93,7 @@ def create_test_environment():
     
     return base_dir
 
-@pytest.mark.skipif(not HAS_FLASK, reason="Flask not installed (install with 'pip install voice-mode[scripts]')")
+@pytest.mark.skipif(not HAS_FLASK, reason="Flask not installed (install with 'pip install yakk[scripts]')")
 def test_playback_ui():
     """Test that playback UI elements are rendered correctly."""
     # Create test environment

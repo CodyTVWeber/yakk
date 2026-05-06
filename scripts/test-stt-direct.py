@@ -34,7 +34,7 @@ async def test_stt_with_file(audio_file: Path):
     except Exception as e:
         logger.error(f"✗ Direct WAV failed: {e}")
     
-    # Test 2: Convert to MP3 (like voice-mode does)
+    # Test 2: Convert to MP3 (like yakk does)
     logger.info("\nTest 2: Convert to MP3 first")
     try:
         audio = AudioSegment.from_wav(str(audio_file))

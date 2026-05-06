@@ -20,7 +20,7 @@ def detect_existing_format_preference() -> Optional[str]:
     Returns:
         Format string if a clear preference is detected, None otherwise
     """
-    audio_dir = Path.home() / "voice-mode_audio"
+    audio_dir = Path.home() / "yakk_audio"
     
     if not audio_dir.exists():
         return None
@@ -59,7 +59,7 @@ def should_show_migration_hint() -> bool:
         return False
     
     # Check if migration hint was already shown
-    hint_file = Path.home() / '.voice-mode-format-migration-shown'
+    hint_file = Path.home() / '.yakk-format-migration-shown'
     if hint_file.exists():
         return False
     
@@ -73,16 +73,16 @@ def should_show_migration_hint() -> bool:
 
 def mark_migration_hint_shown():
     """Mark that the migration hint has been shown to the user."""
-    hint_file = Path.home() / '.voice-mode-format-migration-shown'
+    hint_file = Path.home() / '.yakk-format-migration-shown'
     hint_file.touch()
 
 
 def get_migration_message() -> str:
     """Get the migration hint message."""
     return """
-🎵 Voice Mode Audio Format Update
+🎵 Yakk Audio Format Update
 
-Voice Mode now uses Opus format by default for better performance.
+Yakk now uses Opus format by default for better performance.
 We detected you have existing MP3 recordings.
 
 To continue using MP3 format, set:

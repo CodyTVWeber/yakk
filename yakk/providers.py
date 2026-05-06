@@ -1,5 +1,5 @@
 """
-Provider selection and management for voice-mode.
+Provider selection and management for yakk.
 
 This module provides compatibility layer and selection logic for voice providers,
 working with the dynamic provider discovery system.
@@ -154,7 +154,7 @@ async def get_tts_client_and_voice(
             return client, selected_voice, selected_model, endpoint_info
 
     # No suitable endpoint found
-    raise ValueError("No TTS endpoints found that support requested voice/model preferences")
+    raise ValueError("No TTS endpoints found that support requested yakkl preferences")
 
 
 async def get_stt_client(

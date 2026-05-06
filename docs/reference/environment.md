@@ -168,8 +168,8 @@ These variables from older versions are still supported:
 
 | Old Variable | New Variable | Notes |
 |--------------|--------------|-------|
-| `VOICE_MODE_DEBUG` | `YAKK_DEBUG` | Deprecated |
-| `VOICE_MODE_SAVE_AUDIO` | `YAKK_SAVE_ALL` | Deprecated |
+| `YAKK_DEBUG` | `YAKK_DEBUG` | Deprecated |
+| `YAKK_SAVE_AUDIO` | `YAKK_SAVE_ALL` | Deprecated |
 | `TTS_BASE_URL` | `YAKK_TTS_BASE_URLS` | Still supported |
 | `STT_BASE_URL` | `YAKK_STT_BASE_URLS` | Still supported |
 | `TTS_VOICE` | `YAKK_TTS_VOICE` | Still supported |
@@ -201,7 +201,7 @@ When used as an MCP server, environment variables can be set in the host configu
   "mcpServers": {
     "yakk": {
       "command": "uvx",
-      "args": ["voice-mode"],
+      "args": ["yakk"],
       "env": {
         "OPENAI_API_KEY": "sk-...",
         "YAKK_DEBUG": "true"

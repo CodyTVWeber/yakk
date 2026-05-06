@@ -1,5 +1,5 @@
 """
-Unit tests for voice_mode.auth module.
+Unit tests for yakk.auth module.
 
 Tests PKCE generation, token storage, port selection, and OAuth flow components.
 """
@@ -14,7 +14,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from voice_mode.auth import (
+from yakk.auth import (
     AUTH0_DOMAIN,
     AUTH0_CLIENT_ID,
     CALLBACK_PORT_START,
@@ -219,9 +219,9 @@ class TestTokenStorage:
 
         # Force plaintext store and redirect paths
         monkeypatch.setenv("YAKK_CREDENTIAL_STORE", "plaintext")
-        monkeypatch.setattr("voice_mode.credential_store.CREDENTIALS_DIR", creds_dir)
-        monkeypatch.setattr("voice_mode.credential_store.CREDENTIALS_FILE", creds_file)
-        monkeypatch.setattr("voice_mode.credential_store.CREDENTIALS_MIGRATED_FILE", migrated_file)
+        monkeypatch.setattr("yakk.credential_store.CREDENTIALS_DIR", creds_dir)
+        monkeypatch.setattr("yakk.credential_store.CREDENTIALS_FILE", creds_file)
+        monkeypatch.setattr("yakk.credential_store.CREDENTIALS_MIGRATED_FILE", migrated_file)
 
         return creds_dir, creds_file
 
@@ -483,7 +483,7 @@ class TestTokenExchange:
             "token_type": "Bearer",
         }
 
-        with patch("voice_mode.auth.httpx.Client") as mock_client:
+        with patch("yakk.auth.httpx.Client") as mock_client:
             mock_client.return_value.__enter__.return_value.post.return_value = mock_response
 
             result = exchange_code_for_tokens(
@@ -504,7 +504,7 @@ class TestTokenExchange:
             "error_description": "Invalid authorization code",
         }
 
-        with patch("voice_mode.auth.httpx.Client") as mock_client:
+        with patch("yakk.auth.httpx.Client") as mock_client:
             mock_client.return_value.__enter__.return_value.post.return_value = mock_response
 
             with pytest.raises(AuthError) as exc_info:
@@ -530,7 +530,7 @@ class TestTokenRefresh:
             "token_type": "Bearer",
         }
 
-        with patch("voice_mode.auth.httpx.Client") as mock_client:
+        with patch("yakk.auth.httpx.Client") as mock_client:
             mock_client.return_value.__enter__.return_value.post.return_value = mock_response
 
             result = refresh_access_token("old_refresh_token")
@@ -546,7 +546,7 @@ class TestTokenRefresh:
             "error_description": "Refresh token expired",
         }
 
-        with patch("voice_mode.auth.httpx.Client") as mock_client:
+        with patch("yakk.auth.httpx.Client") as mock_client:
             mock_client.return_value.__enter__.return_value.post.return_value = mock_response
 
             with pytest.raises(AuthError) as exc_info:
@@ -568,7 +568,7 @@ class TestGetUserInfo:
             "name": "Test User",
         }
 
-        with patch("voice_mode.auth.httpx.Client") as mock_client:
+        with patch("yakk.auth.httpx.Client") as mock_client:
             mock_client.return_value.__enter__.return_value.get.return_value = mock_response
 
             result = get_user_info("valid_token")
@@ -581,7 +581,7 @@ class TestGetUserInfo:
         mock_response = MagicMock()
         mock_response.status_code = 401
 
-        with patch("voice_mode.auth.httpx.Client") as mock_client:
+        with patch("yakk.auth.httpx.Client") as mock_client:
             mock_client.return_value.__enter__.return_value.get.return_value = mock_response
 
             with pytest.raises(AuthError) as exc_info:
@@ -601,9 +601,9 @@ class TestGetValidCredentials:
         migrated_file = creds_dir / "credentials.migrated"
 
         monkeypatch.setenv("YAKK_CREDENTIAL_STORE", "plaintext")
-        monkeypatch.setattr("voice_mode.credential_store.CREDENTIALS_DIR", creds_dir)
-        monkeypatch.setattr("voice_mode.credential_store.CREDENTIALS_FILE", creds_file)
-        monkeypatch.setattr("voice_mode.credential_store.CREDENTIALS_MIGRATED_FILE", migrated_file)
+        monkeypatch.setattr("yakk.credential_store.CREDENTIALS_DIR", creds_dir)
+        monkeypatch.setattr("yakk.credential_store.CREDENTIALS_FILE", creds_file)
+        monkeypatch.setattr("yakk.credential_store.CREDENTIALS_MIGRATED_FILE", migrated_file)
 
         return creds_dir, creds_file
 
@@ -645,7 +645,7 @@ class TestGetValidCredentials:
             "token_type": "Bearer",
         }
 
-        with patch("voice_mode.auth.httpx.Client") as mock_client:
+        with patch("yakk.auth.httpx.Client") as mock_client:
             mock_client.return_value.__enter__.return_value.post.return_value = mock_response
 
             result = get_valid_credentials(auto_refresh=True)

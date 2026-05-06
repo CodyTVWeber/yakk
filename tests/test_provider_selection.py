@@ -4,8 +4,8 @@ import pytest
 from unittest.mock import Mock, patch, AsyncMock
 from datetime import datetime, timezone
 
-from voice_mode.provider_discovery import ProviderRegistry, EndpointInfo, detect_provider_type
-from voice_mode.providers import (
+from yakk.provider_discovery import ProviderRegistry, EndpointInfo, detect_provider_type
+from yakk.providers import (
     get_tts_client_and_voice,
     _select_model_for_endpoint,
     _select_stt_model_for_endpoint,
@@ -43,7 +43,7 @@ class TestVoiceFirstSelection:
     @pytest.fixture(autouse=True)
     def mock_voice_preferences(self):
         """Mock voice preferences to avoid test pollution."""
-        with patch('voice_mode.providers.get_voice_preferences', return_value=[]):
+        with patch('yakk.providers.get_voice_preferences', return_value=[]):
             yield
     
     @pytest.fixture
@@ -73,10 +73,10 @@ class TestVoiceFirstSelection:
     @pytest.mark.asyncio
     async def test_voice_first_selects_kokoro_for_af_sky(self, mock_registry):
         """Test that af_sky voice preference selects Kokoro."""
-        with patch('voice_mode.providers.provider_registry', mock_registry):
-            with patch('voice_mode.providers.get_voice_preferences', return_value=['af_sky', 'alloy']):
-                with patch('voice_mode.providers.TTS_MODELS', ['tts-1', 'tts-1-hd']):
-                    with patch('voice_mode.providers.TTS_BASE_URLS', [
+        with patch('yakk.providers.provider_registry', mock_registry):
+            with patch('yakk.providers.get_voice_preferences', return_value=['af_sky', 'alloy']):
+                with patch('yakk.providers.TTS_MODELS', ['tts-1', 'tts-1-hd']):
+                    with patch('yakk.providers.TTS_BASE_URLS', [
                         'http://127.0.0.1:8880/v1',
                         'https://api.openai.com/v1'
                     ]):
@@ -89,10 +89,10 @@ class TestVoiceFirstSelection:
     @pytest.mark.asyncio
     async def test_voice_first_selects_openai_for_nova(self, mock_registry):
         """Test that nova voice preference selects OpenAI."""
-        with patch('voice_mode.providers.provider_registry', mock_registry):
-            with patch('voice_mode.providers.get_voice_preferences', return_value=['nova', 'af_sky']):
-                with patch('voice_mode.providers.TTS_MODELS', ['tts-1-hd', 'tts-1']):
-                    with patch('voice_mode.providers.TTS_BASE_URLS', [
+        with patch('yakk.providers.provider_registry', mock_registry):
+            with patch('yakk.providers.get_voice_preferences', return_value=['nova', 'af_sky']):
+                with patch('yakk.providers.TTS_MODELS', ['tts-1-hd', 'tts-1']):
+                    with patch('yakk.providers.TTS_BASE_URLS', [
                         'http://127.0.0.1:8880/v1',
                         'https://api.openai.com/v1'
                     ]):
@@ -106,9 +106,9 @@ class TestVoiceFirstSelection:
     @pytest.mark.asyncio
     async def test_specific_voice_overrides_preferences(self, mock_registry):
         """Test that specific voice request overrides preferences."""
-        with patch('voice_mode.providers.provider_registry', mock_registry):
-            with patch('voice_mode.providers.get_voice_preferences', return_value=['nova', 'alloy']):
-                with patch('voice_mode.providers.TTS_BASE_URLS', [
+        with patch('yakk.providers.provider_registry', mock_registry):
+            with patch('yakk.providers.get_voice_preferences', return_value=['nova', 'alloy']):
+                with patch('yakk.providers.TTS_BASE_URLS', [
                     'http://127.0.0.1:8880/v1',
                     'https://api.openai.com/v1'
                 ]):
@@ -123,9 +123,9 @@ class TestVoiceFirstSelection:
         # Mark Kokoro as having an error (but it's still tried)
         mock_registry.registry["tts"]["http://127.0.0.1:8880/v1"].last_error = "Previous connection failed"
 
-        with patch('voice_mode.providers.provider_registry', mock_registry):
-            with patch('voice_mode.providers.get_voice_preferences', return_value=['af_sky', 'nova']):
-                with patch('voice_mode.providers.TTS_BASE_URLS', [
+        with patch('yakk.providers.provider_registry', mock_registry):
+            with patch('yakk.providers.get_voice_preferences', return_value=['af_sky', 'nova']):
+                with patch('yakk.providers.TTS_BASE_URLS', [
                     'http://127.0.0.1:8880/v1',
                     'https://api.openai.com/v1'
                 ]):
@@ -138,10 +138,10 @@ class TestVoiceFirstSelection:
     @pytest.mark.asyncio
     async def test_model_selection_respects_provider_models(self, mock_registry):
         """Test that model selection respects what the provider supports."""
-        with patch('voice_mode.providers.provider_registry', mock_registry):
-            with patch('voice_mode.providers.get_voice_preferences', return_value=['af_sky']):
-                with patch('voice_mode.providers.TTS_MODELS', ['gpt-4o-mini-tts', 'tts-1-hd', 'tts-1']):
-                    with patch('voice_mode.providers.TTS_BASE_URLS', [
+        with patch('yakk.providers.provider_registry', mock_registry):
+            with patch('yakk.providers.get_voice_preferences', return_value=['af_sky']):
+                with patch('yakk.providers.TTS_MODELS', ['gpt-4o-mini-tts', 'tts-1-hd', 'tts-1']):
+                    with patch('yakk.providers.TTS_BASE_URLS', [
                         'http://127.0.0.1:8880/v1',
                         'https://api.openai.com/v1'
                     ]):
@@ -178,7 +178,7 @@ class TestModelSelection:
             last_error=None
         )
         
-        with patch('voice_mode.providers.TTS_MODELS', ['gpt-4o-mini-tts', 'tts-1-hd', 'tts-1']):
+        with patch('yakk.providers.TTS_MODELS', ['gpt-4o-mini-tts', 'tts-1-hd', 'tts-1']):
             # Should pick tts-1-hd as it's the first available from preferences
             assert _select_model_for_endpoint(endpoint) == "tts-1-hd"
     
@@ -192,7 +192,7 @@ class TestModelSelection:
             last_error=None
         )
         
-        with patch('voice_mode.providers.TTS_MODELS', ['tts-1', 'tts-1-hd']):
+        with patch('yakk.providers.TTS_MODELS', ['tts-1', 'tts-1-hd']):
             # No preferred models available, use first
             assert _select_model_for_endpoint(endpoint) == "custom-model"
     
@@ -229,12 +229,12 @@ class TestSttModelSelection:
         a positional override."""
         endpoint = self._make_endpoint("https://api.openai.com/v1", "openai")
         with patch(
-            "voice_mode.providers.STT_BASE_URLS",
+            "yakk.providers.STT_BASE_URLS",
             ["https://api.openai.com/v1"],
         ), patch(
-            "voice_mode.providers.STT_MODELS",
+            "yakk.providers.STT_MODELS",
             ["mlx-community/whisper-large-v3-turbo"],
-        ), patch("voice_mode.providers.STT_MODEL", "global-default"):
+        ), patch("yakk.providers.STT_MODEL", "global-default"):
             assert _select_stt_model_for_endpoint(endpoint) == "whisper-1"
             assert (
                 _select_stt_model_for_endpoint(endpoint, "caller-passed")
@@ -254,11 +254,11 @@ class TestSttModelSelection:
                 "http://127.0.0.1:2022/v1", provider_type
             )
             with patch(
-                "voice_mode.providers.STT_BASE_URLS",
+                "yakk.providers.STT_BASE_URLS",
                 ["http://127.0.0.1:2022/v1"],
             ), patch(
-                "voice_mode.providers.STT_MODELS", ["positional-model"]
-            ), patch("voice_mode.providers.STT_MODEL", "global-default"):
+                "yakk.providers.STT_MODELS", ["positional-model"]
+            ), patch("yakk.providers.STT_MODEL", "global-default"):
                 assert (
                     _select_stt_model_for_endpoint(endpoint, "caller-model")
                     == "caller-model"
@@ -277,9 +277,9 @@ class TestSttModelSelection:
             "custom-cpp-model",
             "whisper-1",
         ]
-        with patch("voice_mode.providers.STT_BASE_URLS", urls), patch(
-            "voice_mode.providers.STT_MODELS", models
-        ), patch("voice_mode.providers.STT_MODEL", "global-default"):
+        with patch("yakk.providers.STT_BASE_URLS", urls), patch(
+            "yakk.providers.STT_MODELS", models
+        ), patch("yakk.providers.STT_MODEL", "global-default"):
             mlx = self._make_endpoint(urls[0], "mlx-audio")
             cpp = self._make_endpoint(urls[1], "whisper")
             assert (
@@ -293,10 +293,10 @@ class TestSttModelSelection:
         and no positional STT_MODELS entry applies (URL not in STT_BASE_URLS,
         index out of range, or positional entry empty)."""
         with patch(
-            "voice_mode.providers.STT_BASE_URLS",
+            "yakk.providers.STT_BASE_URLS",
             ["http://127.0.0.1:2022/v1"],
-        ), patch("voice_mode.providers.STT_MODELS", []), patch(
-            "voice_mode.providers.STT_MODEL", "global-default"
+        ), patch("yakk.providers.STT_MODELS", []), patch(
+            "yakk.providers.STT_MODEL", "global-default"
         ):
             # URL not in STT_BASE_URLS
             unknown = self._make_endpoint(
@@ -309,10 +309,10 @@ class TestSttModelSelection:
 
         # Positional entry exists but is empty -> falls back to global
         with patch(
-            "voice_mode.providers.STT_BASE_URLS",
+            "yakk.providers.STT_BASE_URLS",
             ["http://127.0.0.1:2022/v1"],
-        ), patch("voice_mode.providers.STT_MODELS", [""]), patch(
-            "voice_mode.providers.STT_MODEL", "global-default"
+        ), patch("yakk.providers.STT_MODELS", [""]), patch(
+            "yakk.providers.STT_MODEL", "global-default"
         ):
             cpp = self._make_endpoint("http://127.0.0.1:2022/v1", "whisper")
             assert _select_stt_model_for_endpoint(cpp) == "global-default"

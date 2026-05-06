@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Diagnostic script for WSL2 audio issues with voice-mode.
+Diagnostic script for WSL2 audio issues with yakk.
 
 This script checks various audio subsystems and provides recommendations
 for getting microphone access working in WSL2.
@@ -211,7 +211,7 @@ def print_recommendations(is_wsl, wsl_version, packages, pulse_checks, python_ch
         recommendations.append("1. Use LiveKit transport instead of local microphone")
         recommendations.append("2. Set up PulseAudio server on Windows")
         recommendations.append("3. Use USB microphone with usbipd-win")
-        recommendations.append("4. Run voice-mode on native Linux or in Docker")
+        recommendations.append("4. Run yakk on native Linux or in Docker")
     
     if recommendations:
         for rec in recommendations:
@@ -220,7 +220,7 @@ def print_recommendations(is_wsl, wsl_version, packages, pulse_checks, python_ch
         print("✓ Everything looks good! Audio should be working.")
 
 def main():
-    print("=== Voice-Mode WSL Audio Diagnostic Tool ===\n")
+    print("=== Yakk WSL Audio Diagnostic Tool ===\n")
     
     # Check if running in WSL
     is_wsl, wsl_version = check_wsl_version()

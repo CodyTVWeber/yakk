@@ -23,10 +23,10 @@ Install UV package manager (if not already installed), then run the Yakk install
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # Install Yakk and configure services
-uvx voice-mode-install
+uvx yakk-install
 
 # Add to Claude Code MCP
-claude mcp add --scope user yakk -- uvx --refresh voice-mode
+claude mcp add --scope user yakk -- uvx --refresh yakk
 ```
 
 The installer will:
@@ -94,7 +94,7 @@ If you want to use Yakk from the command line:
 
 ```bash
 # Install with pip
-uv tool install voice-mode
+uv tool install yakk
 
 # Or install from source in editable mode
 git clone https://github.com/mbailey/yakk

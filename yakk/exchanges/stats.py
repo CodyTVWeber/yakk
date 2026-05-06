@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from typing import Dict, List, Any, Optional, Tuple
 import re
 
-from voice_mode.exchanges.models import Exchange
+from yakk.exchanges.models import Exchange
 
 
 class ExchangeStats:

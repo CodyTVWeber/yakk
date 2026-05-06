@@ -15,7 +15,7 @@ import urllib.request
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
-from voice_mode.config import BASE_DIR, CLONE_MODEL
+from yakk.config import BASE_DIR, CLONE_MODEL
 
 logger = logging.getLogger("yakk")
 

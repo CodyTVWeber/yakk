@@ -14,7 +14,7 @@ from unittest.mock import patch
 
 import pytest
 
-from voice_mode.tools.mlx_audio.install import (
+from yakk.tools.mlx_audio.install import (
     MLX_AUDIO_DEFAULT_PORT,
     MLX_AUDIO_EXTRAS,
     MLX_AUDIO_PIP_PACKAGE,
@@ -25,7 +25,7 @@ from voice_mode.tools.mlx_audio.install import (
     _query_installed_version,
     mlx_audio_install,
 )
-from voice_mode.tools.service import (
+from yakk.tools.service import (
     _SERVICE_FILE_NAMES,
     _service_file_name,
     get_service_config_vars,
@@ -41,19 +41,19 @@ class TestAppleSiliconCheck:
     """The arm64-Darwin detector must say no on Intel/Linux."""
 
     def test_apple_silicon_on_arm64_mac(self):
-        with patch("voice_mode.tools.mlx_audio.install.platform") as mock_platform:
+        with patch("yakk.tools.mlx_audio.install.platform") as mock_platform:
             mock_platform.system.return_value = "Darwin"
             mock_platform.machine.return_value = "arm64"
             assert _is_apple_silicon() is True
 
     def test_not_apple_silicon_on_intel_mac(self):
-        with patch("voice_mode.tools.mlx_audio.install.platform") as mock_platform:
+        with patch("yakk.tools.mlx_audio.install.platform") as mock_platform:
             mock_platform.system.return_value = "Darwin"
             mock_platform.machine.return_value = "x86_64"
             assert _is_apple_silicon() is False
 
     def test_not_apple_silicon_on_linux_arm(self):
-        with patch("voice_mode.tools.mlx_audio.install.platform") as mock_platform:
+        with patch("yakk.tools.mlx_audio.install.platform") as mock_platform:
             mock_platform.system.return_value = "Linux"
             mock_platform.machine.return_value = "arm64"
             assert _is_apple_silicon() is False
@@ -65,12 +65,12 @@ class TestInstallShortCircuitsOnNonAppleSilicon:
     @pytest.mark.asyncio
     async def test_rejects_intel_mac_without_subprocess(self):
         with patch(
-            "voice_mode.tools.mlx_audio.install._is_apple_silicon",
+            "yakk.tools.mlx_audio.install._is_apple_silicon",
             return_value=False,
         ), patch(
-            "voice_mode.tools.mlx_audio.install.subprocess.run"
+            "yakk.tools.mlx_audio.install.subprocess.run"
         ) as mock_run, patch(
-            "voice_mode.tools.mlx_audio.install.platform"
+            "yakk.tools.mlx_audio.install.platform"
         ) as mock_platform:
             mock_platform.system.return_value = "Darwin"
             mock_platform.machine.return_value = "x86_64"
@@ -83,12 +83,12 @@ class TestInstallShortCircuitsOnNonAppleSilicon:
     @pytest.mark.asyncio
     async def test_rejects_linux_without_subprocess(self):
         with patch(
-            "voice_mode.tools.mlx_audio.install._is_apple_silicon",
+            "yakk.tools.mlx_audio.install._is_apple_silicon",
             return_value=False,
         ), patch(
-            "voice_mode.tools.mlx_audio.install.subprocess.run"
+            "yakk.tools.mlx_audio.install.subprocess.run"
         ) as mock_run, patch(
-            "voice_mode.tools.mlx_audio.install.platform"
+            "yakk.tools.mlx_audio.install.platform"
         ) as mock_platform:
             mock_platform.system.return_value = "Linux"
             mock_platform.machine.return_value = "x86_64"
@@ -194,7 +194,7 @@ class TestPatchAlreadyApplied:
             f"import asyncio\n# yakk-patched\n{PATCH_SENTINEL}\n"
         )
         with patch(
-            "voice_mode.tools.mlx_audio.install.subprocess.run"
+            "yakk.tools.mlx_audio.install.subprocess.run"
         ) as mock_run:
             result = _apply_server_patch(server)
         assert result["success"] is True
@@ -209,7 +209,7 @@ class TestPatchBackupCreation:
     """First-time apply writes a one-shot backup; subsequent applies don't overwrite it."""
 
     def test_backup_created_on_first_apply(self, fake_server_py: Path):
-        from voice_mode.tools.mlx_audio import install as install_mod
+        from yakk.tools.mlx_audio import install as install_mod
 
         # Stub `patch -p1` to "succeed" and inject the sentinel into server.py
         # so the post-patch sanity check passes.
@@ -221,7 +221,7 @@ class TestPatchBackupCreation:
             return type("R", (), {"returncode": 0, "stdout": "", "stderr": ""})()
 
         with patch(
-            "voice_mode.tools.mlx_audio.install.subprocess.run",
+            "yakk.tools.mlx_audio.install.subprocess.run",
             side_effect=fake_patch_run,
         ):
             result = install_mod._apply_server_patch(fake_server_py)
@@ -234,7 +234,7 @@ class TestPatchBackupCreation:
         assert install_mod.PATCH_SENTINEL not in backup.read_text()
 
     def test_existing_backup_preserved(self, fake_server_py: Path):
-        from voice_mode.tools.mlx_audio import install as install_mod
+        from yakk.tools.mlx_audio import install as install_mod
 
         # Pre-seed an "older" backup.
         backup = fake_server_py.parent / "server.py.pre-yakk.bak"
@@ -249,7 +249,7 @@ class TestPatchBackupCreation:
             return type("R", (), {"returncode": 0, "stdout": "", "stderr": ""})()
 
         with patch(
-            "voice_mode.tools.mlx_audio.install.subprocess.run",
+            "yakk.tools.mlx_audio.install.subprocess.run",
             side_effect=fake_patch_run,
         ):
             result = install_mod._apply_server_patch(fake_server_py)
@@ -263,7 +263,7 @@ class TestPatchFailureError:
     """Sentinel absent + ``patch`` returns nonzero -> fail with actionable error."""
 
     def test_patch_failure_surfaces_paths_and_version(self, fake_server_py: Path):
-        from voice_mode.tools.mlx_audio import install as install_mod
+        from yakk.tools.mlx_audio import install as install_mod
 
         def fake_run(cmd, **kwargs):
             # First subprocess.run call is `patch -p1 ...` and fails.
@@ -284,7 +284,7 @@ class TestPatchFailureError:
             raise AssertionError(f"unexpected subprocess.run call: {cmd}")
 
         with patch(
-            "voice_mode.tools.mlx_audio.install.subprocess.run",
+            "yakk.tools.mlx_audio.install.subprocess.run",
             side_effect=fake_run,
         ):
             result = install_mod._apply_server_patch(fake_server_py)
@@ -301,7 +301,7 @@ class TestQueryInstalledVersion:
     """``_query_installed_version`` reads the version from the tool's venv."""
 
     def test_returns_version_from_importlib_metadata(self):
-        from voice_mode.tools.mlx_audio import install as install_mod
+        from yakk.tools.mlx_audio import install as install_mod
 
         def fake_run(cmd, **kwargs):
             # Confirms we go through ``uv tool run --from mlx-audio python``.
@@ -315,22 +315,22 @@ class TestQueryInstalledVersion:
             })()
 
         with patch(
-            "voice_mode.tools.mlx_audio.install.subprocess.run",
+            "yakk.tools.mlx_audio.install.subprocess.run",
             side_effect=fake_run,
         ):
             assert install_mod._query_installed_version() == "0.4.2"
 
     def test_returns_none_when_uv_missing(self):
-        from voice_mode.tools.mlx_audio import install as install_mod
+        from yakk.tools.mlx_audio import install as install_mod
 
         with patch(
-            "voice_mode.tools.mlx_audio.install.subprocess.run",
+            "yakk.tools.mlx_audio.install.subprocess.run",
             side_effect=FileNotFoundError("uv"),
         ):
             assert install_mod._query_installed_version() is None
 
     def test_returns_none_on_nonzero_exit(self):
-        from voice_mode.tools.mlx_audio import install as install_mod
+        from yakk.tools.mlx_audio import install as install_mod
 
         def fake_run(cmd, **kwargs):
             return type("R", (), {
@@ -340,7 +340,7 @@ class TestQueryInstalledVersion:
             })()
 
         with patch(
-            "voice_mode.tools.mlx_audio.install.subprocess.run",
+            "yakk.tools.mlx_audio.install.subprocess.run",
             side_effect=fake_run,
         ):
             assert install_mod._query_installed_version() is None
@@ -348,7 +348,7 @@ class TestQueryInstalledVersion:
     def test_returns_none_when_stdout_is_garbage(self):
         # Defends against future uv versions that might prepend banners or
         # warnings -- if the last line isn't a PEP 440 version, return None.
-        from voice_mode.tools.mlx_audio import install as install_mod
+        from yakk.tools.mlx_audio import install as install_mod
 
         def fake_run(cmd, **kwargs):
             return type("R", (), {
@@ -358,17 +358,17 @@ class TestQueryInstalledVersion:
             })()
 
         with patch(
-            "voice_mode.tools.mlx_audio.install.subprocess.run",
+            "yakk.tools.mlx_audio.install.subprocess.run",
             side_effect=fake_run,
         ):
             assert install_mod._query_installed_version() is None
 
     def test_returns_none_on_timeout(self):
-        from voice_mode.tools.mlx_audio import install as install_mod
+        from yakk.tools.mlx_audio import install as install_mod
         import subprocess as _sp
 
         with patch(
-            "voice_mode.tools.mlx_audio.install.subprocess.run",
+            "yakk.tools.mlx_audio.install.subprocess.run",
             side_effect=_sp.TimeoutExpired(cmd="uv", timeout=30),
         ):
             assert install_mod._query_installed_version() is None
@@ -419,7 +419,7 @@ class TestMlxAudioTemplates:
 
     @property
     def templates_dir(self) -> Path:
-        return Path(__file__).parent.parent / "voice_mode" / "templates"
+        return Path(__file__).parent.parent / "yakk" / "templates"
 
     def test_launchd_plist_exists(self):
         template = self.templates_dir / "launchd" / "com.yakk.mlx-audio.plist"
@@ -436,9 +436,9 @@ class TestMlxAudioTemplates:
     def test_load_template_refuses_mlx_audio_on_linux(self):
         # The template loader must refuse mlx_audio on non-Darwin so we
         # fail loud rather than silently looking up a nonexistent file.
-        from voice_mode.tools.service import load_service_template
+        from yakk.tools.service import load_service_template
 
-        with patch("voice_mode.tools.service.platform") as mock_platform:
+        with patch("yakk.tools.service.platform") as mock_platform:
             mock_platform.system.return_value = "Linux"
             with pytest.raises(FileNotFoundError, match="macOS-only"):
                 load_service_template("mlx_audio")
@@ -469,11 +469,11 @@ class TestMlxAudioConfigEnvVars:
     """Config module exports MLX_AUDIO_PORT/HOST with the right defaults."""
 
     def test_mlx_audio_port_default(self):
-        from voice_mode.config import MLX_AUDIO_PORT
+        from yakk.config import MLX_AUDIO_PORT
         assert MLX_AUDIO_PORT == MLX_AUDIO_DEFAULT_PORT == 8890
 
     def test_mlx_audio_host_default(self):
-        from voice_mode.config import MLX_AUDIO_HOST
+        from yakk.config import MLX_AUDIO_HOST
         assert MLX_AUDIO_HOST == "127.0.0.1"
 
 
@@ -483,12 +483,12 @@ class TestMlxAudioConfigEnvVars:
 
 
 class TestBundledPatchResource:
-    """The patch file ships under voice_mode/data/patches/."""
+    """The patch file ships under yakk/data/patches/."""
 
     def test_patch_file_exists_in_package(self):
         patch_path = (
             Path(__file__).parent.parent
-            / "voice_mode"
+            / "yakk"
             / "data"
             / "patches"
             / "mlx_audio_server.patch"
@@ -501,7 +501,7 @@ class TestBundledPatchResource:
         # The whole point of bundling: the patch introduces our sentinel.
         patch_path = (
             Path(__file__).parent.parent
-            / "voice_mode"
+            / "yakk"
             / "data"
             / "patches"
             / "mlx_audio_server.patch"

@@ -1,7 +1,7 @@
 """Tools to list available versions for services."""
 
-from voice_mode.server import mcp
-from voice_mode.utils.version_helpers import (
+from yakk.server import mcp
+from yakk.utils.version_helpers import (
     get_git_tags, get_latest_stable_tag, get_current_version
 )
 from pathlib import Path

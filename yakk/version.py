@@ -1,4 +1,4 @@
-"""Enhanced version detection for voice mode."""
+"""Enhanced version detection for yakk."""
 
 import os
 import subprocess

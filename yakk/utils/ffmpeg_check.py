@@ -1,4 +1,4 @@
-"""FFmpeg detection and installation helper for voice-mode."""
+"""FFmpeg detection and installation helper for yakk."""
 
 import os
 import platform
@@ -146,7 +146,7 @@ Alternatively, for native Windows:
 3. Add the bin folder to your system PATH
 4. Restart your terminal
 
-Note: Voice Mode works best in WSL2 on Windows."""
+Note: Yakk works best in WSL2 on Windows."""
     
     else:
         return f"""FFmpeg is required for audio processing but was not found.
@@ -187,6 +187,6 @@ def check_and_report_ffmpeg() -> bool:
 def ensure_ffmpeg_or_exit():
     """Ensure FFmpeg is installed or exit with helpful message."""
     if not check_and_report_ffmpeg():
-        print("\n❌ Voice Mode cannot start without FFmpeg.")
+        print("\n❌ Yakk cannot start without FFmpeg.")
         print("Please install FFmpeg and try again.\n")
         sys.exit(1)

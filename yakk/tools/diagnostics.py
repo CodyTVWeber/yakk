@@ -1,23 +1,23 @@
-"""Diagnostic tools for voice-mode."""
+"""Diagnostic tools for yakk."""
 
 import os
-from voice_mode.server import mcp
-from voice_mode.version import __version__
-from voice_mode.config import TTS_VOICES, TTS_BASE_URLS, TTS_MODELS
-from voice_mode.provider_discovery import provider_registry
+from yakk.server import mcp
+from yakk.version import __version__
+from yakk.config import TTS_VOICES, TTS_BASE_URLS, TTS_MODELS
+from yakk.provider_discovery import provider_registry
 import logging
 
 logger = logging.getLogger("yakk")
 
 
 @mcp.tool()
-async def voice_mode_info() -> str:
-    """Get diagnostic information about the voice-mode installation.
+async def yakk_info() -> str:
+    """Get diagnostic information about the yakk installation.
     
     Shows version, configuration, and provider status to help debug issues.
     """
     info = []
-    info.append(f"Voice Mode Diagnostics")
+    info.append(f"Yakk Diagnostics")
     info.append(f"====================")
     info.append(f"Version: {__version__}")
     info.append(f"Working Directory: {os.getcwd()}")
@@ -42,7 +42,7 @@ async def voice_mode_info() -> str:
     
     # Check which provider would be selected
     try:
-        from voice_mode.providers import get_tts_client_and_voice
+        from yakk.providers import get_tts_client_and_voice
         client, voice, model, endpoint = await get_tts_client_and_voice()
         info.append(f"\nDefault TTS Selection:")
         info.append(f"  Provider: {endpoint.provider_type}")

@@ -27,7 +27,7 @@ If the MCP server isn't connected or the tool isn't available:
 2. **Or install manually via CLI:**
 
    ```bash
-   uvx voice-mode-install --yes
+   uvx yakk-install --yes
    yakk whisper service install
    yakk kokoro install
    ```

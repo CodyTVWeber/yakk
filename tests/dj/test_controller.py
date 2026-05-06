@@ -2,7 +2,7 @@
 
 import pytest
 
-from voice_mode.dj import DJController, TrackStatus
+from yakk.dj import DJController, TrackStatus
 
 
 class TestDJControllerStatus:

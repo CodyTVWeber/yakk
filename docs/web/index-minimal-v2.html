@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VOICE MODE</title>
+    <title>YAKK</title>
     <style>
         * {
             margin: 0;
@@ -211,7 +211,7 @@
 <body>
     <div class="container">
         <header>
-            <h1>VOICE MODE</h1>
+            <h1>YAKK</h1>
             <div class="subtitle">NATURAL VOICE CONVERSATIONS FOR AI ASSISTANTS VIA MCP</div>
         </header>
 
@@ -232,7 +232,7 @@
             <section class="section">
                 <h2>THESIS</h2>
                 <p>
-                    Voice Mode transforms AI assistants from text-based tools into conversational partners. 
+                    Yakk transforms AI assistants from text-based tools into conversational partners. 
                     Through the Model Context Protocol, we enable Claude, ChatGPT, and other LLMs to engage in natural voice interactions.
                 </p>
                 <p>
@@ -268,7 +268,7 @@
                     TEXT → TTS SERVICE → AUDIO SYNTHESIS → SPEAKER OUTPUT<br>
                     <br>
                     <div class="spec-header">PROTOCOL LAYER</div>
-                    MCP CLIENT ↔ VOICE MODE SERVER ↔ OPENAI-COMPATIBLE API<br>
+                    MCP CLIENT ↔ YAKK SERVER ↔ OPENAI-COMPATIBLE API<br>
                     <br>
                     <div class="spec-header">SERVICE LAYER</div>
                     WHISPER.CPP (STT) | KOKORO (TTS) | LIVEKIT (RTC)
@@ -325,9 +325,9 @@
                     TTS_API_KEY             # TTS authentication<br>
                     TTS_MODEL               # TTS model selection<br>
                     TTS_VOICE               # Voice selection<br>
-                    VOICE_MODE_DEBUG         # Enable debug logging<br>
-                    VOICE_MODE_SAVE_AUDIO    # Save audio files<br>
-                    VOICE_MODE_AUDIO_DIR     # Audio save directory
+                    YAKK_DEBUG         # Enable debug logging<br>
+                    YAKK_SAVE_AUDIO    # Save audio files<br>
+                    YAKK_AUDIO_DIR     # Audio save directory
                 </div>
             </section>
         </div>
@@ -338,13 +338,13 @@
                 <p>Three methods. Choose one.</p>
                 <div class="spec">
                     <div class="spec-header">METHOD 1: CLAUDE CODE</div>
-                    $ claude mcp add --scope user voice-mode uvx voice-mode<br>
+                    $ claude mcp add --scope user yakk uvx yakk<br>
                     <br>
                     <div class="spec-header">METHOD 2: UV</div>
-                    $ uvx voice-mode<br>
+                    $ uvx yakk<br>
                     <br>
                     <div class="spec-header">METHOD 3: PIP</div>
-                    $ pip install voice-mode
+                    $ pip install yakk
                 </div>
             </section>
 
@@ -370,12 +370,12 @@
                 <h2>INTEGRATION</h2>
                 <div class="spec">
                     <div class="spec-header">CLAUDE DESKTOP</div>
-                    1. Install Voice Mode via Claude Code<br>
+                    1. Install Yakk via Claude Code<br>
                     2. Start Claude Desktop<br>
                     3. Use /converse command<br>
                     <br>
                     <div class="spec-header">CUSTOM MCP CLIENT</div>
-                    1. Add voice-mode to MCP server list<br>
+                    1. Add yakk to MCP server list<br>
                     2. Configure transport (stdio/sse)<br>
                     3. Call voice tools via MCP protocol
                 </div>
@@ -418,7 +418,7 @@
                     # Shows available input/output devices<br>
                     <br>
                     <div class="spec-header">DEBUG MODE</div>
-                    export VOICE_MODE_DEBUG=true<br>
+                    export YAKK_DEBUG=true<br>
                     # Enables verbose logging
                 </div>
             </section>
@@ -426,7 +426,7 @@
             <section class="section">
                 <h2>DEMONSTRATION</h2>
                 <p>
-                    Watch Voice Mode in action: <a href="https://www.youtube.com/watch?v=aXRNWvpnwVs" target="_blank">Demo Video</a>
+                    Watch Yakk in action: <a href="https://www.youtube.com/watch?v=aXRNWvpnwVs" target="_blank">Demo Video</a>
                 </p>
                 <p>
                     Read the complete documentation: <a href="https://github.com/mbailey/yakk" target="_blank">GitHub Repository</a>
@@ -438,7 +438,7 @@
         </div>
 
         <footer class="meta">
-            VOICE MODE | <a href="https://getyakk.com">GETYAKK.COM</a> | <a href="https://github.com/mbailey/yakk">GITHUB</a> | <a href="https://discord.gg/gVHPPK5U">DISCORD</a><br>
+            YAKK | <a href="https://getyakk.com">GETYAKK.COM</a> | <a href="https://github.com/mbailey/yakk">GITHUB</a> | <a href="https://discord.gg/gVHPPK5U">DISCORD</a><br>
             MIT LICENSE | A <a href="https://failmode.com">FAILMODE</a> PROJECT<br>
             <br>
             BUILT FOR HUMANS WHO PREFER SPEAKING TO TYPING

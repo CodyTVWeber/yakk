@@ -141,7 +141,7 @@ export YAKK_PRONOUNCE='TTS \bTali\b Tar-lee # Active rule
 Test your pronunciation rules:
 
 ```python
-from voice_mode.pronounce import PronounceManager
+from yakk.pronounce import PronounceManager
 
 manager = PronounceManager()
 

@@ -46,17 +46,17 @@ def audio_command(
     
     Examples:
     
-        voice-mode transcribe audio recording.mp3
+        yakk transcribe audio recording.mp3
         
-        voice-mode transcribe audio interview.wav --words
+        yakk transcribe audio interview.wav --words
         
-        voice-mode transcribe audio podcast.mp3 --words --format srt -o subtitles.srt
+        yakk transcribe audio podcast.mp3 --words --format srt -o subtitles.srt
         
-        voice-mode transcribe audio spanish.mp3 --language es --backend whisperx
+        yakk transcribe audio spanish.mp3 --language es --backend whisperx
     """
     async def run():
         # Import here to avoid loading tools at module level
-        from voice_mode.tools.transcription import (
+        from yakk.tools.transcription import (
             transcribe_audio,
             TranscriptionBackend,
             OutputFormat

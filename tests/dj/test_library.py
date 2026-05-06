@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from voice_mode.dj.library import (
+from yakk.dj.library import (
     MusicLibrary,
     Track,
     LibraryStats,

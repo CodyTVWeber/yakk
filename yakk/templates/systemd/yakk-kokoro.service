@@ -4,7 +4,7 @@
 # Simplified: start script handles config via yakk.env
 
 [Unit]
-Description=Voice Mode Kokoro Text-to-Speech Service
+Description=Yakk Kokoro Text-to-Speech Service
 After=network.target
 
 [Service]

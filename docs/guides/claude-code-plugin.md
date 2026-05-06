@@ -42,7 +42,7 @@ This runs the Yakk installer which sets up:
 Or install Yakk directly using uv:
 
 ```bash
-uv tool install voice-mode
+uv tool install yakk
 yakk whisper service install
 yakk kokoro install
 ```

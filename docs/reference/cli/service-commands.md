@@ -1,6 +1,6 @@
 # Service Management Commands
 
-Voice Mode now includes built-in service management commands for Kokoro and Whisper services.
+Yakk now includes built-in service management commands for Kokoro and Whisper services.
 
 ## Usage
 

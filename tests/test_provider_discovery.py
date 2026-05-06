@@ -2,7 +2,7 @@
 
 import pytest
 
-from voice_mode.provider_discovery import detect_provider_type, is_local_provider
+from yakk.provider_discovery import detect_provider_type, is_local_provider
 
 
 class TestDetectProviderType:

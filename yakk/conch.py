@@ -35,7 +35,7 @@ from typing import Optional
 def _get_lock_expiry() -> float:
     """Get lock expiry from config, with fallback."""
     try:
-        from voice_mode.config import CONCH_LOCK_EXPIRY
+        from yakk.config import CONCH_LOCK_EXPIRY
         return CONCH_LOCK_EXPIRY
     except ImportError:
         return 120.0  # Default 2 minutes

@@ -84,7 +84,7 @@ async def startup_initialization():
 
 def cleanup_on_shutdown():
     """Cleanup function called on shutdown"""
-    from voice_mode.core import cleanup as cleanup_clients
+    from yakk.core import cleanup as cleanup_clients
     
     # Cleanup local clients
     cleanup_clients()

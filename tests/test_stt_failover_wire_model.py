@@ -14,7 +14,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from voice_mode.simple_failover import simple_stt_failover
+from yakk.simple_failover import simple_stt_failover
 
 
 def _make_audio_file():
@@ -35,15 +35,15 @@ async def _capture_kwargs_for_url(base_url: str, stt_model: str, stt_models=None
         return "ok"
 
     with patch(
-        "voice_mode.simple_failover.STT_BASE_URLS", [base_url]
+        "yakk.simple_failover.STT_BASE_URLS", [base_url]
     ), patch(
-        "voice_mode.providers.STT_BASE_URLS", [base_url]
+        "yakk.providers.STT_BASE_URLS", [base_url]
     ), patch(
-        "voice_mode.providers.STT_MODEL", stt_model
+        "yakk.providers.STT_MODEL", stt_model
     ), patch(
-        "voice_mode.providers.STT_MODELS", stt_models
+        "yakk.providers.STT_MODELS", stt_models
     ), patch(
-        "voice_mode.simple_failover.AsyncOpenAI"
+        "yakk.simple_failover.AsyncOpenAI"
     ) as MockClient:
         mock_client = MockClient.return_value
         mock_client.audio.transcriptions.create = AsyncMock(side_effect=fake_create)

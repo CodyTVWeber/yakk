@@ -1,12 +1,12 @@
 """Whisper service tools."""
 
-from voice_mode.tools.whisper.install import whisper_install
-from voice_mode.tools.whisper.uninstall import whisper_uninstall
-from voice_mode.tools.whisper.model_install import whisper_model_install
-from voice_mode.tools.whisper.list_models import whisper_models
-from voice_mode.tools.whisper.model_active import whisper_model_active
-from voice_mode.tools.whisper.model_remove import whisper_model_remove
-from voice_mode.tools.whisper.model_benchmark import whisper_model_benchmark
+from yakk.tools.whisper.install import whisper_install
+from yakk.tools.whisper.uninstall import whisper_uninstall
+from yakk.tools.whisper.model_install import whisper_model_install
+from yakk.tools.whisper.list_models import whisper_models
+from yakk.tools.whisper.model_active import whisper_model_active
+from yakk.tools.whisper.model_remove import whisper_model_remove
+from yakk.tools.whisper.model_benchmark import whisper_model_benchmark
 
 __all__ = [
     'whisper_install',

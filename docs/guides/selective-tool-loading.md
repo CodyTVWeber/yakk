@@ -141,7 +141,7 @@ If no configuration is set, Yakk loads essential tools only (`converse`, `servic
 If a tool isn't loading when specified:
 1. Check the tool name is spelled correctly
 2. Check logs for warnings about missing tools
-3. Ensure the tool file exists in `voice_mode/tools/`
+3. Ensure the tool file exists in `yakk/tools/`
 
 ### Unexpected Tools Loading
 Some tools may load additional dependencies. For example:
@@ -153,10 +153,10 @@ Check which tools are loaded:
 ```python
 import os
 os.environ['YAKK_TOOLS_ENABLED'] = 'converse,service'
-from voice_mode import tools
+from yakk import tools
 # Check loaded modules
 import sys
-loaded = [m for m in sys.modules if 'voice_mode.tools' in m]
+loaded = [m for m in sys.modules if 'yakk.tools' in m]
 print(loaded)
 ```
 

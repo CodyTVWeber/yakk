@@ -35,39 +35,39 @@ jobs:
         python -m pip install --upgrade pip
         pip install build twine
     
-    - name: Build voice-mode package
+    - name: Build yakk package
       run: python -m build
 
-    - name: Check voice-mode package
+    - name: Check yakk package
       run: twine check dist/*
 
-    - name: Build voice-mode-install package
+    - name: Build yakk-install package
       run: |
         cd installer
         python -m build
 
-    - name: Check voice-mode-install package
+    - name: Check yakk-install package
       run: twine check installer/dist/*
     
-    - name: Publish voice-mode to TestPyPI
+    - name: Publish yakk to TestPyPI
       if: github.event_name == 'workflow_dispatch' && inputs.target == 'testpypi'
       env:
         TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
       run: twine upload --repository testpypi dist/*
 
-    - name: Publish voice-mode-install to TestPyPI
+    - name: Publish yakk-install to TestPyPI
       if: github.event_name == 'workflow_dispatch' && inputs.target == 'testpypi'
       env:
         TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
       run: twine upload --repository testpypi installer/dist/*
     
-    - name: Publish voice-mode to PyPI
+    - name: Publish yakk to PyPI
       if: (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')) || (github.event_name == 'workflow_dispatch' && inputs.target == 'pypi')
       uses: pypa/gh-action-pypi-publish@release/v1
 
-    - name: Publish voice-mode-install to PyPI
+    - name: Publish yakk-install to PyPI
       if: (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')) || (github.event_name == 'workflow_dispatch' && inputs.target == 'pypi')
       uses: pypa/gh-action-pypi-publish@release/v1
       with:

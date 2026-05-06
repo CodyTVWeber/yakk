@@ -1,3 +1,3 @@
 """
-Voice Mode CLI commands.
+Yakk CLI commands.
 """

@@ -74,10 +74,10 @@ async def test_rapid_calls():
 if __name__ == "__main__":
     print("""
 This test script simulates rapid MCP tool calls.
-To use it, run the voice-mode server with debug logging:
+To use it, run the yakk server with debug logging:
 
-    export VOICE_MODE_DEBUG=trace
-    python test_rapid_converse.py | voice-mode
+    export YAKK_DEBUG=trace
+    python test_rapid_converse.py | yakk
 
 Watch for BrokenResourceError or similar issues.
 """, file=sys.stderr)

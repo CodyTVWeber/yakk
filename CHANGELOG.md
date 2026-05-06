@@ -23,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - **ESC during converse no longer kills the MCP server** (VM-1026, [#337](https://github.com/mbailey/yakk/issues/337), [#339](https://github.com/mbailey/yakk/pull/339)) -- Pressing ESC while a `converse` call was in flight used to take the entire yakk MCP server offline, requiring `/mcp` reconnect. The tool now catches `CancelledError`, cleans up audio state, and returns control to Claude without bringing the server down.
-- **Circular import in changelog/release_notes under pytest 9** -- Deferred `voice_mode.resources.changelog` import inside `release_notes_prompt` so `tests/test_changelog_resource.py` collects cleanly under pytest 9's stricter import rules. No behavioural change; the resource is still registered at import time.
+- **Circular import in changelog/release_notes under pytest 9** -- Deferred `yakk.resources.changelog` import inside `release_notes_prompt` so `tests/test_changelog_resource.py` collects cleanly under pytest 9's stricter import rules. No behavioural change; the resource is still registered at import time.
 - **Star notification failures on multiline bios** -- GitHub user bios containing newlines no longer break the star notification script.
 
 ### Changed
@@ -33,7 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - **Legacy Yakk Connect Python integration** (VM-958) -- Removed the Python-based WebSocket client, agent registry, inbox symlinks, and filesystem message delivery that pre-dated the Claude Code channel system. Superseded by the `yakk-channel` plugin.
-  - Deleted: `voice_mode/connect/`, `voice_mode/connect_registry.py`, `voice_mode/tools/connect_status.py`, 10 Connect hook scripts + JSON configs, 11 Connect test files, `docs/connect/`, Connect service templates.
+  - Deleted: `yakk/connect/`, `yakk/connect_registry.py`, `yakk/tools/connect_status.py`, 10 Connect hook scripts + JSON configs, 11 Connect test files, `docs/connect/`, Connect service templates.
   - Cleaned: `config.py` (`CONNECT_ENABLED`, `CONNECT_WS_URL`, `CONNECT_USERS`, etc.), `cli.py` (`yakk connect` command group — `connect auth` subcommands restored separately by VM-992), `server.py` (Connect WebSocket lifespan handler), `service.py` (`connect` service entry).
 - **Stale Connect hook references from `plugin.json`** (VM-958) -- Cleaned up dangling hook entries left behind by the legacy Connect removal.
 
@@ -348,7 +348,7 @@ _Note: Fix files not committed - use 8.0.6_
   - Prevents notification sounds from disrupting voice recordings
 
 - **Auto-Install Voice Services**
-  - Whisper and Kokoro services automatically installed during `voice-mode-install`
+  - Whisper and Kokoro services automatically installed during `yakk-install`
   - New `install.sh` curl|bash script for quick setup
   - Streamlined first-time setup experience
 
@@ -422,7 +422,7 @@ _Note: Fix files not committed - use 8.0.6_
 ### Removed
 
 - **Deprecated Install Script** (VM-329)
-  - Use `uvx voice-mode-install` instead
+  - Use `uvx yakk-install` instead
 
 ### Documentation
 
@@ -619,7 +619,7 @@ _Note: Fix files not committed - use 8.0.6_
 ### ChangedS
 
 - **Documentation Updates**
-  - Getting started guide now uses `uvx voice-mode-install` for installation
+  - Getting started guide now uses `uvx yakk-install` for installation
   - Simplified installation instructions with uvx approach
 
 ### Fixed
@@ -691,11 +691,11 @@ Yakk now understands natural voice commands during conversations:
   - "Waiting one minute" - acknowledges pause request
   - "Ready to listen" - signals end of wait period
   - Fallback to TTS if audio files unavailable
-  - Audio stored in `voice_mode/data/soundfonts/default/system-messages/`
+  - Audio stored in `yakk/data/soundfonts/default/system-messages/`
 
 - **Claude Code Skill for Yakk** (VM-210)
   - New SKILL.md with comprehensive voice interaction instructions
-  - Triggers on "voice mode" or "yakk" mentions
+  - Triggers on "yakk" or "yakk" mentions
   - Includes parallel operation guidelines for natural conversations
   - Documents all CLI commands and MCP tool usage
 
@@ -722,7 +722,7 @@ Yakk now understands natural voice commands during conversations:
 - **Communication Guidelines** (VM-210)
   - Parallel operations now default behavior (speak while acting)
   - Ask questions one at a time for clarity in voice interactions
-  - Updated skill trigger phrases to include "voice mode"
+  - Updated skill trigger phrases to include "yakk"
 
 ### Refactored
 
@@ -734,7 +734,7 @@ Yakk now understands natural voice commands during conversations:
 
 ### Developer
 
-- Added `scripts/compare-voice-modes.sh` for testing voice services against cloud
+- Added `scripts/compare-yakks.sh` for testing voice services against cloud
 
 ## [6.0.5] - 2025-10-27
 
@@ -755,7 +755,7 @@ Yakk now understands natural voice commands during conversations:
 
 ### Added
 
-- **Automated Installer Publishing** - voice-mode-install now publishes automatically on release
+- **Automated Installer Publishing** - yakk-install now publishes automatically on release
   - GitHub Actions workflow builds and publishes installer alongside main package
   - Both packages publish to PyPI when version tags are pushed
   - Supports both production and TestPyPI publishing
@@ -908,8 +908,8 @@ Yakk now understands natural voice commands during conversations:
 
 ### Added
 
-- **voice-mode-install Package** - Standalone installer package for simplified Yakk setup
-  - New PyPI package `voice-mode-install` provides `voice-mode-install` command
+- **yakk-install Package** - Standalone installer package for simplified Yakk setup
+  - New PyPI package `yakk-install` provides `yakk-install` command
   - Handles system dependency detection and installation before main package
   - Cross-platform support for macOS, Ubuntu/Debian, and Fedora
   - Interactive prompts with smart defaults for dependency installation
@@ -923,10 +923,10 @@ Yakk now understands natural voice commands during conversations:
 ### Fixed
 
 - **Installer Package Naming Consistency**
-  - Fixed wheel filename pattern in Makefile from `yakk_install` to `voice_mode_install`
-  - Corrected package name from `yakk-install` to `voice-mode-install` in all documentation
+  - Fixed wheel filename pattern in Makefile from `yakk_install` to `yakk_install`
+  - Corrected package name from `yakk-install` to `yakk-install` in all documentation
   - Updated README.md, CLI examples, and test scripts to use correct hyphenated name
-  - PyPI package naming now consistent: `voice-mode-install` (package) → `voice_mode_install` (wheel) → `yakk_install` (module)
+  - PyPI package naming now consistent: `yakk-install` (package) → `yakk_install` (wheel) → `yakk_install` (module)
   - Synchronized installer version (5.1.4) with yakk for simpler version management
 
 ## [5.1.3] - 2025-10-12
@@ -986,7 +986,7 @@ Yakk now understands natural voice commands during conversations:
 - **Lazy-Loading System Dependency Management** - Complete dependency checking and installation system
   - Automatic detection and installation of system dependencies on-demand
   - Lazy dependency checking that happens when needed (core deps on converse, build deps on service install)
-  - Single source of truth in `voice_mode/dependencies.yaml` for all platform dependencies
+  - Single source of truth in `yakk/dependencies.yaml` for all platform dependencies
   - CLI command `yakk deps` to check and install dependencies interactively
   - Non-interactive mode with `--yes` flag for automation
   - Component-specific checking with `--component` flag (whisper, kokoro, core)
@@ -1215,7 +1215,7 @@ Yakk now understands natural voice commands during conversations:
 ### Fixed
 
 - Disable OpenAI client retries for local endpoints to avoid delays
-- Fix logger name consistency (yakk vs voice-mode) for STT logging
+- Fix logger name consistency (yakk vs yakk) for STT logging
 - Prevent test_installers from killing running voice services during tests
 - Update tests to work with refactored provider system
 - Resolve test failures related to new environment variables
@@ -1318,7 +1318,7 @@ Yakk now understands natural voice commands during conversations:
   - Generic and flexible extraction supporting full conversations
   - Multiple output formats: full messages, text only, or thinking only
   - Better filtering by message type (user/assistant)
-  - Improved integration with voice mode tools
+  - Improved integration with yakk tools
 
 ### Removed
 
@@ -1346,7 +1346,7 @@ Yakk now understands natural voice commands during conversations:
   - Full CLI interface for managing pronunciation rules
   - MCP tool for LLM-based rule management with `pronounce` tool
   - Integrated into converse tool for automatic text processing
-  - New configuration file: `voice_mode/data/default_pronunciation.yaml`
+  - New configuration file: `yakk/data/default_pronunciation.yaml`
 
 ## [4.0.1] - 2025-09-01
 
@@ -1434,7 +1434,7 @@ Yakk now understands natural voice commands during conversations:
   - Implemented XDG-compliant paths for bash completions
   - Removed fish shell support to simplify maintenance (bash/zsh only)
   - Zsh completions now correctly use underscore prefix (\_yakk)
-  - MCP configuration now uses plain `voice-mode` command for better performance
+  - MCP configuration now uses plain `yakk` command for better performance
 
 ### Fixed
 
@@ -1502,7 +1502,7 @@ Yakk now understands natural voice commands during conversations:
 
 - **Installer script stability**
   - Fixed script exit after Whisper installation when CoreML setup CLI check fails
-  - Properly handle check_voice_mode_cli failures in setup_coreml_acceleration
+  - Properly handle check_yakk_cli failures in setup_coreml_acceleration
   - Installer now continues with Kokoro and LiveKit even if CoreML setup encounters issues
   - Fixed installer exit issue after Whisper when checking for yakk CLI
 
@@ -1539,11 +1539,11 @@ Yakk now understands natural voice commands during conversations:
 ### Changed
 
 - **CLI consistency improvements**
-  - Replaced all user-facing "voice-mode" references with "yakk"
-  - Updated shell completion environment variables from `_VOICE_MODE_COMPLETE` to `_YAKK_COMPLETE`
+  - Replaced all user-facing "yakk" references with "yakk"
+  - Updated shell completion environment variables from `_YAKK_COMPLETE` to `_YAKK_COMPLETE`
   - Removed redundant `completion` command, keeping only the superior `completions` command
   - Simplified command help text and examples for consistency
-  - Logger name remains "voice-mode" for backward compatibility
+  - Logger name remains "yakk" for backward compatibility
 
 ### Fixed
 
@@ -1565,7 +1565,7 @@ Yakk now understands natural voice commands during conversations:
 - **Intelligent update command**
   - Automatic detection of installation method (UV tool, UV pip, or standard pip)
   - Uses appropriate update strategy based on installation type
-  - Seamless updates regardless of how Voice Mode was installed
+  - Seamless updates regardless of how Yakk was installed
 
 ## [2.29.0] - 2025-08-25
 
@@ -1580,7 +1580,7 @@ Yakk now understands natural voice commands during conversations:
   - Clear instructions for enabling CoreML later if initially skipped
 
 - **Beautiful installer experience**
-  - Added Voice Mode ASCII art in Claude Code orange color
+  - Added Yakk ASCII art in Claude Code orange color
   - Enhanced preamble with clear value proposition and privacy messaging
   - Early system detection with special recognition for Apple Silicon
   - Professional presentation with centered text and visual hierarchy
@@ -1605,7 +1605,7 @@ Yakk now understands natural voice commands during conversations:
   - Addresses systemic issue where Claude Code MCP client passes strings
 
 - **Installer script uvx command corrections**
-  - Fixed MCP configuration to use correct command `uvx voice-mode` (without --refresh)
+  - Fixed MCP configuration to use correct command `uvx yakk` (without --refresh)
   - Installer now always refreshes to latest version at start
   - Removed unnecessary --refresh flags from runtime commands
   - Updated user-facing command examples to show correct usage
@@ -1634,7 +1634,7 @@ Yakk now understands natural voice commands during conversations:
 - **Standardized project naming as Yakk MCP**
   - Consistent branding across all documentation and code
   - Updated project descriptions and metadata
-  - Renamed internal references from "voice-mode" to "Yakk MCP"
+  - Renamed internal references from "yakk" to "Yakk MCP"
   - Maintains backward compatibility with existing installations
 
 ### Fixed
@@ -1699,12 +1699,12 @@ Yakk now understands natural voice commands during conversations:
 ### Added
 
 - **CLI version and update commands**
-  - New `voice-mode version` command to display current version
-  - New `voice-mode update` command to upgrade to latest version
+  - New `yakk version` command to display current version
+  - New `yakk update` command to upgrade to latest version
   - Comprehensive bats tests for version and update functionality
   - Automatic version detection from package metadata
 - **Shell completion support for CLI**
-  - New `voice-mode completion` command group with bash, zsh, and fish subcommands
+  - New `yakk completion` command group with bash, zsh, and fish subcommands
   - Automatic tab completion for all commands, options, and arguments
   - Install.sh automatically configures shell completions during setup
   - Native Click completion mechanism for dynamic suggestions
@@ -1775,7 +1775,7 @@ Yakk now understands natural voice commands during conversations:
 ### Added
 
 - **CLI converse command** - Direct voice conversations from the command line
-  - New `voice-mode converse` command for testing voice interactions
+  - New `yakk converse` command for testing voice interactions
   - Supports all MCP tool options (voice, speed, audio format, etc.)
   - Continuous conversation mode with `--continuous` flag
   - Useful for testing TTS/STT services without MCP client
@@ -1802,7 +1802,7 @@ Yakk now understands natural voice commands during conversations:
 ### Fixed
 
 - **uvx command refresh flag** - Add --refresh flag to all uvx commands in installer
-  - Ensures latest version is always fetched when running voice-mode commands
+  - Ensures latest version is always fetched when running yakk commands
   - Fixes issues with cached old versions being used
   - Applies to service installation, uninstallation, and status commands
 - **Performance optimization** - Significantly improved help command performance
@@ -1902,7 +1902,7 @@ Yakk now understands natural voice commands during conversations:
 ### Added
 
 - **LiveKit service integration** - Complete support for LiveKit as a managed service
-  - Install/uninstall LiveKit server with `voice-mode livekit install/uninstall`
+  - Install/uninstall LiveKit server with `yakk livekit install/uninstall`
   - Service management commands: `start/stop/status/restart/enable/disable/logs`
   - Frontend management for LiveKit Voice Assistant UI
   - Configurable host/port settings for frontend
@@ -1913,7 +1913,7 @@ Yakk now understands natural voice commands during conversations:
   - Offers to install Whisper, Kokoro, and LiveKit services
   - Quick mode (Y) installs all services automatically
   - Selective mode (s) allows choosing individual services
-  - Uses `uvx voice-mode` for robust operation on fresh systems
+  - Uses `uvx yakk` for robust operation on fresh systems
   - Cross-platform support for Linux and macOS
 - **Install.sh automated testing** - Comprehensive test suite (temporarily skipped)
   - Unit tests for individual bash functions
@@ -1936,7 +1936,7 @@ Yakk now understands natural voice commands during conversations:
 ### Changed
 
 - **Whisper default port** - Updated from 2000 to 2022 in shell aliases
-- **Install.sh robustness** - Always use `uvx voice-mode` for consistency
+- **Install.sh robustness** - Always use `uvx yakk` for consistency
 - **Test infrastructure** - Skip failing tests temporarily to maintain green CI
 
 ## [2.21.1] - 2025-08-13
@@ -1948,10 +1948,10 @@ Yakk now understands natural voice commands during conversations:
 ### Added
 
 - **CLI service commands** - New subcommands for managing Whisper and Kokoro services
-  - `voice-mode service whisper start/stop/status/restart/enable/disable/logs`
-  - `voice-mode service kokoro start/stop/status/restart/enable/disable/logs`
-  - `voice-mode service whisper update-service-files` - Update systemd/launchd service files
-  - `voice-mode service kokoro update-service-files` - Update systemd/launchd service files
+  - `yakk service whisper start/stop/status/restart/enable/disable/logs`
+  - `yakk service kokoro start/stop/status/restart/enable/disable/logs`
+  - `yakk service whisper update-service-files` - Update systemd/launchd service files
+  - `yakk service kokoro update-service-files` - Update systemd/launchd service files
   - Unified interface for controlling both STT and TTS services
   - Direct access to service management without needing MCP client
   - Consistent behavior across Linux (systemd) and macOS (launchd)
@@ -2027,7 +2027,7 @@ Yakk now understands natural voice commands during conversations:
 ### Changed
 
 - **Post-release improvements from 2.17.2**
-  - Improved installer output formatting when Voice Mode is already configured
+  - Improved installer output formatting when Yakk is already configured
   - Fixed installer test that was failing due to complex mock setup
   - GitHub release notes now feature universal installer as primary installation method
   - Manual installation methods (pip, claude mcp) moved to subsection
@@ -2040,7 +2040,7 @@ Yakk now understands natural voice commands during conversations:
   - Single command installation: `curl -O https://getyakk.com/install.sh && bash install.sh`
   - Cross-platform support: Linux (Ubuntu/Fedora), macOS, and Windows WSL
   - Automatic dependency installation (Node.js, audio libraries, etc.)
-  - Claude Code installation and Voice Mode MCP configuration
+  - Claude Code installation and Yakk MCP configuration
   - WSL2-specific audio setup and troubleshooting guidance
   - Symlink in project root for easy access: `./install.sh`
 - **Centralized GPU detection utility**
@@ -2058,7 +2058,7 @@ Yakk now understands natural voice commands during conversations:
   - Installer now detects `ffmpeg` by command presence on Fedora (handles RPM Fusion installs)
   - Fixed installer exiting early due to `dnf check-update` exit codes
   - Automatic fallback for older Claude Code versions without `--scope` flag support
-  - Better handling of existing Voice Mode configurations
+  - Better handling of existing Yakk configurations
 - **Documentation updates**
   - README now emphasizes Claude Code and AI code editors as primary audience
   - Quick Start section leads with automatic installer
@@ -2094,7 +2094,7 @@ Yakk now understands natural voice commands during conversations:
 ### Added
 
 - **Automatic configuration file loading**
-  - Voice Mode now creates `~/.yakk/yakk.env` on first run
+  - Yakk now creates `~/.yakk/yakk.env` on first run
   - Template file includes all available settings with documentation
   - Environment variables always take precedence over file settings
   - Secure file permissions (0600) automatically set
@@ -2184,9 +2184,9 @@ Yakk now understands natural voice commands during conversations:
 ### Changed
 
 - Reorganized helper functions from tools/ to utils/
-  - `voice_mode/tools/services/common.py` → `voice_mode/utils/services/common.py`
-  - `voice_mode/tools/services/*/helpers.py` → `voice_mode/utils/services/*_helpers.py`
-  - `voice_mode/tools/services/version_helpers.py` → `voice_mode/utils/version_helpers.py`
+  - `yakk/tools/services/common.py` → `yakk/utils/services/common.py`
+  - `yakk/tools/services/*/helpers.py` → `yakk/utils/services/*_helpers.py`
+  - `yakk/tools/services/version_helpers.py` → `yakk/utils/version_helpers.py`
   - Helper functions are no longer exposed as MCP tools
 
 ### Fixed
@@ -2429,7 +2429,7 @@ Yakk now understands natural voice commands during conversations:
 ### Fixed
 
 - Fixed WebRTC VAD sample rate compatibility issue
-  - VAD requires 8kHz, 16kHz, or 32kHz but voice_mode uses 24kHz
+  - VAD requires 8kHz, 16kHz, or 32kHz but yakk uses 24kHz
   - Implemented proper sample extraction for VAD processing
   - Silence detection now works correctly with 24kHz audio
 - Added automatic STT (Speech-to-Text) failover mechanism
@@ -2494,7 +2494,7 @@ Yakk now understands natural voice commands during conversations:
   - System events: session start/end, transport switches, provider switches
 - Automatic timing metric calculation from event timestamps
 - Integration with conversation flow for accurate performance tracking
-- Provider management tools for voice-mode
+- Provider management tools for yakk
   - `refresh_provider_registry` tool to manually update health checks
   - `get_provider_details` tool to inspect specific endpoints
   - Support for filtering by service type (tts/stt) or specific URL
@@ -2592,15 +2592,15 @@ Yakk now understands natural voice commands during conversations:
 
 ### Changed
 
-- **BREAKING**: All `VOICE_MODE_` environment variables renamed to `YAKK_`
-  - `VOICE_MODE_DEBUG` → `YAKK_DEBUG`
-  - `VOICE_MODE_SAVE_AUDIO` → `YAKK_SAVE_AUDIO`
-  - `VOICE_MODE_AUDIO_FEEDBACK` → `YAKK_AUDIO_FEEDBACK`
-  - `VOICE_MODE_FEEDBACK_VOICE` → `YAKK_FEEDBACK_VOICE`
-  - `VOICE_MODE_FEEDBACK_MODEL` → `YAKK_FEEDBACK_MODEL`
-  - `VOICE_MODE_FEEDBACK_STYLE` → `YAKK_FEEDBACK_STYLE`
-  - `VOICE_MODE_PREFER_LOCAL` → `YAKK_PREFER_LOCAL`
-  - `VOICE_MODE_AUTO_START_KOKORO` → `YAKK_AUTO_START_KOKORO`
+- **BREAKING**: All `YAKK_` environment variables renamed to `YAKK_`
+  - `YAKK_DEBUG` → `YAKK_DEBUG`
+  - `YAKK_SAVE_AUDIO` → `YAKK_SAVE_AUDIO`
+  - `YAKK_AUDIO_FEEDBACK` → `YAKK_AUDIO_FEEDBACK`
+  - `YAKK_FEEDBACK_VOICE` → `YAKK_FEEDBACK_VOICE`
+  - `YAKK_FEEDBACK_MODEL` → `YAKK_FEEDBACK_MODEL`
+  - `YAKK_FEEDBACK_STYLE` → `YAKK_FEEDBACK_STYLE`
+  - `YAKK_PREFER_LOCAL` → `YAKK_PREFER_LOCAL`
+  - `YAKK_AUTO_START_KOKORO` → `YAKK_AUTO_START_KOKORO`
 - Also renamed non-prefixed variables to use `YAKK_` prefix:
   - `VOICE_ALLOW_EMOTIONS` → `YAKK_ALLOW_EMOTIONS`
   - `VOICE_EMOTION_AUTO_UPGRADE` → `YAKK_EMOTION_AUTO_UPGRADE`
@@ -2641,12 +2641,12 @@ Yakk now understands natural voice commands during conversations:
 ### Added
 
 - Audio feedback chimes for recording start/stop (inspired by PR #1 from @jtuffin)
-- New `VOICE_MODE_AUDIO_FEEDBACK` configuration with options: `chime` (default), `voice`, `both`, `none`
+- New `YAKK_AUDIO_FEEDBACK` configuration with options: `chime` (default), `voice`, `both`, `none`
 - Backward compatibility for boolean audio feedback values
 
 ### Changed
 
-- Replaced all references from `voice-mcp` to `voice-mode` throughout documentation
+- Replaced all references from `voice-mcp` to `yakk` throughout documentation
 - Updated MCP configuration examples to use `uvx` instead of outdated `./mcp-servers/` directory
 - Removed hardcoded version from `server_new.py`
 - Changed default listen duration to 15 seconds (from 10s/20s) in all voice conversation functions for better balance
@@ -2664,7 +2664,7 @@ Yakk now understands natural voice commands during conversations:
 
 - Consolidated package structure from three to two pyproject.toml files
 - Removed unpublishable `yakk` package configuration
-- Made `voice-mode` the primary package (in pyproject.toml)
+- Made `yakk` the primary package (in pyproject.toml)
 - Moved `voice-mcp` to secondary configuration (pyproject-voice-mcp.toml)
 
 ### Added
@@ -2689,7 +2689,7 @@ This change reflects our vision for the project's future. While MCP (Model Conte
 
 - Primary command renamed from `voice-mcp` to `yakk`
 - GitHub repository moved to `mbailey/yakk`
-- Primary PyPI package is now `voice-mode` (hyphenated due to naming restrictions)
+- Primary PyPI package is now `yakk` (hyphenated due to naming restrictions)
 - Legacy `voice-mcp` package maintained for backward compatibility
 - Documentation and branding updated throughout
 - Simplified package structure to dual-package configuration
@@ -2697,13 +2697,13 @@ This change reflects our vision for the project's future. While MCP (Model Conte
 #### Backward Compatibility
 
 - The `voice-mcp` command remains available for existing users
-- Both `voice-mode` and `voice-mcp` packages available on PyPI
+- Both `yakk` and `voice-mcp` packages available on PyPI
 - All packages provide the `yakk` command
 
 ### Changed
 
 - Consolidated package configuration to two pyproject.toml files
-- Made `voice-mode` the primary package with Yakk branding
+- Made `yakk` the primary package with Yakk branding
 - Updated package descriptions to reflect the rebrand
 
 ### Added
@@ -2715,7 +2715,7 @@ This change reflects our vision for the project's future. While MCP (Model Conte
 ### Added
 
 - Audio feedback with whispered responses by default
-- Configurable audio feedback style (whisper or shout) via VOICE_MODE_FEEDBACK_STYLE environment variable
+- Configurable audio feedback style (whisper or shout) via YAKK_FEEDBACK_STYLE environment variable
 - Support for overriding audio feedback settings per conversation
 
 ## [0.1.29] - 2025-06-17
@@ -2741,7 +2741,7 @@ This change reflects our vision for the project's future. While MCP (Model Conte
 ### Added
 
 - Voice chat prompt/command (`/voice-mcp:converse`) for interactive voice conversations
-- Automatic local provider preference with VOICE_MODE_PREFER_LOCAL environment variable
+- Automatic local provider preference with YAKK_PREFER_LOCAL environment variable
 - Documentation improvements with better organization and cross-linking
 
 ### Changed
@@ -2753,7 +2753,7 @@ This change reflects our vision for the project's future. While MCP (Model Conte
 
 ### Fixed
 
-- Added missing voice_mode() function to cli.py for voice-mode command
+- Added missing yakk() function to cli.py for yakk command
 
 ## [0.1.25] - 2025-06-17
 
@@ -2763,7 +2763,7 @@ This change reflects our vision for the project's future. While MCP (Model Conte
 
 ### Fixed
 
-- Missing psutil dependency in voice-mode package
+- Missing psutil dependency in yakk package
 
 ## [0.1.24] - 2025-06-17
 
@@ -2781,8 +2781,8 @@ This change reflects our vision for the project's future. While MCP (Model Conte
   - Dynamic provider discovery and registration
   - Automatic availability checking
   - Feature-based provider filtering
-- Dual package name support (voice-mcp and voice-mode)
-  - Both commands now available in voice-mode package
+- Dual package name support (voice-mcp and yakk)
+  - Both commands now available in yakk package
   - Maintains backward compatibility
 - Service management tools for Kokoro TTS:
   - `start_kokoro` - Start the Kokoro TTS service using uvx
@@ -2818,7 +2818,7 @@ This change reflects our vision for the project's future. While MCP (Model Conte
 
 ### Added
 
-- VOICE_MODE_SAVE_AUDIO environment variable to save all TTS/STT audio files
+- YAKK_SAVE_AUDIO environment variable to save all TTS/STT audio files
 - Audio files saved to ~/voice-mcp_audio/ with timestamps
 - Improved voice selection documentation and guidance
 

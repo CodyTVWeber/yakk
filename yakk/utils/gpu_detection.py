@@ -1,4 +1,4 @@
-"""GPU detection utilities for voice mode."""
+"""GPU detection utilities for yakk."""
 
 import platform
 import subprocess

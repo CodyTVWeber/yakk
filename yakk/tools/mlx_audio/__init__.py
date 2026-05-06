@@ -6,9 +6,9 @@ venv -- and applies the bundled ``mlx_audio_server.patch`` so the
 upstream server.py is yakk-client-usable out of the box.
 """
 
-from voice_mode.tools.mlx_audio.install import mlx_audio_install
-from voice_mode.tools.mlx_audio.status import mlx_audio_status
-from voice_mode.tools.mlx_audio.uninstall import mlx_audio_uninstall
+from yakk.tools.mlx_audio.install import mlx_audio_install
+from yakk.tools.mlx_audio.status import mlx_audio_status
+from yakk.tools.mlx_audio.uninstall import mlx_audio_uninstall
 
 __all__ = [
     "mlx_audio_install",

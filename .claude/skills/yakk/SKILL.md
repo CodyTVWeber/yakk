@@ -1,6 +1,6 @@
 ---
 name: yakk
-description: Voice interaction for Claude Code. Use when users mention voice mode, speak, talk, converse, voice status, or voice troubleshooting.
+description: Voice interaction for Claude Code. Use when users mention yakk, speak, talk, converse, voice status, or voice troubleshooting.
 ---
 
 ## First-Time Setup
@@ -19,7 +19,7 @@ After install, reconnect MCP: `/mcp` → select yakk → "Reconnect" (or restart
 
 Natural voice conversations with Claude Code using speech-to-text (STT) and text-to-speech (TTS).
 
-**Note:** The Python package is `voice-mode` (hyphen), but the CLI command is `yakk` (no hyphen).
+**Note:** The Python package is `yakk` (hyphen), but the CLI command is `yakk` (no hyphen).
 
 ## When to Use MCP vs CLI
 
@@ -27,7 +27,7 @@ Natural voice conversations with Claude Code using speech-to-text (STT) and text
 |------|-----|-----|
 | Voice conversations | MCP `yakk:converse` | Faster - server already running |
 | Service start/stop | MCP `yakk:service` | Works within Claude Code |
-| Installation | CLI `voice-mode-install` | One-time setup |
+| Installation | CLI `yakk-install` | One-time setup |
 | Configuration | CLI `yakk config` | Edit settings directly |
 | Diagnostics | CLI `yakk diag` | Administrative tasks |
 
@@ -57,7 +57,7 @@ For all parameters, see [Converse Parameters](../../docs/reference/converse-para
 ## Best Practices
 
 1. **Narrate without waiting** - Use `wait_for_response=False` when announcing actions
-2. **One question at a time** - Don't bundle multiple questions in voice mode
+2. **One question at a time** - Don't bundle multiple questions in yakk
 3. **Check status first** - Verify services are running before starting conversations
 4. **Let Yakk auto-select** - Don't hardcode providers unless user has preference
 5. **First run is slow** - Model downloads happen on first start (2-5 min), then instant
@@ -168,7 +168,7 @@ Shows service status including running state, ports, and health.
 
 ```bash
 # Install Yakk CLI and configure services
-uvx voice-mode-install --yes
+uvx yakk-install --yes
 
 # Install local services (Apple Silicon recommended)
 yakk service install whisper

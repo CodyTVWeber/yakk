@@ -1,5 +1,5 @@
 {
-  description = "Voice Mode - Natural voice conversations for AI assistants";
+  description = "Yakk - Natural voice conversations for AI assistants";
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
@@ -17,7 +17,7 @@
         ]);
         
         # Wrapper script that uses uvx with proper environment
-        voice-mode = pkgs.writeShellScriptBin "voice-mode" ''
+        yakk = pkgs.writeShellScriptBin "yakk" ''
           export LD_LIBRARY_PATH="${pkgs.lib.makeLibraryPath [
             pkgs.portaudio
             pkgs.libpulseaudio
@@ -49,11 +49,11 @@
           # Make sure gcc, pkg-config, and ffmpeg are available
           export PATH="${pkgs.gcc}/bin:${pkgs.pkg-config}/bin:${pkgs.ffmpeg}/bin:$PATH"
           
-          exec ${pkgs.uv}/bin/uvx voice-mode "$@"
+          exec ${pkgs.uv}/bin/uvx yakk "$@"
         '';
       in
       {
-        packages.default = voice-mode;
+        packages.default = yakk;
         
         devShells.default = pkgs.mkShell {
           # Build-time dependencies (available during build)
@@ -86,7 +86,7 @@
           ];
           
           shellHook = ''
-            echo "Voice Mode NixOS development environment"
+            echo "Yakk NixOS development environment"
             echo "Python ${pkgs.python312.version} with uv and audio dependencies"
             
             # Set up library paths
@@ -118,8 +118,8 @@
             
             echo ""
             echo "To activate the virtual environment, run: source .venv/bin/activate"
-            echo "Then install voice-mode with: uv pip install -e ."
-            echo "Or run directly with: uvx voice-mode"
+            echo "Then install yakk with: uv pip install -e ."
+            echo "Or run directly with: uvx yakk"
           '';
         };
       });

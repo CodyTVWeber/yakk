@@ -3,8 +3,8 @@
 import os
 from pathlib import Path
 from typing import Optional
-from voice_mode.server import mcp
-from voice_mode.config import SAVE_AUDIO, AUDIO_DIR, logger
+from yakk.server import mcp
+from yakk.config import SAVE_AUDIO, AUDIO_DIR, logger
 
 @mcp.resource("audio://files/{directory}")
 async def list_audio_files(directory: str = "all") -> Optional[str]:
@@ -14,7 +14,7 @@ async def list_audio_files(directory: str = "all") -> Optional[str]:
     creation times and sizes.
     """
     if not SAVE_AUDIO:
-        return "Audio saving is not enabled. Set VOICE_MODE_SAVE_AUDIO=1 to enable."
+        return "Audio saving is not enabled. Set YAKK_SAVE_AUDIO=1 to enable."
     
     if not os.path.exists(AUDIO_DIR):
         return "No audio files found - directory does not exist."
@@ -41,7 +41,7 @@ async def get_audio_file(filename: str) -> Optional[str]:
         File metadata including size and creation time.
     """
     if not SAVE_AUDIO:
-        return "Audio saving is not enabled. Set VOICE_MODE_SAVE_AUDIO=1 to enable."
+        return "Audio saving is not enabled. Set YAKK_SAVE_AUDIO=1 to enable."
     file_path = os.path.join(AUDIO_DIR, filename)
     
     if not os.path.exists(file_path):

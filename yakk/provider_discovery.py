@@ -1,5 +1,5 @@
 """
-Provider discovery and registry management for voice-mode.
+Provider discovery and registry management for yakk.
 
 This module handles automatic discovery of TTS/STT endpoints, including:
 - Health checks

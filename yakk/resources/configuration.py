@@ -1,4 +1,4 @@
-"""MCP resources for voice mode configuration."""
+"""MCP resources for yakk configuration."""
 
 import os
 from typing import Dict, Any
@@ -40,7 +40,7 @@ def mask_sensitive(value: Any, key: str) -> Any:
 @mcp.resource("voice://config/all")
 async def all_configuration() -> str:
     """
-    Complete voice mode configuration.
+    Complete yakk configuration.
     
     Shows all current configuration settings including:
     - Core settings (directories, saving options)
@@ -54,7 +54,7 @@ async def all_configuration() -> str:
     Sensitive values like API keys are masked for security.
     """
     lines = []
-    lines.append("Voice Mode Configuration")
+    lines.append("Yakk Configuration")
     lines.append("=" * 80)
     lines.append("")
     
@@ -231,7 +231,7 @@ def parse_env_file(file_path: Path) -> Dict[str, str]:
 @mcp.resource("voice://config/env-vars")
 async def environment_variables() -> str:
     """
-    All voice mode environment variables with current values.
+    All yakk environment variables with current values.
     
     Shows each configuration variable with:
     - Name: The environment variable name
@@ -302,7 +302,7 @@ async def environment_variables() -> str:
     ]
     
     result = []
-    result.append("Voice Mode Environment Variables")
+    result.append("Yakk Environment Variables")
     result.append("=" * 80)
     result.append("")
     
@@ -329,7 +329,7 @@ async def environment_variables() -> str:
 @mcp.resource("voice://config/env-template")
 async def environment_template() -> str:
     """
-    Environment variable template for voice mode configuration.
+    Environment variable template for yakk configuration.
     
     Provides a ready-to-use template of all available environment variables
     with their current values. This can be saved to ~/.yakk/yakk.env and
@@ -339,7 +339,7 @@ async def environment_template() -> str:
     """
     template_lines = [
         "#!/usr/bin/env bash",
-        "# Voice Mode Environment Configuration",
+        "# Yakk Environment Configuration",
         "# Generated from current settings",
         "",
         "# Core Settings",

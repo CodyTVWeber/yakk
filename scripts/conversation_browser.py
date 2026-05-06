@@ -6,9 +6,9 @@
 # ]
 # ///
 """
-Conversation Browser for Voice Mode
+Conversation Browser for Yakk
 
-A simple web interface to browse voice mode conversations and play associated audio.
+A simple web interface to browse yakk conversations and play associated audio.
 
 Usage:
     uvx conversation_browser.py
@@ -27,10 +27,10 @@ from collections import defaultdict
 
 from flask import Flask, render_template_string, jsonify, send_file, request
 
-# Import get_audio_path from voice_mode
+# Import get_audio_path from yakk
 import sys
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from voice_mode.core import get_audio_path
+from yakk.core import get_audio_path
 
 app = Flask(__name__)
 
@@ -351,7 +351,7 @@ HTML_TEMPLATE = """
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Voice Mode Conversation Browser</title>
+    <title>Yakk Conversation Browser</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -577,7 +577,7 @@ HTML_TEMPLATE = """
     </style>
 </head>
 <body>
-    <h1>Voice Mode Conversation Browser</h1>
+    <h1>Yakk Conversation Browser</h1>
     
     <div class="stats">
         <strong>Total Conversations:</strong> {{ total_count }} |
@@ -1082,7 +1082,7 @@ def api_conversations():
     return jsonify(conversations)
 
 if __name__ == '__main__':
-    print(f"Starting Voice Mode Conversation Browser...")
+    print(f"Starting Yakk Conversation Browser...")
     print(f"Base directory: {BASE_DIR}")
     print(f"Transcriptions: {TRANSCRIPTIONS_DIR}")
     print(f"Audio files: {AUDIO_DIR}")

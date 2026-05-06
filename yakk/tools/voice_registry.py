@@ -1,7 +1,7 @@
 """Voice provider registry tool for displaying available voice services."""
 
-from voice_mode.server import mcp
-from voice_mode.provider_discovery import provider_registry
+from yakk.server import mcp
+from yakk.provider_discovery import provider_registry
 
 
 @mcp.tool()

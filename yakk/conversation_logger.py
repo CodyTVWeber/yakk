@@ -13,8 +13,8 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, Any, Optional
 
-from voice_mode.__version__ import __version__
-from voice_mode.config import BASE_DIR
+from yakk.__version__ import __version__
+from yakk.config import BASE_DIR
 
 
 class ConversationLogger:
@@ -140,7 +140,7 @@ class ConversationLogger:
             "audio_file": audio_file,
             "duration_ms": duration_ms,
             "metadata": {
-                "voice_mode_version": __version__,
+                "yakk_version": __version__,
                 **(metadata or {})
             }
         }

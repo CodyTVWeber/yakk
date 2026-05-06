@@ -13,7 +13,7 @@ Align the tool names and function signatures between Yakk (local MCP) and Yakk C
 
 ## Current State
 
-### Yakk Local (`voice_mode/tools/`)
+### Yakk Local (`yakk/tools/`)
 Default tools exposed:
 - `converse(message, wait_for_response, voice, ...)` — TTS + STT via local mic/speakers
 - `service(service_name, action, lines)` — manage Whisper/Kokoro services

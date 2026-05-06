@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Simplified tests for voice-mode that don't require complex mocking.
+Simplified tests for yakk that don't require complex mocking.
 """
 
 import pytest
@@ -40,7 +40,7 @@ class TestSimpleAudioProcessing:
     
     def test_debug_directory_creation(self):
         """Test debug directory creation"""
-        test_dir = Path.home() / "test-voice-mode-debug"
+        test_dir = Path.home() / "test-yakk-debug"
         
         # Create directory
         test_dir.mkdir(exist_ok=True)
@@ -112,7 +112,7 @@ class TestUtilities:
         """Test file path validation"""
         # Test absolute paths
         test_paths = [
-            Path.home() / "voice-mode_recordings",
+            Path.home() / "yakk_recordings",
             Path("/tmp/test-audio.wav"),
             Path.cwd() / "test.mp3"
         ]

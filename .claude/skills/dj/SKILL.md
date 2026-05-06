@@ -40,7 +40,7 @@ yakk dj find <query>        # Search library
 ## Programmatic Access
 
 ```python
-from voice_mode import DJController, MfpService, MusicLibrary
+from yakk import DJController, MfpService, MusicLibrary
 ```
 
 ## Configuration

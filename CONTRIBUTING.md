@@ -37,7 +37,7 @@ Thank you for your interest in contributing to Yakk. This guide will help you ge
    # Set your API key
    export OPENAI_API_KEY=your-key-here
    
-   # Voice Mode will auto-generate ~/.yakk/yakk.env on first run
+   # Yakk will auto-generate ~/.yakk/yakk.env on first run
    # You can edit this file to customize configuration
    ```
 
@@ -48,7 +48,7 @@ Thank you for your interest in contributing to Yakk. This guide will help you ge
 pytest
 
 # Run with coverage
-pytest --cov=voice_mode
+pytest --cov=yakk
 
 # Run specific test file
 pytest tests/test_server_syntax.py
@@ -83,7 +83,7 @@ The repo's `.mcp.json` uses `uv run yakk`, which automatically runs your local d
 
 ```bash
 # Test TTS and audio playback
-python -c "from voice_mode.core import text_to_speech; import asyncio; asyncio.run(text_to_speech(...))"
+python -c "from yakk.core import text_to_speech; import asyncio; asyncio.run(text_to_speech(...))"
 ```
 
 ## Making Changes

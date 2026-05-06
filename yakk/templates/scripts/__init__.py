@@ -1,1 +1,1 @@
-# Script templates for Voice Mode services
+# Script templates for Yakk services

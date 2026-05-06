@@ -81,7 +81,7 @@ YAKK_DEBUG=false
         assert '\n' in pronounce_value  # Should contain newline
 
         # Verify it can be parsed as pronunciation rules
-        from voice_mode.pronounce import parse_compact_rules
+        from yakk.pronounce import parse_compact_rules
         rules = parse_compact_rules(pronounce_value)
         assert len(rules['tts']) == 2
         assert rules['tts'][0].pattern == 'bag'

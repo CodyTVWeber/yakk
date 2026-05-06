@@ -23,10 +23,10 @@ except ImportError as e:
     webrtcvad = None
     VAD_AVAILABLE = False
 
-from voice_mode.server import mcp
-from voice_mode.conch import Conch
-from voice_mode.conversation_logger import get_conversation_logger
-from voice_mode.config import (
+from yakk.server import mcp
+from yakk.conch import Conch
+from yakk.conversation_logger import get_conversation_logger
+from yakk.config import (
     audio_operation_lock,
     SAMPLE_RATE,
     CHANNELS,
@@ -64,9 +64,9 @@ from voice_mode.config import (
     CONCH_CHECK_INTERVAL,
     AUTO_FOCUS_PANE
 )
-import voice_mode.config
-from voice_mode.provider_discovery import provider_registry
-from voice_mode.core import (
+import yakk.config
+from yakk.provider_discovery import provider_registry
+from yakk.core import (
     get_local_clients,
     text_to_speech,
     cleanup as cleanup_clients,
@@ -77,9 +77,9 @@ from voice_mode.core import (
     play_chime_end,
     play_system_audio
 )
-from voice_mode.audio_player import NonBlockingAudioPlayer
-from voice_mode.statistics_tracking import track_voice_interaction
-from voice_mode.utils import (
+from yakk.audio_player import NonBlockingAudioPlayer
+from yakk.statistics_tracking import track_voice_interaction
+from yakk.utils import (
     get_event_logger,
     log_recording_start,
     log_recording_end,
@@ -89,7 +89,7 @@ from voice_mode.utils import (
     log_tool_request_end,
     update_latest_symlinks
 )
-from voice_mode.pronounce import get_manager as get_pronounce_manager, is_enabled as pronounce_enabled
+from yakk.pronounce import get_manager as get_pronounce_manager, is_enabled as pronounce_enabled
 
 logger = logging.getLogger("yakk")
 
@@ -357,10 +357,10 @@ service_clients = get_local_clients("dummy-key-for-local", None, None)
 
 async def startup_initialization():
     """Initialize services on startup based on configuration"""
-    if voice_mode.config._startup_initialized:
+    if yakk.config._startup_initialized:
         return
     
-    voice_mode.config._startup_initialized = True
+    yakk.config._startup_initialized = True
     logger.info("Running startup initialization...")
     
     # Initialize provider registry
@@ -368,7 +368,7 @@ async def startup_initialization():
     await provider_registry.initialize()
     
     # Check if we should auto-start Kokoro
-    auto_start_kokoro = os.getenv("VOICE_MODE_AUTO_START_KOKORO", "").lower() in ("true", "1", "yes", "on")
+    auto_start_kokoro = os.getenv("YAKK_AUTO_START_KOKORO", "").lower() in ("true", "1", "yes", "on")
     if auto_start_kokoro:
         try:
             # Check if Kokoro is already running
@@ -414,8 +414,8 @@ async def startup_initialization():
 
 async def get_tts_config(provider: Optional[str] = None, voice: Optional[str] = None, model: Optional[str] = None, instructions: Optional[str] = None):
     """Get TTS configuration - simplified to use direct config"""
-    from voice_mode.provider_discovery import detect_provider_type
-    from voice_mode.voice_profiles import is_clone_voice, get_profile
+    from yakk.provider_discovery import detect_provider_type
+    from yakk.voice_profiles import is_clone_voice, get_profile
 
     # Check if this is a clone voice — override provider/model/base_url
     if voice and is_clone_voice(voice):
@@ -462,8 +462,8 @@ async def get_tts_config(provider: Optional[str] = None, voice: Optional[str] = 
 
 async def get_stt_config(provider: Optional[str] = None):
     """Get STT configuration - simplified to use direct config"""
-    from voice_mode.provider_discovery import detect_provider_type
-    from voice_mode.config import STT_BASE_URLS
+    from yakk.provider_discovery import detect_provider_type
+    from yakk.config import STT_BASE_URLS
 
     # Map provider names to base URLs
     provider_urls = {
@@ -512,7 +512,7 @@ async def text_to_speech_with_failover(
         message = pronounce_mgr.process_tts(message)
 
     # Always use simple failover (the only mode now)
-    from voice_mode.simple_failover import simple_tts_failover
+    from yakk.simple_failover import simple_tts_failover
     return await simple_tts_failover(
         text=message,
         voice=voice or TTS_VOICES[0],
@@ -623,11 +623,11 @@ async def speech_to_text(
     """
     import tempfile
     import io
-    from voice_mode.conversation_logger import get_conversation_logger
-    from voice_mode.core import save_debug_file, get_debug_filename
-    from voice_mode.simple_failover import simple_stt_failover
-    from voice_mode.config import STT_BASE_URLS, STT_COMPRESS
-    from voice_mode.provider_discovery import is_local_provider
+    from yakk.conversation_logger import get_conversation_logger
+    from yakk.core import save_debug_file, get_debug_filename
+    from yakk.simple_failover import simple_stt_failover
+    from yakk.config import STT_BASE_URLS, STT_COMPRESS
+    from yakk.provider_discovery import is_local_provider
 
     # Determine compression based on STT_COMPRESS mode
     # Options: auto (default), always, never
@@ -870,7 +870,7 @@ def record_audio(duration: float) -> np.ndarray:
                 # Fall through to normal error handling
         
         # Import here to avoid circular imports
-        from voice_mode.utils.audio_diagnostics import get_audio_error_help
+        from yakk.utils.audio_diagnostics import get_audio_error_help
         
         # Get helpful error message
         help_message = get_audio_error_help(e)
@@ -1115,7 +1115,7 @@ def record_audio_with_silence_detection(max_duration: float, disable_silence_det
             logger.error(f"Recording with VAD failed: {e}")
             
             # Import here to avoid circular imports
-            from voice_mode.utils.audio_diagnostics import get_audio_error_help
+            from yakk.utils.audio_diagnostics import get_audio_error_help
             
             # Check if this is a device error that might be recoverable
             error_str = str(e).lower()
@@ -1329,7 +1329,7 @@ consult the MCP resources listed above.
             listen_duration_min = listen_duration_max
     
     # Check if FFmpeg is available
-    ffmpeg_available = getattr(voice_mode.config, 'FFMPEG_AVAILABLE', True)  # Default to True if not set
+    ffmpeg_available = getattr(yakk.config, 'FFMPEG_AVAILABLE', True)  # Default to True if not set
     if not ffmpeg_available:
         from ..utils.ffmpeg_check import get_install_instructions
         error_msg = (

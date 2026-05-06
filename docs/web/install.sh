@@ -15,7 +15,7 @@ set -o nounset -o pipefail -o errexit
 # Configuration
 # -----------------------------------------------------------------------------
 
-YAKK_PACKAGE="voice-mode"
+YAKK_PACKAGE="yakk"
 INTERACTIVE=true
 
 # Parse command line arguments

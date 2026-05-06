@@ -22,7 +22,7 @@ import httpx
 os.environ['OPENAI_API_KEY'] = os.environ.get('OPENAI_API_KEY', 'test-key')
 
 # Import from the core module
-from voice_mode.core import text_to_speech, get_openai_clients, cleanup, save_debug_file
+from yakk.core import text_to_speech, get_openai_clients, cleanup, save_debug_file
 
 
 class TestTTSStability:
@@ -70,8 +70,8 @@ class TestTTSStability:
         openai_clients = {'tts': mock_openai_client}
         
         # Mock dependencies
-        with patch('voice_mode.core.AudioSegment') as mock_audio, \
-             patch('voice_mode.core.logger') as mock_logger:
+        with patch('yakk.core.AudioSegment') as mock_audio, \
+             patch('yakk.core.logger') as mock_logger:
             
             # Mock audio processing
             mock_audio_instance = MagicMock()
@@ -128,8 +128,8 @@ class TestTTSStability:
     @pytest.mark.asyncio
     async def test_tts_with_connection_pooling(self):
         """Test TTS with connection pooling configuration"""
-        with patch('voice_mode.core.AsyncOpenAI') as mock_openai_class, \
-             patch('voice_mode.core.httpx.AsyncClient') as mock_http_client:
+        with patch('yakk.core.AsyncOpenAI') as mock_openai_class, \
+             patch('yakk.core.httpx.AsyncClient') as mock_http_client:
             
             # Call get_openai_clients
             clients = get_openai_clients(
@@ -165,7 +165,7 @@ class TestTTSStability:
     async def test_debug_logging(self, mock_openai_client, tmp_path):
         """Test debug logging functionality"""
         # Set debug mode
-        debug_dir = tmp_path / "voice-mode_recordings"
+        debug_dir = tmp_path / "yakk_recordings"
         debug_dir.mkdir(exist_ok=True)
         
         # Test saving debug file
@@ -179,8 +179,8 @@ class TestTTSStability:
         # Test debug mode with TTS
         openai_clients = {'tts': mock_openai_client}
         
-        with patch('voice_mode.core.AudioSegment') as mock_audio, \
-             patch('voice_mode.core.sd') as mock_sd:
+        with patch('yakk.core.AudioSegment') as mock_audio, \
+             patch('yakk.core.sd') as mock_sd:
             
             # Mock audio processing
             mock_audio_instance = MagicMock()
@@ -210,16 +210,16 @@ class TestTTSStability:
     @pytest.mark.asyncio
     async def test_trace_logging(self, tmp_path):
         """Test trace logging functionality"""
-        os.environ['VOICE_MODE_DEBUG'] = 'trace'
-        trace_file = tmp_path / "voice_mode_trace.log"
+        os.environ['YAKK_DEBUG'] = 'trace'
+        trace_file = tmp_path / "yakk_trace.log"
         
         # This test would require actually importing the module with trace enabled
         # For now, we'll test the trace file creation logic
-        assert os.environ['VOICE_MODE_DEBUG'] == 'trace'
+        assert os.environ['YAKK_DEBUG'] == 'trace'
         
         # In actual implementation, trace logging would create the file
         # We'll just verify the environment is set correctly
-        assert os.getenv('VOICE_MODE_DEBUG', '').lower() == 'trace'
+        assert os.getenv('YAKK_DEBUG', '').lower() == 'trace'
 
 
 class TestMemoryManagement:
@@ -228,7 +228,7 @@ class TestMemoryManagement:
     @pytest.mark.asyncio
     async def test_garbage_collection_on_cleanup(self):
         """Test that garbage collection runs during cleanup"""
-        with patch('voice_mode.core.gc') as mock_gc:
+        with patch('yakk.core.gc') as mock_gc:
             
             mock_gc.collect.return_value = 42  # Number of objects collected
             
@@ -255,10 +255,10 @@ class TestAudioFileHandling:
             temp_files_created.append(tmp.name)
             return tmp
         
-        with patch('voice_mode.core.AudioSegment') as mock_audio, \
-             patch('voice_mode.core.sd') as mock_sd, \
-             patch('voice_mode.core.tempfile.NamedTemporaryFile', track_tempfile), \
-             patch('voice_mode.core.os.unlink') as mock_unlink:
+        with patch('yakk.core.AudioSegment') as mock_audio, \
+             patch('yakk.core.sd') as mock_sd, \
+             patch('yakk.core.tempfile.NamedTemporaryFile', track_tempfile), \
+             patch('yakk.core.os.unlink') as mock_unlink:
             
             # Mock audio processing
             mock_audio_instance = MagicMock()

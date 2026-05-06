@@ -12,7 +12,7 @@ from typing import Optional, List, Dict, Union
 # Core ML setup no longer needed - using pre-built models from Hugging Face
 # from .coreml_setup import setup_coreml_venv, get_coreml_python
 
-from voice_mode.utils.download import download_with_progress_async
+from yakk.utils.download import download_with_progress_async
 
 logger = logging.getLogger("yakk")
 
@@ -42,7 +42,7 @@ def find_whisper_server() -> Optional[str]:
 
 def find_whisper_model() -> Optional[str]:
     """Find the active whisper model file based on YAKK_WHISPER_MODEL setting."""
-    from voice_mode.config import WHISPER_MODEL_PATH, WHISPER_MODEL
+    from yakk.config import WHISPER_MODEL_PATH, WHISPER_MODEL
     
     # First try to find the specific model configured in YAKK_WHISPER_MODEL
     model_name = WHISPER_MODEL  # This reads from env/config

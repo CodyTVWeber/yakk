@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Automated tests for voice-mode MCP server.
+Automated tests for yakk MCP server.
 
 Tests cover:
 - Tool functionality (mocked audio I/O)
@@ -18,7 +18,7 @@ import pytest
 import numpy as np
 from fastmcp import Client
 
-# Import the voice-mode module components
+# Import the yakk module components
 import sys
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
@@ -60,15 +60,15 @@ def mock_audio_functions():
 
 
 @pytest.fixture
-async def voice_mode_server(mock_openai_clients, mock_audio_functions):
-    """Create a voice-mode server instance with mocked dependencies"""
+async def yakk_server(mock_openai_clients, mock_audio_functions):
+    """Create a yakk server instance with mocked dependencies"""
     # Set required environment variables
     os.environ['OPENAI_API_KEY'] = 'test-key'
-    os.environ['VOICE_MODE_DEBUG'] = 'false'
+    os.environ['YAKK_DEBUG'] = 'false'
     
     # Import the script module dynamically
     import importlib.util
-    script_path = Path(__file__).parent.parent / "src" / "voice_mode" / "scripts" / "voice-mode"
+    script_path = Path(__file__).parent.parent / "src" / "yakk" / "scripts" / "yakk"
     
     # Read the script content and remove the shebang and script metadata
     with open(script_path, 'r') as f:
@@ -105,41 +105,41 @@ async def voice_mode_server(mock_openai_clients, mock_audio_functions):
             'livekit_plugins_openai': MagicMock(),
             'livekit_plugins_silero': MagicMock(),
         }):
-            spec = importlib.util.spec_from_file_location("voice_mode_script", tmp_path)
-            voice_mode_module = importlib.util.module_from_spec(spec)
+            spec = importlib.util.spec_from_file_location("yakk_script", tmp_path)
+            yakk_module = importlib.util.module_from_spec(spec)
             
             # Patch the get_openai_clients function
-            with patch.object(voice_mode_module, 'get_openai_clients', return_value=mock_openai_clients):
-                spec.loader.exec_module(voice_mode_module)
+            with patch.object(yakk_module, 'get_openai_clients', return_value=mock_openai_clients):
+                spec.loader.exec_module(yakk_module)
             
             # Return the configured MCP server
-            return voice_mode_module.mcp
+            return yakk_module.mcp
     finally:
         os.unlink(tmp_path)
 
 
 @pytest.mark.skip(reason="Complex mocking of script-based MCP server not yet implemented")
 class TestVoiceMCPTools:
-    """Test voice-mode tool functionality"""
+    """Test yakk tool functionality"""
     
     @pytest.mark.asyncio
-    async def test_speak_text(self, voice_mode_server):
+    async def test_speak_text(self, yakk_server):
         """Test text-to-speech functionality"""
-        async with Client(voice_mode_server) as client:
+        async with Client(yakk_server) as client:
             result = await client.call_tool("converse", {"message": "Hello, world!", "wait_for_response": False})
             assert "successfully" in result[0].text.lower()
     
     @pytest.mark.asyncio
-    async def test_listen_for_speech(self, voice_mode_server):
+    async def test_listen_for_speech(self, yakk_server):
         """Test speech-to-text functionality"""
-        async with Client(voice_mode_server) as client:
+        async with Client(yakk_server) as client:
             result = await client.call_tool("listen_for_speech", {"duration": 1.0})
             assert "Test transcription" in result[0].text
     
     @pytest.mark.asyncio
-    async def test_converse_local(self, voice_mode_server):
+    async def test_converse_local(self, yakk_server):
         """Test voice conversation with local transport"""
-        async with Client(voice_mode_server) as client:
+        async with Client(yakk_server) as client:
             result = await client.call_tool(
                 "converse",
                 {
@@ -151,9 +151,9 @@ class TestVoiceMCPTools:
             assert "Test transcription" in result[0].text
     
     @pytest.mark.asyncio
-    async def test_check_audio_devices(self, voice_mode_server):
+    async def test_check_audio_devices(self, yakk_server):
         """Test audio device listing"""
-        async with Client(voice_mode_server) as client:
+        async with Client(yakk_server) as client:
             result = await client.call_tool("check_audio_devices", {})
             assert "Input Devices" in result[0].text
             assert "Output Devices" in result[0].text
@@ -166,27 +166,27 @@ class TestErrorHandling:
     """Test error handling scenarios"""
     
     @pytest.mark.asyncio
-    async def test_tts_api_error(self, voice_mode_server, mock_openai_clients):
+    async def test_tts_api_error(self, yakk_server, mock_openai_clients):
         """Test handling of TTS API errors"""
         # Make TTS fail
         mock_openai_clients['tts'].audio.speech.create.side_effect = Exception("API Error")
         
-        async with Client(voice_mode_server) as client:
+        async with Client(yakk_server) as client:
             result = await client.call_tool("converse", {"message": "Test", "wait_for_response": False})
             assert "Error" in result[0].text
     
     @pytest.mark.asyncio
-    async def test_stt_api_error(self, voice_mode_server, mock_openai_clients):
+    async def test_stt_api_error(self, yakk_server, mock_openai_clients):
         """Test handling of STT API errors"""
         # Make STT fail
         mock_openai_clients['stt'].audio.transcriptions.create.side_effect = Exception("API Error")
         
-        async with Client(voice_mode_server) as client:
+        async with Client(yakk_server) as client:
             result = await client.call_tool("listen_for_speech", {"duration": 1.0})
             assert "Error" in result[0].text or "No speech detected" in result[0].text
     
     @pytest.mark.asyncio
-    async def test_recording_error(self, voice_mode_server):
+    async def test_recording_error(self, yakk_server):
         """Test handling of recording errors"""
         # This test requires modifying the mock after server creation
         # For now, skip this test or implement differently
@@ -208,7 +208,7 @@ class TestConfiguration:
         
         # Import the script module dynamically
         import importlib.util
-        script_path = Path(__file__).parent.parent / "src" / "voice_mode" / "scripts" / "voice-mode"
+        script_path = Path(__file__).parent.parent / "src" / "yakk" / "scripts" / "yakk"
         
         # Read and process the script
         with open(script_path, 'r') as f:
@@ -243,26 +243,26 @@ class TestConfiguration:
                 'livekit_plugins_openai': MagicMock(),
                 'livekit_plugins_silero': MagicMock(),
             }):
-                spec = importlib.util.spec_from_file_location("voice_mode_script", tmp_path)
-                voice_mode_module = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(voice_mode_module)
+                spec = importlib.util.spec_from_file_location("yakk_script", tmp_path)
+                yakk_module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(yakk_module)
                 
-                assert voice_mode_module.STT_BASE_URL == 'http://127.0.0.1:2022/v1'
-                assert voice_mode_module.TTS_BASE_URL == 'http://127.0.0.1:8880/v1'
-                assert voice_mode_module.TTS_VOICE == 'custom_voice'
-                assert voice_mode_module.TTS_MODEL == 'custom-tts'
-                assert voice_mode_module.STT_MODEL == 'custom-stt'
+                assert yakk_module.STT_BASE_URL == 'http://127.0.0.1:2022/v1'
+                assert yakk_module.TTS_BASE_URL == 'http://127.0.0.1:8880/v1'
+                assert yakk_module.TTS_VOICE == 'custom_voice'
+                assert yakk_module.TTS_MODEL == 'custom-tts'
+                assert yakk_module.STT_MODEL == 'custom-stt'
         finally:
             os.unlink(tmp_path)
     
     @pytest.mark.skip(reason="Module import issues with script format")
     def test_debug_mode(self):
         """Test debug mode configuration"""
-        os.environ['VOICE_MODE_DEBUG'] = 'true'
+        os.environ['YAKK_DEBUG'] = 'true'
         
         # Import the script module dynamically
         import importlib.util
-        script_path = Path(__file__).parent.parent / "src" / "voice_mode" / "scripts" / "voice-mode"
+        script_path = Path(__file__).parent.parent / "src" / "yakk" / "scripts" / "yakk"
         
         # Read and process the script
         with open(script_path, 'r') as f:
@@ -297,12 +297,12 @@ class TestConfiguration:
                 'livekit_plugins_openai': MagicMock(),
                 'livekit_plugins_silero': MagicMock(),
             }):
-                spec = importlib.util.spec_from_file_location("voice_mode_script", tmp_path)
-                voice_mode_module = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(voice_mode_module)
+                spec = importlib.util.spec_from_file_location("yakk_script", tmp_path)
+                yakk_module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(yakk_module)
                 
-                assert voice_mode_module.DEBUG == True
-                assert voice_mode_module.DEBUG_DIR.exists()
+                assert yakk_module.DEBUG == True
+                assert yakk_module.DEBUG_DIR.exists()
         finally:
             os.unlink(tmp_path)
 
@@ -312,10 +312,10 @@ class TestAudioProcessing:
     
     @pytest.mark.skip(reason="Complex mocking of script-based MCP server not yet implemented")
     @pytest.mark.asyncio
-    async def test_audio_file_formats(self, voice_mode_server, mock_openai_clients):
+    async def test_audio_file_formats(self, yakk_server, mock_openai_clients):
         """Test handling of different audio formats"""
         # Test MP3 format (default)
-        async with Client(voice_mode_server) as client:
+        async with Client(yakk_server) as client:
             result = await client.call_tool("converse", {"message": "Test MP3", "wait_for_response": False})
             assert "successfully" in result[0].text.lower()
         
@@ -341,14 +341,14 @@ class TestLiveKitIntegration:
     """Test LiveKit transport functionality"""
     
     @pytest.mark.asyncio
-    async def test_livekit_availability_check(self, voice_mode_server):
+    async def test_livekit_availability_check(self, yakk_server):
         """Test LiveKit availability checking"""
         # Mock check_livekit_available to return False
         async def mock_check_livekit():
             return False
             
-        with patch.object(voice_mode_server.app, 'check_livekit_available', mock_check_livekit):
-            async with Client(voice_mode_server) as client:
+        with patch.object(yakk_server.app, 'check_livekit_available', mock_check_livekit):
+            async with Client(yakk_server) as client:
                 # When LiveKit is not available, auto should fall back to local
                 result = await client.call_tool(
                     "converse",
@@ -367,24 +367,24 @@ class TestDebugFeatures:
     """Test debug mode features"""
     
     @pytest.mark.asyncio
-    async def test_debug_file_saving(self, voice_mode_server, tmp_path):
+    async def test_debug_file_saving(self, yakk_server, tmp_path):
         """Test that debug files are saved when debug mode is on"""
-        os.environ['VOICE_MODE_DEBUG'] = 'true'
-        debug_dir = tmp_path / "voice-mode_recordings"
+        os.environ['YAKK_DEBUG'] = 'true'
+        debug_dir = tmp_path / "yakk_recordings"
         debug_dir.mkdir()
         
         # Patch the DEBUG_DIR on the module
         import sys
         voice_module = None
         for name, module in sys.modules.items():
-            if 'voice_mode_script' in name:
+            if 'yakk_script' in name:
                 voice_module = module
                 break
         
         if voice_module:
             with patch.object(voice_module, 'DEBUG_DIR', debug_dir), \
                  patch.object(voice_module, 'DEBUG', True):
-                async with Client(voice_mode_server) as client:
+                async with Client(yakk_server) as client:
                     await client.call_tool("converse", {"message": "Debug test", "wait_for_response": False})
                     
                     # Check if debug files were created
@@ -395,9 +395,9 @@ class TestDebugFeatures:
 # Integration test
 @pytest.mark.skip(reason="Complex mocking of script-based MCP server not yet implemented")
 @pytest.mark.asyncio
-async def test_full_conversation_flow(voice_mode_server):
+async def test_full_conversation_flow(yakk_server):
     """Test a complete conversation flow"""
-    async with Client(voice_mode_server) as client:
+    async with Client(yakk_server) as client:
         # Step 1: Ask a question
         result1 = await client.call_tool(
             "converse",

@@ -4,7 +4,7 @@ import os
 import warnings
 from pathlib import Path
 from typing import Any, Dict, List, Optional, TypedDict
-from voice_mode.config import WHISPER_MODEL_PATH, WHISPER_MODEL
+from yakk.config import WHISPER_MODEL_PATH, WHISPER_MODEL
 
 
 class ModelInfo(TypedDict):

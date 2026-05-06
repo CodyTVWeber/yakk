@@ -11,13 +11,13 @@ from typing import Dict, Any, Optional, Union
 import asyncio
 import aiohttp
 
-from voice_mode.server import mcp
-from voice_mode.config import SERVICE_AUTO_ENABLE
-from voice_mode.utils.version_helpers import (
+from yakk.server import mcp
+from yakk.config import SERVICE_AUTO_ENABLE
+from yakk.utils.version_helpers import (
     get_git_tags, get_latest_stable_tag, get_current_version,
     checkout_version, is_version_installed
 )
-from voice_mode.utils.migration_helpers import auto_migrate_if_needed
+from yakk.utils.migration_helpers import auto_migrate_if_needed
 
 logger = logging.getLogger("yakk")
 
@@ -38,7 +38,7 @@ async def update_kokoro_service_files(
     Returns:
         Dict with success status and details about what was updated
     """
-    from voice_mode.tools.service import create_service_file, enable_service
+    from yakk.tools.service import create_service_file, enable_service
 
     system = platform.system()
     result = {"success": False, "updated": False}
@@ -144,7 +144,7 @@ async def kokoro_install(
 
         # Check kokoro dependencies (unless skipped)
         if not skip_deps:
-            from voice_mode.utils.dependencies.checker import (
+            from yakk.utils.dependencies.checker import (
                 check_component_dependencies,
                 install_missing_dependencies
             )

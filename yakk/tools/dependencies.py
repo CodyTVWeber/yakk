@@ -3,8 +3,8 @@
 import logging
 from typing import Dict, Any
 
-from voice_mode.server import mcp
-from voice_mode.utils.audio_diagnostics import (
+from yakk.server import mcp
+from yakk.utils.audio_diagnostics import (
     check_system_audio_packages,
     check_pulseaudio_status,
     diagnose_audio_setup
@@ -22,7 +22,7 @@ async def check_audio_dependencies() -> Dict[str, Any]:
     for missing dependencies based on your platform.
     
     Useful when:
-    - Voice mode fails with audio errors
+    - Yakk fails with audio errors
     - Setting up on a new system
     - Troubleshooting WSL audio issues
     

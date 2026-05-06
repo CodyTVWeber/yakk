@@ -1,12 +1,12 @@
-"""CHANGELOG resource for Voice Mode."""
+"""CHANGELOG resource for Yakk."""
 
 from pathlib import Path
-from voice_mode.server import mcp
+from yakk.server import mcp
 
 
-@mcp.resource("changelog://voice-mode")
+@mcp.resource("changelog://yakk")
 def changelog_resource() -> str:
-    """Voice Mode changelog and release history."""
+    """Yakk changelog and release history."""
     # Try to find CHANGELOG.md in various locations
     possible_paths = [
         # When running from source

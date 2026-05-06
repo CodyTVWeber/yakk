@@ -21,13 +21,13 @@ class TestConverseCancellation:
     @pytest.mark.asyncio
     async def test_cancelled_during_tts_returns_cancellation_message(self):
         """If TTS raises CancelledError, converse must return cleanly."""
-        from voice_mode.tools.converse import converse
+        from yakk.tools.converse import converse
 
-        with patch("voice_mode.core.text_to_speech") as mock_tts:
+        with patch("yakk.core.text_to_speech") as mock_tts:
             mock_tts.side_effect = asyncio.CancelledError()
 
-            with patch("voice_mode.config.TTS_BASE_URLS", ["https://api.openai.com/v1"]):
-                with patch("voice_mode.config.OPENAI_API_KEY", "test-api-key"):
+            with patch("yakk.config.TTS_BASE_URLS", ["https://api.openai.com/v1"]):
+                with patch("yakk.config.OPENAI_API_KEY", "test-api-key"):
                     result = await converse.fn(
                         message="Test message",
                         wait_for_response=False,
@@ -43,14 +43,14 @@ class TestConverseCancellation:
     @pytest.mark.asyncio
     async def test_cancellation_releases_conch(self):
         """After cancellation, the conch must be released so other agents can speak."""
-        from voice_mode.tools.converse import converse
-        from voice_mode.conch import Conch
+        from yakk.tools.converse import converse
+        from yakk.conch import Conch
 
-        with patch("voice_mode.core.text_to_speech") as mock_tts:
+        with patch("yakk.core.text_to_speech") as mock_tts:
             mock_tts.side_effect = asyncio.CancelledError()
 
-            with patch("voice_mode.config.TTS_BASE_URLS", ["https://api.openai.com/v1"]):
-                with patch("voice_mode.config.OPENAI_API_KEY", "test-api-key"):
+            with patch("yakk.config.TTS_BASE_URLS", ["https://api.openai.com/v1"]):
+                with patch("yakk.config.OPENAI_API_KEY", "test-api-key"):
                     await converse.fn(
                         message="Test message",
                         wait_for_response=False,
@@ -65,7 +65,7 @@ class TestConverseCancellation:
     @pytest.mark.asyncio
     async def test_outer_task_cancel_is_swallowed(self):
         """Cancelling the converse task from the outside must not raise past the await."""
-        from voice_mode.tools.converse import converse
+        from yakk.tools.converse import converse
 
         # Make TTS hang so we can cancel it cleanly.
         hang_event = asyncio.Event()
@@ -74,9 +74,9 @@ class TestConverseCancellation:
             await hang_event.wait()
             return True, None, {}
 
-        with patch("voice_mode.core.text_to_speech", new=hang):
-            with patch("voice_mode.config.TTS_BASE_URLS", ["https://api.openai.com/v1"]):
-                with patch("voice_mode.config.OPENAI_API_KEY", "test-api-key"):
+        with patch("yakk.core.text_to_speech", new=hang):
+            with patch("yakk.config.TTS_BASE_URLS", ["https://api.openai.com/v1"]):
+                with patch("yakk.config.OPENAI_API_KEY", "test-api-key"):
                     task = asyncio.create_task(
                         converse.fn(message="Hello", wait_for_response=False)
                     )

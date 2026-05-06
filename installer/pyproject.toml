@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "voice-mode-install"
+name = "yakk-install"
 version = "8.6.1"
 description = "Installer for Yakk - handles system dependencies and installation"
 readme = "README.md"
@@ -38,7 +38,7 @@ Repository = "https://github.com/mbailey/yakk"
 Issues = "https://github.com/mbailey/yakk/issues"
 
 [project.scripts]
-voice-mode-install = "yakk_install.cli:main"
+yakk-install = "yakk_install.cli:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["yakk_install"]

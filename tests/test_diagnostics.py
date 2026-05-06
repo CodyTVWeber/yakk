@@ -3,23 +3,23 @@ import asyncio
 import pytest
 from pathlib import Path
 from unittest.mock import patch, MagicMock, PropertyMock, AsyncMock
-from voice_mode.tools.diagnostics import voice_mode_info
-from voice_mode.tools.devices import check_audio_devices
-from voice_mode.tools.voice_registry import voice_registry
-from voice_mode.tools.dependencies import check_audio_dependencies
+from yakk.tools.diagnostics import yakk_info
+from yakk.tools.devices import check_audio_devices
+from yakk.tools.voice_registry import voice_registry
+from yakk.tools.dependencies import check_audio_dependencies
 
 
 class TestDiagnosticTools:
     """Test diagnostic tool functions."""
 
     @pytest.mark.asyncio
-    async def test_voice_mode_info(self):
-        """Test voice_mode_info returns installation information."""
-        with patch("voice_mode.tools.diagnostics.__version__", "2.18.0"), \
+    async def test_yakk_info(self):
+        """Test yakk_info returns installation information."""
+        with patch("yakk.tools.diagnostics.__version__", "2.18.0"), \
              patch("pathlib.Path.exists", return_value=True), \
              patch("pathlib.Path.home", return_value=Path("/home/test")):
             
-            result = await voice_mode_info.fn()
+            result = await yakk_info.fn()
             
             # Should return formatted string
             assert isinstance(result, str)
@@ -45,7 +45,7 @@ class TestDiagnosticTools:
             {"name": "Bluetooth Speaker", "index": 1, "max_input_channels": 0, "max_output_channels": 2}
         ]
         
-        with patch("voice_mode.tools.devices.sd.query_devices") as mock_query:
+        with patch("yakk.tools.devices.sd.query_devices") as mock_query:
             # Setup mock to return devices based on kind parameter
             def query_side_effect(kind=None):
                 if kind == 'input':
@@ -99,7 +99,7 @@ class TestDiagnosticTools:
             }
         }
         
-        with patch("voice_mode.tools.voice_registry.provider_registry") as mock_registry_instance:
+        with patch("yakk.tools.voice_registry.provider_registry") as mock_registry_instance:
             mock_registry_instance.initialize = AsyncMock()
             mock_registry_instance.get_registry_for_llm.return_value = mock_registry
             
@@ -124,7 +124,7 @@ class TestDiagnosticTools:
         """Test check_audio_dependencies on Linux."""
         # Since platform is imported inside the function, we need to ensure
         # the function reloads it with our mock
-        with patch("voice_mode.tools.dependencies.diagnose_audio_setup", return_value=[]):
+        with patch("yakk.tools.dependencies.diagnose_audio_setup", return_value=[]):
             import sys
             import importlib
             
@@ -141,8 +141,8 @@ class TestDiagnosticTools:
             
             try:
                 # Reload the dependencies module to use our mocked platform
-                if 'voice_mode.tools.dependencies' in sys.modules:
-                    importlib.reload(sys.modules['voice_mode.tools.dependencies'])
+                if 'yakk.tools.dependencies' in sys.modules:
+                    importlib.reload(sys.modules['yakk.tools.dependencies'])
                 
                 with patch("shutil.which") as mock_which, \
                      patch("subprocess.run") as mock_run:
@@ -181,7 +181,7 @@ class TestDiagnosticTools:
     @pytest.mark.asyncio
     async def test_check_audio_dependencies_macos(self):
         """Test check_audio_dependencies on macOS."""
-        with patch("voice_mode.tools.dependencies.diagnose_audio_setup", return_value=[]):
+        with patch("yakk.tools.dependencies.diagnose_audio_setup", return_value=[]):
             import sys
             import importlib
             
@@ -198,8 +198,8 @@ class TestDiagnosticTools:
             
             try:
                 # Reload the dependencies module to use our mocked platform
-                if 'voice_mode.tools.dependencies' in sys.modules:
-                    importlib.reload(sys.modules['voice_mode.tools.dependencies'])
+                if 'yakk.tools.dependencies' in sys.modules:
+                    importlib.reload(sys.modules['yakk.tools.dependencies'])
                 
                 result = await check_audio_dependencies.fn()
                 
@@ -243,15 +243,15 @@ class TestDiagnosticTools:
                 assert wsl_detected or result["platform"] == "Linux"
 
     @pytest.mark.asyncio
-    async def test_voice_mode_info_error_handling(self):
-        """Test voice_mode_info handles errors gracefully."""
-        # Skip this test as get_voice_mode_version doesn't exist
-        pytest.skip("get_voice_mode_version doesn't exist in current implementation")
+    async def test_yakk_info_error_handling(self):
+        """Test yakk_info handles errors gracefully."""
+        # Skip this test as get_yakk_version doesn't exist
+        pytest.skip("get_yakk_version doesn't exist in current implementation")
 
     @pytest.mark.asyncio
     async def test_check_audio_devices_no_devices(self):
         """Test check_audio_devices when no devices are found."""
-        with patch("voice_mode.tools.devices.sd.query_devices") as mock_query:
+        with patch("yakk.tools.devices.sd.query_devices") as mock_query:
             # When called with no args, return empty list
             # When called with kind='input' or 'output', return a mock device
             def query_side_effect(kind=None):

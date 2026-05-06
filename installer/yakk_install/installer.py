@@ -112,7 +112,7 @@ class PackageInstaller:
 
     def install_yakk(self, version: Optional[str] = None) -> bool:
         """
-        Install or upgrade voice-mode using uv tool install --upgrade.
+        Install or upgrade yakk using uv tool install --upgrade.
 
         Args:
             version: Optional version to install (e.g., "5.1.3")
@@ -122,18 +122,18 @@ class PackageInstaller:
         """
         if self.dry_run:
             if version:
-                print(f"[DRY RUN] Would install: uv tool install --upgrade voice-mode=={version}")
+                print(f"[DRY RUN] Would install: uv tool install --upgrade yakk=={version}")
             else:
-                print("[DRY RUN] Would install: uv tool install --upgrade voice-mode")
+                print("[DRY RUN] Would install: uv tool install --upgrade yakk")
             return True
 
         try:
             # Always use --upgrade to ensure we get the latest/requested version
             # This also implies --refresh to check for new versions
             if version:
-                cmd = ['uv', 'tool', 'install', '--upgrade', f'voice-mode=={version}']
+                cmd = ['uv', 'tool', 'install', '--upgrade', f'yakk=={version}']
             else:
-                cmd = ['uv', 'tool', 'install', '--upgrade', 'voice-mode']
+                cmd = ['uv', 'tool', 'install', '--upgrade', 'yakk']
 
             result = subprocess.run(
                 cmd,

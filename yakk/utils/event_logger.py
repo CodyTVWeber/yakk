@@ -1,5 +1,5 @@
 """
-Unified event logging system for Voice Mode.
+Unified event logging system for Yakk.
 
 This module provides real-time event tracking for voice interactions,
 enabling accurate timing calculations, debugging, and analytics.

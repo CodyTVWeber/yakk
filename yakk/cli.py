@@ -1,5 +1,5 @@
 """
-CLI entry points for voice-mode package.
+CLI entry points for yakk package.
 """
 import asyncio
 import sys
@@ -12,12 +12,12 @@ from pathlib import Path
 
 # Import version info
 try:
-    from voice_mode.version import __version__
+    from yakk.version import __version__
 except ImportError:
     __version__ = "unknown"
 
 # Import configuration constants
-from voice_mode.config import (
+from yakk.config import (
     DEFAULT_WHISPER_MODEL,
     DEFAULT_LISTEN_DURATION,
     MIN_RECORDING_DURATION,
@@ -55,8 +55,8 @@ if not os.environ.get('YAKK_DEBUG', '').lower() in ('true', '1', 'yes'):
 @click.option('--tools-enabled', help='Comma-separated list of tools to enable (whitelist)')
 @click.option('--tools-disabled', help='Comma-separated list of tools to disable (blacklist)')
 @click.pass_context
-def voice_mode_main_cli(ctx, debug, tools_enabled, tools_disabled):
-    """Voice Mode - MCP server and service management.
+def yakk_main_cli(ctx, debug, tools_enabled, tools_disabled):
+    """Yakk - MCP server and service management.
 
     Without arguments, starts the MCP server.
     With subcommands, executes service management operations.
@@ -78,13 +78,13 @@ def voice_mode_main_cli(ctx, debug, tools_enabled, tools_disabled):
     if ctx.invoked_subcommand is None:
         # No subcommand - run MCP server
         # Note: warnings are already suppressed at module level unless debug is enabled
-        from .server import main as voice_mode_main
-        voice_mode_main()
+        from .server import main as yakk_main
+        yakk_main()
 
 
-def voice_mode() -> None:
+def yakk() -> None:
     """Entry point for yakk command - starts the MCP server or runs subcommands."""
-    voice_mode_main_cli()
+    yakk_main_cli()
 
 
 # ============================================================================
@@ -121,7 +121,7 @@ def sayas_command(voice, text, list_voices, preview, output, stream, completion)
     import urllib.request
     import urllib.error
 
-    from voice_mode.tools.clone.profiles import (
+    from yakk.tools.clone.profiles import (
         _load_voices_json,
         DEFAULT_CLONE_BASE_URL,
         DEFAULT_CLONE_MODEL,
@@ -132,7 +132,7 @@ def sayas_command(voice, text, list_voices, preview, output, stream, completion)
         from importlib.resources import files as _pkg_files
 
         completion_script = (
-            _pkg_files("voice_mode.data.completions")
+            _pkg_files("yakk.data.completions")
             .joinpath("sayas.bash")
             .read_text()
         )
@@ -345,7 +345,7 @@ def sayas_cli() -> None:
 #   yakk clone remove       Remove a voice profile
 
 
-@voice_mode_main_cli.group()
+@yakk_main_cli.group()
 @click.help_option('-h', '--help', help='Show this message and exit')
 def clone():
     """Voice cloning profile management.
@@ -388,7 +388,7 @@ def add(name, audio_file, description, ref_text, model, base_url):
       yakk clone add fleabag ~/clip.wav -d "Phoebe as Fleabag"
       yakk clone add mike ~/mike.wav --ref-text "Hello everyone"
     """
-    from voice_mode.tools.clone.profiles import clone_add
+    from yakk.tools.clone.profiles import clone_add
     result = asyncio.run(clone_add(
         name=name,
         audio_file=audio_file,
@@ -418,7 +418,7 @@ def list_voices():
 
     Shows all voice profiles from ~/.yakk/voices.json.
     """
-    from voice_mode.tools.clone.profiles import clone_list
+    from yakk.tools.clone.profiles import clone_list
     result = asyncio.run(clone_list())
 
     voices = result.get('voices', [])
@@ -446,7 +446,7 @@ def remove(name, keep_audio):
     Removes the profile from voices.json and optionally the reference audio file.
     By default, the audio file is also deleted.
     """
-    from voice_mode.tools.clone.profiles import clone_remove
+    from yakk.tools.clone.profiles import clone_remove
     result = asyncio.run(clone_remove(
         name=name,
         remove_audio=not keep_audio,
@@ -484,7 +484,7 @@ def _normalize_service_name(name: str) -> str:
     return name.replace("-", "_") if name else name
 
 
-@voice_mode_main_cli.group()
+@yakk_main_cli.group()
 @click.help_option('-h', '--help')
 def service():
     """Manage Yakk services.
@@ -530,7 +530,7 @@ def service_start(service_name):
       yakk  HTTP MCP server for remote access
       mlx-audio  Apple Silicon: unified Whisper STT + Kokoro TTS + Qwen3-TTS
     """
-    from voice_mode.tools.service import start_service
+    from yakk.tools.service import start_service
     result = asyncio.run(start_service(_normalize_service_name(service_name)))
     click.echo(result)
 
@@ -548,7 +548,7 @@ def service_stop(service_name):
       yakk  HTTP MCP server for remote access
       mlx-audio  Apple Silicon: unified Whisper STT + Kokoro TTS + Qwen3-TTS
     """
-    from voice_mode.tools.service import stop_service
+    from yakk.tools.service import stop_service
     result = asyncio.run(stop_service(_normalize_service_name(service_name)))
     click.echo(result)
 
@@ -566,7 +566,7 @@ def service_restart(service_name):
       yakk  HTTP MCP server for remote access
       mlx-audio  Apple Silicon: unified Whisper STT + Kokoro TTS + Qwen3-TTS
     """
-    from voice_mode.tools.service import restart_service
+    from yakk.tools.service import restart_service
     result = asyncio.run(restart_service(_normalize_service_name(service_name)))
     click.echo(result)
 
@@ -593,7 +593,7 @@ def service_status(service_name):
       yakk service status whisper  # Show only Whisper
       yakk service status yakk # Show HTTP server status
     """
-    from voice_mode.tools.service import status_service
+    from yakk.tools.service import status_service
 
     if service_name:
         # Show specific service
@@ -625,7 +625,7 @@ def service_enable(service_name):
       kokoro     Local text-to-speech (TTS)
       yakk  HTTP MCP server for remote access
     """
-    from voice_mode.tools.service import enable_service
+    from yakk.tools.service import enable_service
     result = asyncio.run(enable_service(_normalize_service_name(service_name)))
     click.echo(result)
 
@@ -646,7 +646,7 @@ def service_disable(service_name):
       kokoro     Local text-to-speech (TTS)
       yakk  HTTP MCP server for remote access
     """
-    from voice_mode.tools.service import disable_service
+    from yakk.tools.service import disable_service
     result = asyncio.run(disable_service(_normalize_service_name(service_name)))
     click.echo(result)
 
@@ -667,7 +667,7 @@ def service_logs(service_name, lines):
       yakk service logs whisper       # Last 50 lines
       yakk service logs yakk -n 100  # Last 100 lines
     """
-    from voice_mode.tools.service import view_logs
+    from yakk.tools.service import view_logs
     result = asyncio.run(view_logs(_normalize_service_name(service_name), lines))
     click.echo(result)
 
@@ -739,7 +739,7 @@ def service_install(service_name, force):
       yakk service install mlx-audio
     """
     if service_name == 'whisper':
-        from voice_mode.tools.whisper.install import whisper_install
+        from yakk.tools.whisper.install import whisper_install
         result = asyncio.run(whisper_install.fn(force_reinstall=force))
         # Handle dict result from tool
         if isinstance(result, dict):
@@ -752,7 +752,7 @@ def service_install(service_name, force):
         else:
             click.echo(result)
     elif service_name == 'kokoro':
-        from voice_mode.tools.kokoro.install import kokoro_install
+        from yakk.tools.kokoro.install import kokoro_install
         result = asyncio.run(kokoro_install.fn(force_reinstall=force))
         if isinstance(result, dict):
             if result.get("success"):
@@ -764,7 +764,7 @@ def service_install(service_name, force):
         else:
             click.echo(result)
     elif service_name == 'yakk':
-        from voice_mode.tools.service import install_yakk_start_script
+        from yakk.tools.service import install_yakk_start_script
         result = asyncio.run(install_yakk_start_script())
         if result.get("success"):
             click.echo(f"✅ Yakk start script installed successfully")
@@ -773,7 +773,7 @@ def service_install(service_name, force):
         else:
             click.echo(f"❌ Yakk installation failed: {result.get('error', 'Unknown error')}")
     elif service_name == 'mlx-audio':
-        from voice_mode.tools.mlx_audio.install import mlx_audio_install
+        from yakk.tools.mlx_audio.install import mlx_audio_install
         result = asyncio.run(mlx_audio_install(force_reinstall=force))
         if isinstance(result, dict):
             if result.get("success"):
@@ -802,14 +802,14 @@ def service_install(service_name, force):
 # These are hidden from help/tab completion but still functional for backward
 # compatibility. Use 'yakk service <action> <service>' instead.
 
-@voice_mode_main_cli.group(hidden=True)
+@yakk_main_cli.group(hidden=True)
 @click.help_option('-h', '--help', help='Show this message and exit')
 def kokoro():
     """Manage Kokoro TTS service. [DEPRECATED: Use 'yakk service' instead]"""
     pass
 
 
-@voice_mode_main_cli.group(hidden=True)
+@yakk_main_cli.group(hidden=True)
 @click.help_option('-h', '--help', help='Show this message and exit')
 def whisper():
     """Manage Whisper STT service. [DEPRECATED: Use 'yakk service' instead]"""
@@ -824,7 +824,7 @@ def whisper():
 def status():
     """(Deprecated) Show Kokoro service status. Use 'yakk service status kokoro' instead."""
     click.secho("⚠️  Deprecated: Use 'yakk service status kokoro' instead", fg='yellow', err=True)
-    from voice_mode.tools.service import status_service
+    from yakk.tools.service import status_service
     result = asyncio.run(status_service("kokoro"))
     click.echo(result)
 
@@ -833,7 +833,7 @@ def status():
 def start():
     """(Deprecated) Start Kokoro service. Use 'yakk service start kokoro' instead."""
     click.secho("⚠️  Deprecated: Use 'yakk service start kokoro' instead", fg='yellow', err=True)
-    from voice_mode.tools.service import start_service
+    from yakk.tools.service import start_service
     result = asyncio.run(start_service("kokoro"))
     click.echo(result)
 
@@ -842,7 +842,7 @@ def start():
 def stop():
     """(Deprecated) Stop Kokoro service. Use 'yakk service stop kokoro' instead."""
     click.secho("⚠️  Deprecated: Use 'yakk service stop kokoro' instead", fg='yellow', err=True)
-    from voice_mode.tools.service import stop_service
+    from yakk.tools.service import stop_service
     result = asyncio.run(stop_service("kokoro"))
     click.echo(result)
 
@@ -851,7 +851,7 @@ def stop():
 def restart():
     """(Deprecated) Restart Kokoro service. Use 'yakk service restart kokoro' instead."""
     click.secho("⚠️  Deprecated: Use 'yakk service restart kokoro' instead", fg='yellow', err=True)
-    from voice_mode.tools.service import restart_service
+    from yakk.tools.service import restart_service
     result = asyncio.run(restart_service("kokoro"))
     click.echo(result)
 
@@ -860,7 +860,7 @@ def restart():
 def enable():
     """(Deprecated) Enable Kokoro service. Use 'yakk service enable kokoro' instead."""
     click.secho("⚠️  Deprecated: Use 'yakk service enable kokoro' instead", fg='yellow', err=True)
-    from voice_mode.tools.service import enable_service
+    from yakk.tools.service import enable_service
     result = asyncio.run(enable_service("kokoro"))
     click.echo(result)
 
@@ -869,7 +869,7 @@ def enable():
 def disable():
     """(Deprecated) Disable Kokoro service. Use 'yakk service disable kokoro' instead."""
     click.secho("⚠️  Deprecated: Use 'yakk service disable kokoro' instead", fg='yellow', err=True)
-    from voice_mode.tools.service import disable_service
+    from yakk.tools.service import disable_service
     result = asyncio.run(disable_service("kokoro"))
     click.echo(result)
 
@@ -880,7 +880,7 @@ def disable():
 def logs(lines):
     """(Deprecated) View Kokoro logs. Use 'yakk service logs kokoro' instead."""
     click.secho("⚠️  Deprecated: Use 'yakk service logs kokoro' instead", fg='yellow', err=True)
-    from voice_mode.tools.service import view_logs
+    from yakk.tools.service import view_logs
     result = asyncio.run(view_logs("kokoro", lines))
     click.echo(result)
 
@@ -922,7 +922,7 @@ def health():
 @click.option('--skip-deps', is_flag=True, help='Skip dependency checks (for advanced users)')
 def install(install_dir, port, force, version, auto_enable, skip_deps):
     """Install kokoro-fastapi TTS service."""
-    from voice_mode.tools.kokoro.install import kokoro_install
+    from yakk.tools.kokoro.install import kokoro_install
     result = asyncio.run(kokoro_install.fn(
         install_dir=install_dir,
         port=port,
@@ -959,7 +959,7 @@ def install(install_dir, port, force, version, auto_enable, skip_deps):
 @click.confirmation_option(prompt='Are you sure you want to uninstall Kokoro?')
 def uninstall(remove_models, remove_all_data):
     """Uninstall kokoro-fastapi service and optionally remove data."""
-    from voice_mode.tools.kokoro.uninstall import kokoro_uninstall
+    from yakk.tools.kokoro.uninstall import kokoro_uninstall
     result = asyncio.run(kokoro_uninstall.fn(
         remove_models=remove_models,
         remove_all_data=remove_all_data
@@ -1000,7 +1000,7 @@ def whisper_service():
 @whisper_service.command("status")
 def whisper_service_status():
     """Show Whisper service status."""
-    from voice_mode.tools.service import status_service
+    from yakk.tools.service import status_service
     result = asyncio.run(status_service("whisper"))
     click.echo(result)
 
@@ -1008,7 +1008,7 @@ def whisper_service_status():
 @whisper_service.command("start")
 def whisper_service_start():
     """Start Whisper service."""
-    from voice_mode.tools.service import start_service
+    from yakk.tools.service import start_service
     result = asyncio.run(start_service("whisper"))
     click.echo(result)
 
@@ -1016,7 +1016,7 @@ def whisper_service_start():
 @whisper_service.command("stop")
 def whisper_service_stop():
     """Stop Whisper service."""
-    from voice_mode.tools.service import stop_service
+    from yakk.tools.service import stop_service
     result = asyncio.run(stop_service("whisper"))
     click.echo(result)
 
@@ -1024,7 +1024,7 @@ def whisper_service_stop():
 @whisper_service.command("restart")
 def whisper_service_restart():
     """Restart Whisper service."""
-    from voice_mode.tools.service import restart_service
+    from yakk.tools.service import restart_service
     result = asyncio.run(restart_service("whisper"))
     click.echo(result)
 
@@ -1032,7 +1032,7 @@ def whisper_service_restart():
 @whisper_service.command("enable")
 def whisper_service_enable():
     """Enable Whisper service to start at boot/login."""
-    from voice_mode.tools.service import enable_service
+    from yakk.tools.service import enable_service
     result = asyncio.run(enable_service("whisper"))
     click.echo(result)
 
@@ -1040,7 +1040,7 @@ def whisper_service_enable():
 @whisper_service.command("disable")
 def whisper_service_disable():
     """Disable Whisper service from starting at boot/login."""
-    from voice_mode.tools.service import disable_service
+    from yakk.tools.service import disable_service
     result = asyncio.run(disable_service("whisper"))
     click.echo(result)
 
@@ -1050,7 +1050,7 @@ def whisper_service_disable():
 @click.option('--lines', '-n', default=50, help='Number of log lines to show')
 def whisper_service_logs(lines):
     """View Whisper service logs."""
-    from voice_mode.tools.service import view_logs
+    from yakk.tools.service import view_logs
     result = asyncio.run(view_logs("whisper", lines))
     click.echo(result)
 
@@ -1093,7 +1093,7 @@ def whisper_service_health():
 @click.option('--skip-deps', is_flag=True, help='Skip dependency checks (for advanced users)')
 def whisper_service_install(install_dir, model, use_gpu, force, version, auto_enable, skip_deps):
     """Install whisper.cpp STT service with automatic system detection."""
-    from voice_mode.tools.whisper.install import whisper_install
+    from yakk.tools.whisper.install import whisper_install
     result = asyncio.run(whisper_install.fn(
         install_dir=install_dir,
         model=model,
@@ -1148,7 +1148,7 @@ def whisper_service_install(install_dir, model, use_gpu, force, version, auto_en
 @click.confirmation_option(prompt='Are you sure you want to uninstall Whisper?')
 def whisper_service_uninstall(remove_models, remove_all_data):
     """Uninstall whisper.cpp and optionally remove models and data."""
-    from voice_mode.tools.whisper.uninstall import whisper_uninstall
+    from yakk.tools.whisper.uninstall import whisper_uninstall
     result = asyncio.run(whisper_uninstall.fn(
         remove_models=remove_models,
         remove_all_data=remove_all_data
@@ -1179,7 +1179,7 @@ def whisper_service_uninstall(remove_models, remove_all_data):
 
 
 # Import the unified model command
-from voice_mode.whisper_model_unified import whisper_model_unified
+from yakk.whisper_model_unified import whisper_model_unified
 
 # Add it directly to the whisper group
 whisper.add_command(whisper_model_unified, name="model")
@@ -1295,7 +1295,7 @@ def whisper_model_list():
     - Language support
     - Performance characteristics
     """
-    from voice_mode.tools.whisper.models import (
+    from yakk.tools.whisper.models import (
         WHISPER_MODEL_REGISTRY,
         get_model_directory,
         get_active_model,
@@ -1379,7 +1379,7 @@ def whisper_model_active(model_name):
     Without arguments: Shows the current active model
     With MODEL_NAME: Sets the active model (updates YAKK_WHISPER_MODEL)
     """
-    from voice_mode.tools.whisper.models import (
+    from yakk.tools.whisper.models import (
         get_active_model,
         WHISPER_MODEL_REGISTRY,
         is_whisper_model_installed,
@@ -1464,7 +1464,7 @@ def whisper_models():
 
     DEPRECATED: Use 'yakk whisper model list' instead.
     """
-    from voice_mode.tools.whisper.models import (
+    from yakk.tools.whisper.models import (
         WHISPER_MODEL_REGISTRY, 
         get_model_directory,
         get_active_model,
@@ -1553,7 +1553,7 @@ def whisper_model_install(model, force, skip_core_ml):
     medium, medium.en, large-v1, large-v2, large-v3, large-v3-turbo
     """
     import json
-    import voice_mode.tools.whisper.model_install as install_module
+    import yakk.tools.whisper.model_install as install_module
     # Get the actual function from the MCP tool wrapper
     tool = install_module.whisper_model_install
     install_func = tool.fn if hasattr(tool, 'fn') else tool
@@ -1607,7 +1607,7 @@ def whisper_model_remove(model, force):
     
     MODEL is the name of the model to remove (e.g., 'large-v2').
     """
-    from voice_mode.tools.whisper.models import (
+    from yakk.tools.whisper.models import (
         WHISPER_MODEL_REGISTRY,
         is_whisper_model_installed,
         get_model_directory,
@@ -1678,7 +1678,7 @@ def whisper_model_benchmark_cmd(models, sample, runs):
     Runs performance tests on specified models to help choose the optimal model
     for your use case based on speed vs accuracy trade-offs.
     """
-    from voice_mode.tools.whisper.model_benchmark import whisper_model_benchmark
+    from yakk.tools.whisper.model_benchmark import whisper_model_benchmark
     
     # Parse models parameter
     if ',' in models:
@@ -1745,7 +1745,7 @@ def whisper_model_benchmark_cmd(models, sample, runs):
 ''' # End of old model subcommands
 
 
-@voice_mode_main_cli.group()
+@yakk_main_cli.group()
 @click.help_option('-h', '--help', help='Show this message and exit')
 def config():
     """Manage yakk configuration."""
@@ -1755,7 +1755,7 @@ def config():
 @config.command("list")
 def config_list():
     """List all configuration keys with their descriptions."""
-    from voice_mode.tools.configuration_management import list_config_keys
+    from yakk.tools.configuration_management import list_config_keys
     result = asyncio.run(list_config_keys.fn())
     click.echo(result)
 
@@ -1804,7 +1804,7 @@ def config_get(key):
 @click.argument('value')
 def config_set(key, value):
     """Set a configuration value."""
-    from voice_mode.tools.configuration_management import update_config
+    from yakk.tools.configuration_management import update_config
     result = asyncio.run(update_config.fn(key, value))
     click.echo(result)
 
@@ -1831,7 +1831,7 @@ def config_edit(editor):
     # Create default config if it doesn't exist
     if not config_path.exists():
         config_path.parent.mkdir(parents=True, exist_ok=True)
-        from voice_mode.config import load_yakk_env
+        from yakk.config import load_yakk_env
         # This will create the default config
         load_yakk_env()
 
@@ -1876,7 +1876,7 @@ def config_edit(editor):
 
 
 # Dependency management group
-@voice_mode_main_cli.command()
+@yakk_main_cli.command()
 @click.help_option('-h', '--help')
 @click.option('--component', type=click.Choice(['core', 'whisper', 'kokoro']),
               help='Check specific component only')
@@ -1895,7 +1895,7 @@ def deps(component, yes, dry_run, verbose):
         yakk deps --yes              # Install without prompting
         yakk deps --verbose          # Show full installation output
     """
-    from voice_mode.utils.dependencies.checker import (
+    from yakk.utils.dependencies.checker import (
         check_component_dependencies,
         load_dependencies,
         install_missing_dependencies
@@ -1943,7 +1943,7 @@ def deps(component, yes, dry_run, verbose):
 
 
 # Diagnostics group
-@voice_mode_main_cli.group()
+@yakk_main_cli.group()
 @click.help_option('-h', '--help', help='Show this message and exit')
 def diag():
     """Diagnostic tools for yakk."""
@@ -1953,15 +1953,15 @@ def diag():
 @diag.command()
 def info():
     """Show yakk installation information."""
-    from voice_mode.tools.diagnostics import voice_mode_info
-    result = asyncio.run(voice_mode_info.fn())
+    from yakk.tools.diagnostics import yakk_info
+    result = asyncio.run(yakk_info.fn())
     click.echo(result)
 
 
 @diag.command()
 def devices():
     """List available audio input and output devices."""
-    from voice_mode.tools.devices import check_audio_devices
+    from yakk.tools.devices import check_audio_devices
     result = asyncio.run(check_audio_devices.fn())
     click.echo(result)
 
@@ -1969,7 +1969,7 @@ def devices():
 @diag.command()
 def registry():
     """Show voice provider registry with all discovered endpoints."""
-    from voice_mode.tools.voice_registry import voice_registry
+    from yakk.tools.voice_registry import voice_registry
     result = asyncio.run(voice_registry.fn())
     click.echo(result)
 
@@ -1979,31 +1979,31 @@ def registry():
 @click.version_option()
 @click.help_option('-h', '--help')
 def cli():
-    """Voice Mode CLI - Manage conversations, view logs, and analyze voice interactions."""
+    """Yakk CLI - Manage conversations, view logs, and analyze voice interactions."""
     pass
 
 
 # Import subcommand groups
-from voice_mode.cli_commands import exchanges as exchanges_cmd
-from voice_mode.cli_commands import transcribe as transcribe_cmd
-from voice_mode.cli_commands import status as status_cmd
-from voice_mode.cli_commands import claude as claude_cmd
-from voice_mode.cli_commands import soundfonts as soundfonts_cmd
+from yakk.cli_commands import exchanges as exchanges_cmd
+from yakk.cli_commands import transcribe as transcribe_cmd
+from yakk.cli_commands import status as status_cmd
+from yakk.cli_commands import claude as claude_cmd
+from yakk.cli_commands import soundfonts as soundfonts_cmd
 
 # Add subcommands to legacy CLI
 cli.add_command(exchanges_cmd.exchanges)
 cli.add_command(transcribe_cmd.transcribe)
 
 # Add exchanges to main CLI
-voice_mode_main_cli.add_command(exchanges_cmd.exchanges)
+yakk_main_cli.add_command(exchanges_cmd.exchanges)
 # Add unified status command
-voice_mode_main_cli.add_command(status_cmd.status)
+yakk_main_cli.add_command(status_cmd.status)
 
 # Add Claude Code integration commands
-voice_mode_main_cli.add_command(claude_cmd.claude)
+yakk_main_cli.add_command(claude_cmd.claude)
 
 # Add soundfonts toggle commands
-voice_mode_main_cli.add_command(soundfonts_cmd.soundfonts)
+yakk_main_cli.add_command(soundfonts_cmd.soundfonts)
 
 # Note: We'll add these commands after the groups are defined
 # audio group will get transcribe and play commands
@@ -2013,10 +2013,10 @@ voice_mode_main_cli.add_command(soundfonts_cmd.soundfonts)
 # Add transcribe as top-level command
 transcribe_audio_cmd = transcribe_cmd.transcribe.commands['audio']
 transcribe_audio_cmd.name = 'transcribe'
-voice_mode_main_cli.add_command(transcribe_audio_cmd)
+yakk_main_cli.add_command(transcribe_audio_cmd)
 
 # Converse command - direct voice conversation from CLI
-@voice_mode_main_cli.command()
+@yakk_main_cli.command()
 @click.help_option('-h', '--help')
 @click.option('--message', '-m', default="Hello! How can I help you today?", help='Initial message to speak')
 @click.option('--wait/--no-wait', default=True, help='Wait for response after speaking')
@@ -2053,7 +2053,7 @@ def converse(message, wait, duration, min_duration, voice, tts_provider,
         yakk converse --voice nova
     """
     # Check core dependencies before running
-    from voice_mode.utils.dependencies.checker import check_component_dependencies
+    from yakk.utils.dependencies.checker import check_component_dependencies
 
     results = check_component_dependencies('core')
     missing = [pkg for pkg, installed in results.items() if not installed]
@@ -2063,7 +2063,7 @@ def converse(message, wait, duration, min_duration, voice, tts_provider,
         click.echo("   Run 'yakk deps' to install them")
         return
 
-    from voice_mode.tools.converse import converse as converse_fn
+    from yakk.tools.converse import converse as converse_fn
     
     async def run_conversation():
         """Run the conversation asynchronously."""
@@ -2188,7 +2188,7 @@ def converse(message, wait, duration, min_duration, voice, tts_provider,
 
 
 # Serve command - HTTP/SSE server for remote access
-@voice_mode_main_cli.command()
+@yakk_main_cli.command()
 @click.help_option('-h', '--help')
 @click.option('--host', default='127.0.0.1', help='Host to bind to (use 0.0.0.0 for all interfaces)')
 @click.option('--port', '-p', default=8765, type=int, help='Port to bind to')
@@ -2428,7 +2428,7 @@ def serve(host: str, port: int, transport: str, log_level: str, allow_anthropic:
 
 
 # Completions command
-@voice_mode_main_cli.command()
+@yakk_main_cli.command()
 @click.help_option('-h', '--help')
 @click.argument('shell', type=click.Choice(['bash', 'zsh', 'fish']))
 @click.option('--install', is_flag=True, help='Install completion script to the appropriate location')
@@ -2536,649 +2536,9 @@ complete -c yakk -f -a '(__fish_yakk_complete)'
 
 
 # Connect command group — disabled in local-only mode
-@voice_mode_main_cli.group()
+@yakk_main_cli.group()
 @click.help_option('-h', '--help', help='Show this message and exit')
 def connect():
     """Yakk Connect -- disabled in local-only mode."""
     click.echo("Yakk Connect is disabled in local-only mode.", err=True)
     sys.exit(1)
-
-
-# DJ (Background Music) command group
-@voice_mode_main_cli.group()
-@click.help_option('-h', '--help', help='Show this message and exit')
-def dj():
-    """Background music playback for voice sessions.
-
-    Control audio playback via mpv for ambient music during conversations.
-    Supports files, URLs, and chapter navigation.
-
-    Examples:
-        yakk dj play /path/to/ambient.mp3
-        yakk dj play https://example.com/stream.mp3 --volume 30
-        yakk dj status
-        yakk dj pause
-        yakk dj stop
-    """
-    pass
-
-
-def _format_time(seconds: float) -> str:
-    """Format seconds as MM:SS or HH:MM:SS."""
-    total_seconds = int(seconds)
-    hours = total_seconds // 3600
-    minutes = (total_seconds % 3600) // 60
-    secs = total_seconds % 60
-
-    if hours > 0:
-        return f"{hours}:{minutes:02d}:{secs:02d}"
-    return f"{minutes}:{secs:02d}"
-
-
-def _truncate(text: str, max_len: int) -> str:
-    """Truncate text with ellipsis if too long."""
-    if len(text) <= max_len:
-        return text
-    return text[:max_len - 2] + ".."
-
-
-def _print_status_line(status) -> None:
-    """Print compact one-line status for tmux status bar.
-
-    Format: Artist - Title Position (-Remaining) ♪
-    With tmux color codes for remaining time warnings.
-    """
-    # Get chapter info or fall back to track info
-    if status.chapter:
-        # Chapter format is typically "Title - Artist" from ffmeta
-        display = status.chapter
-    elif status.artist and status.title:
-        display = f"{status.artist} - {status.title}"
-    elif status.title:
-        display = status.title
-    else:
-        display = status.path or "Unknown"
-
-    # Truncate display to reasonable length
-    display = _truncate(display, 40)
-
-    # Position
-    pos_str = _format_time(status.position)
-
-    # Remaining time with color coding
-    remaining = int(status.remaining)
-    remaining_str = _format_time(status.remaining)
-
-    if remaining < 10:
-        color = "#[fg=red,bold]"
-        reset = "#[fg=default,nobold]"
-    elif remaining < 30:
-        color = "#[fg=yellow]"
-        reset = "#[fg=default]"
-    else:
-        color = ""
-        reset = ""
-
-    # Paused indicator
-    icon = "⏸" if status.is_paused else "♪"
-
-    click.echo(f"{display} {pos_str} {color}(-{remaining_str}){reset} {icon}")
-
-
-@dj.command()
-@click.help_option('-h', '--help', help='Show this message and exit')
-@click.argument('source')
-@click.option('--chapters', '-c', help='Path to chapters file (FFmetadata or CUE)')
-@click.option('--volume', '-v', default=50, type=int, help='Initial volume (0-100)')
-def play(source: str, chapters: str | None, volume: int):
-    """Start playing a file or URL.
-
-    SOURCE can be a local file path or a URL.
-
-    Examples:
-        yakk dj play /path/to/music.mp3
-        yakk dj play /path/to/album.mp3 --chapters /path/to/chapters.txt
-        yakk dj play https://stream.example.com/audio --volume 30
-    """
-    from voice_mode.dj import DJController
-
-    controller = DJController()
-    if controller.play(source, chapters_file=chapters, volume=volume):
-        click.echo(f"Playing: {source}")
-        if chapters:
-            click.echo(f"Chapters: {chapters}")
-        click.echo(f"Volume: {volume}%")
-    else:
-        click.echo("Failed to start playback", err=True)
-        click.echo("Make sure mpv is installed: brew install mpv", err=True)
-
-
-@dj.command()
-@click.option('--line', '-l', is_flag=True, help='One-line output for tmux status bar')
-@click.help_option('-h', '--help', help='Show this message and exit')
-def status(line: bool):
-    """Show what's currently playing.
-
-    Displays track information, playback position, volume, and chapter info.
-
-    Use --line for compact tmux status bar output.
-    """
-    from voice_mode.dj import DJController
-
-    controller = DJController()
-    track_status = controller.status()
-
-    if track_status:
-        if line:
-            # Compact one-line format for tmux status bar
-            _print_status_line(track_status)
-        else:
-            # Full multi-line format
-            # Track info
-            title = track_status.title or track_status.path or "(unknown)"
-            click.echo(f"Track: {title}")
-
-            # Position
-            pos_str = _format_time(track_status.position)
-            dur_str = _format_time(track_status.duration)
-            progress = track_status.progress_percent
-            click.echo(f"Position: {pos_str} / {dur_str} ({progress:.0f}%)")
-
-            # Volume and state
-            state = "Paused" if track_status.is_paused else "Playing"
-            click.echo(f"Volume: {track_status.volume}%")
-            click.echo(f"State: {state}")
-
-            # Chapter info if available
-            if track_status.chapter_count and track_status.chapter_count > 0:
-                chapter_num = (track_status.chapter_index or 0) + 1
-                chapter_name = track_status.chapter or f"Chapter {chapter_num}"
-                click.echo(f"Chapter: {chapter_name} ({chapter_num}/{track_status.chapter_count})")
-    else:
-        if not line:
-            click.echo("DJ is not running")
-
-
-@dj.command()
-@click.help_option('-h', '--help', help='Show this message and exit')
-def stop():
-    """Stop playback and quit the player."""
-    from voice_mode.dj import DJController
-
-    controller = DJController()
-    if controller.is_playing():
-        controller.stop()
-        click.echo("Stopped")
-    else:
-        click.echo("DJ is not running")
-
-
-@dj.command()
-@click.help_option('-h', '--help', help='Show this message and exit')
-def pause():
-    """Pause playback."""
-    from voice_mode.dj import DJController
-
-    controller = DJController()
-    if controller.pause():
-        click.echo("Paused")
-    else:
-        click.echo("DJ is not running", err=True)
-
-
-@dj.command()
-@click.help_option('-h', '--help', help='Show this message and exit')
-def resume():
-    """Resume playback."""
-    from voice_mode.dj import DJController
-
-    controller = DJController()
-    if controller.resume():
-        click.echo("Resumed")
-    else:
-        click.echo("DJ is not running", err=True)
-
-
-@dj.command()
-@click.help_option('-h', '--help', help='Show this message and exit')
-def next():
-    """Skip to the next chapter."""
-    from voice_mode.dj import DJController
-
-    controller = DJController()
-    status = controller.next()
-    if status:
-        if status.chapter:
-            click.echo(f"Chapter: {status.chapter}")
-        elif status.chapter_index is not None and status.chapter_count:
-            click.echo(f"Chapter: {status.chapter_index + 1}/{status.chapter_count}")
-        else:
-            click.echo("Skipped to next chapter")
-    else:
-        click.echo("DJ is not running", err=True)
-
-
-@dj.command()
-@click.help_option('-h', '--help', help='Show this message and exit')
-def prev():
-    """Go to the previous chapter."""
-    from voice_mode.dj import DJController
-
-    controller = DJController()
-    status = controller.prev()
-    if status:
-        if status.chapter:
-            click.echo(f"Chapter: {status.chapter}")
-        elif status.chapter_index is not None and status.chapter_count:
-            click.echo(f"Chapter: {status.chapter_index + 1}/{status.chapter_count}")
-        else:
-            click.echo("Skipped to previous chapter")
-    else:
-        click.echo("DJ is not running", err=True)
-
-
-@dj.command()
-@click.help_option('-h', '--help', help='Show this message and exit')
-@click.argument('level', required=False, type=int)
-def volume(level: int | None):
-    """Get or set the volume level.
-
-    Without LEVEL: Shows the current volume.
-    With LEVEL: Sets volume to the specified level (0-100).
-
-    Examples:
-        yakk dj volume        # Show current volume
-        yakk dj volume 30     # Set volume to 30%
-        yakk dj volume 100    # Set volume to 100%
-    """
-    from voice_mode.dj import DJController
-
-    controller = DJController()
-    result = controller.volume(level)
-
-    if result is not None:
-        if level is not None:
-            click.echo(f"Volume: {result}%")
-        else:
-            click.echo(f"Volume: {result}%")
-    else:
-        click.echo("DJ is not running", err=True)
-
-
-# MFP (Music For Programming) subcommand group
-@dj.group()
-@click.help_option('-h', '--help', help='Show this message and exit')
-def mfp():
-    """Music For Programming episodes.
-
-    Play curated ambient mixes designed for coding sessions.
-    Each episode features chapter markers for track navigation.
-
-    Examples:
-        yakk dj mfp list              # List episodes with chapters
-        yakk dj mfp play 49           # Play episode 49
-        yakk dj mfp sync              # Convert CUE files to chapters
-    """
-    pass
-
-
-@mfp.command("list")
-@click.help_option('-h', '--help', help='Show this message and exit')
-@click.option('--all', '-a', 'show_all', is_flag=True, help='Show all episodes (not just those with chapters)')
-@click.option('--refresh', '-r', is_flag=True, help='Force refresh from RSS feed')
-def mfp_list(show_all: bool, refresh: bool):
-    """List available Music For Programming episodes.
-
-    By default, only shows episodes that have chapter files for track navigation.
-    Use --all to see all episodes from the RSS feed.
-
-    Examples:
-        yakk dj mfp list              # Episodes with chapters
-        yakk dj mfp list --all        # All episodes
-        yakk dj mfp list --refresh    # Refresh from RSS
-    """
-    from voice_mode.dj.mfp import MfpService
-
-    service = MfpService()
-    try:
-        episodes = service.list_episodes(with_chapters_only=not show_all, refresh=refresh)
-    except RuntimeError as e:
-        click.echo(f"Error: {e}", err=True)
-        return
-
-    if not episodes:
-        if show_all:
-            click.echo("No episodes found in RSS feed.")
-        else:
-            click.echo("No episodes with chapter files found.")
-            click.echo("Use --all to see all episodes, or run 'yakk dj mfp sync' to sync chapters.")
-        return
-
-    title = "All Episodes" if show_all else "Episodes with Chapters"
-    click.echo(f"Music For Programming - {title}")
-    click.echo("=" * (27 + len(title)))
-    click.echo()
-
-    # Header
-    click.echo(f"{'#':>3}  {'Curator':<25}  {'Ch':>3}  {'MP3':>3}")
-    click.echo("-" * 42)
-
-    for ep in episodes:
-        ch_status = "yes" if ep.has_chapters else " - "
-        mp3_status = "yes" if ep.has_local_file else " - "
-        curator = ep.curator[:25] if len(ep.curator) > 25 else ep.curator
-        click.echo(f"{ep.number:3d}  {curator:<25}  {ch_status:>3}  {mp3_status:>3}")
-
-    click.echo()
-    click.echo(f"Total: {len(episodes)} episodes")
-    click.echo()
-    click.echo("Play with: yakk dj mfp play <number>")
-
-
-@mfp.command("play")
-@click.help_option('-h', '--help', help='Show this message and exit')
-@click.argument('episode', type=int)
-@click.option('--volume', '-v', default=50, type=int, help='Initial volume (0-100)')
-def mfp_play(episode: int, volume: int):
-    """Play a Music For Programming episode by number.
-
-    Automatically loads chapter files if available for track navigation.
-    Use 'yakk dj next' and 'yakk dj prev' to skip between tracks.
-
-    Examples:
-        yakk dj mfp play 49           # Play episode 49
-        yakk dj mfp play 76 -v 30     # Play episode 76 at 30% volume
-    """
-    from voice_mode.dj import DJController
-    from voice_mode.dj.mfp import MfpService
-
-    service = MfpService()
-    ep = service.get_episode(episode)
-
-    if not ep:
-        click.echo(f"Episode {episode} not found.", err=True)
-        click.echo("Use 'yakk dj mfp list --all' to see available episodes.", err=True)
-        return
-
-    # Determine source - prefer local file if available
-    local_path = service.get_local_path(episode)
-    source = str(local_path) if local_path else ep.url
-
-    # Get chapters file if available
-    chapters_path = service.get_chapters_file(episode)
-
-    # Play
-    controller = DJController()
-    if controller.play(source, chapters_file=str(chapters_path) if chapters_path else None, volume=volume):
-        click.echo(f"Playing: MFP {episode} - {ep.curator}")
-        if chapters_path:
-            click.echo(f"Chapters: Loaded ({chapters_path.name})")
-        if local_path:
-            click.echo(f"Source: Local file")
-        else:
-            click.echo(f"Source: Streaming")
-        click.echo(f"Volume: {volume}%")
-    else:
-        click.echo("Failed to start playback", err=True)
-        click.echo("Make sure mpv is installed: brew install mpv", err=True)
-
-
-@mfp.command("sync")
-@click.help_option('-h', '--help', help='Show this message and exit')
-@click.option('--force', '-f', is_flag=True, help='Overwrite local files even if modified')
-def mfp_sync(force: bool):
-    """Sync chapter files from package to local cache.
-
-    Copies chapter files bundled with Yakk to your local cache directory.
-    Compares checksums to identify new and updated files.
-
-    User modifications are preserved unless --force is used, in which case
-    they are backed up with a .user extension.
-
-    Examples:
-        yakk dj mfp sync              # Sync new chapter files
-        yakk dj mfp sync --force      # Overwrite local modifications
-    """
-    from voice_mode.dj.mfp import MfpService
-
-    service = MfpService()
-    results = service.sync_chapters(force=force)
-
-    if not results:
-        click.echo("No chapter files found in package.")
-    else:
-        click.echo()
-        click.echo("Chapter sync complete")
-
-    click.echo(f"Cache directory: {service.cache_dir}")
-
-
-# Music library search command (top-level under dj for convenience)
-@dj.command()
-@click.help_option('-h', '--help', help='Show this message and exit')
-@click.argument('query')
-@click.option('--limit', '-l', default=50, type=int, help='Maximum results to show')
-@click.option('--all', '-a', 'include_sidecars', is_flag=True, help='Include sidecars (stems, loops)')
-def find(query: str, limit: int, include_sidecars: bool):
-    """Search music library by artist, album, or title.
-
-    Searches the indexed music library for tracks matching QUERY.
-    Results show track ID, artist, title, and album.
-
-    Examples:
-        yakk dj find "daft punk"      # Search for Daft Punk tracks
-        yakk dj find ambient          # Search for ambient music
-        yakk dj find --limit 10 jazz  # Show top 10 jazz results
-    """
-    from voice_mode.dj.library import MusicLibrary
-
-    library = MusicLibrary()
-    tracks = library.search(query, limit=limit, include_sidecars=include_sidecars)
-
-    if not tracks:
-        click.echo(f"No tracks found matching '{query}'")
-        click.echo()
-        click.echo("Tip: Make sure you've scanned your library:")
-        click.echo("  yakk dj library scan --path ~/Audio/music")
-        return
-
-    # Display results in a table format
-    for track in tracks:
-        artist = track.artist or "(unknown)"
-        title = track.title
-        album = track.album or ""
-        fav = "*" if track.is_favorite else ""
-        sidecar = f" [{track.sidecar_type}]" if track.is_sidecar else ""
-        click.echo(f"[{track.id}] {fav}{artist} - {title}{sidecar}")
-        if album:
-            click.echo(f"     Album: {album}")
-
-    click.echo()
-    click.echo(f"Found {len(tracks)} track(s)")
-
-
-# Library subcommand group
-@dj.group()
-@click.help_option('-h', '--help', help='Show this message and exit')
-def library():
-    """Music library management.
-
-    Commands for scanning, indexing, and managing your local music library.
-
-    Examples:
-        yakk dj library scan          # Scan default music folder
-        yakk dj library stats         # Show library statistics
-    """
-    pass
-
-
-@library.command("scan")
-@click.help_option('-h', '--help', help='Show this message and exit')
-@click.option('--path', '-p', type=click.Path(exists=True), help='Music directory to scan')
-def library_scan(path: str | None):
-    """Scan and index music folder.
-
-    Scans the music directory and indexes all audio files.
-    Metadata is parsed from directory structure: Artist/Year-Album/Track.ext
-
-    Supported formats: mp3, flac, m4a, wav, ogg, opus
-
-    Examples:
-        yakk dj library scan                    # Scan ~/Audio/music
-        yakk dj library scan --path ~/Music    # Scan custom path
-    """
-    from pathlib import Path
-    from voice_mode.dj.library import MusicLibrary
-
-    library = MusicLibrary()
-    music_path = Path(path) if path else library.music_root
-
-    click.echo(f"Scanning: {music_path}")
-    click.echo()
-
-    count = library.scan(music_path)
-
-    if count > 0:
-        click.echo(f"Indexed {count} file(s)")
-        click.echo()
-        # Show stats
-        stats = library.stats()
-        click.echo(f"Library: {stats.total_tracks} tracks, {stats.total_artists} artists, {stats.total_albums} albums")
-        if stats.total_sidecars > 0:
-            click.echo(f"Sidecars: {stats.total_sidecars} (stems/loops/samples)")
-    else:
-        click.echo("No audio files found.")
-        click.echo()
-        click.echo(f"Make sure {music_path} contains audio files in the format:")
-        click.echo("  Artist/Year-Album/Track.mp3")
-
-
-@library.command("stats")
-@click.help_option('-h', '--help', help='Show this message and exit')
-def library_stats():
-    """Show library statistics.
-
-    Displays summary information about your indexed music library.
-
-    Examples:
-        yakk dj library stats
-    """
-    from voice_mode.dj.library import MusicLibrary
-
-    library = MusicLibrary()
-    stats = library.stats()
-
-    if stats.total_tracks == 0:
-        click.echo("Music library is empty.")
-        click.echo()
-        click.echo("Scan your music folder first:")
-        click.echo("  yakk dj library scan --path ~/Audio/music")
-        return
-
-    click.echo("Music Library Statistics")
-    click.echo("========================")
-    click.echo(f"Total tracks:  {stats.total_tracks}")
-    click.echo(f"Sidecars:      {stats.total_sidecars}")
-    click.echo(f"Favorites:     {stats.total_favorites}")
-    click.echo(f"Artists:       {stats.total_artists}")
-    click.echo(f"Albums:        {stats.total_albums}")
-    click.echo()
-    click.echo(f"Database: {library.db_path}")
-
-
-@dj.command()
-@click.help_option('-h', '--help', help='Show this message and exit')
-@click.option('--limit', '-l', default=20, type=int, help='Number of entries to show')
-def history(limit: int):
-    """Show recently played tracks.
-
-    Displays the play history with timestamps, most recent first.
-    Only shows tracks that are in the indexed music library.
-
-    Examples:
-        yakk dj history              # Show last 20 plays
-        yakk dj history --limit 50   # Show last 50 plays
-    """
-    from voice_mode.dj.library import MusicLibrary
-
-    library = MusicLibrary()
-    entries = library.get_history(limit=limit)
-
-    if not entries:
-        click.echo("No play history yet.")
-        click.echo()
-        click.echo("Play some tracks from your library:")
-        click.echo("  yakk dj find <search term>")
-        return
-
-    click.echo("Play History")
-    click.echo("============")
-    click.echo()
-
-    for track, played_at in entries:
-        artist = track.artist or "(unknown)"
-        title = track.title
-        fav = "*" if track.is_favorite else ""
-        # Format the timestamp nicely if possible
-        timestamp = played_at[:19] if played_at else ""  # Trim to YYYY-MM-DD HH:MM:SS
-        click.echo(f"[{timestamp}] {fav}{artist} - {title}")
-
-    click.echo()
-    click.echo(f"Showing {len(entries)} play(s)")
-
-
-@dj.command()
-@click.help_option('-h', '--help', help='Show this message and exit')
-def favorite():
-    """Toggle favorite status of the currently playing track.
-
-    Marks the currently playing track as a favorite (or removes it from favorites
-    if already marked). The track must be in the indexed music library.
-
-    Examples:
-        yakk dj favorite    # Toggle favorite on current track
-    """
-    from pathlib import Path
-    from voice_mode.dj import DJController
-    from voice_mode.dj.library import MusicLibrary
-
-    controller = DJController()
-    status = controller.status()
-
-    if not status:
-        click.echo("DJ is not running", err=True)
-        return
-
-    if not status.path:
-        click.echo("No track path available", err=True)
-        return
-
-    library = MusicLibrary()
-
-    # Try to find the track in the library
-    # The status.path might be an absolute path, so try to match it
-    track_path = Path(status.path)
-
-    # First, try looking up by the path as-is (might be relative)
-    track = library.get_track_by_path(status.path)
-
-    # If not found and it's an absolute path under music_root, try relative
-    if not track and track_path.is_absolute():
-        try:
-            rel_path = str(track_path.relative_to(library.music_root))
-            track = library.get_track_by_path(rel_path)
-        except ValueError:
-            pass
-
-    if not track:
-        click.echo(f"Track not found in library: {status.path}", err=True)
-        click.echo()
-        click.echo("Make sure the track is indexed:")
-        click.echo("  yakk dj library scan")
-        return
-
-    is_favorite = library.toggle_favorite(track.id)
-    status_str = "added to" if is_favorite else "removed from"
-
-    artist = track.artist or "(unknown)"
-    click.echo(f"{artist} - {track.title} {status_str} favorites")

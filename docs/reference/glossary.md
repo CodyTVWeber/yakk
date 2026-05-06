@@ -1,6 +1,6 @@
 # Glossary
 
-This glossary defines key terms and concepts used throughout the Voice Mode project. It serves as a reference for both human developers and AI assistants to ensure consistent terminology.
+This glossary defines key terms and concepts used throughout the Yakk project. It serves as a reference for both human developers and AI assistants to ensure consistent terminology.
 
 ## Why This Glossary Exists
 
@@ -17,19 +17,19 @@ This glossary defines key terms and concepts used throughout the Voice Mode proj
 
 ---
 
-**Base Directory**: The root directory for all Voice Mode data, defaults to `~/.yakk`.
+**Base Directory**: The root directory for all Yakk data, defaults to `~/.yakk`.
 
 **Conversation**: A group of related exchanges that form a complete interaction, typically with less than 5 minutes between exchanges.
 
 **Endpoint**: A specific URL where a provider's API is accessible (e.g., `http://127.0.0.1:8880/v1`).
 
-**Exchange**: A single call-and-response interaction in voice mode. One user utterance and one assistant response.
+**Exchange**: A single call-and-response interaction in yakk. One user utterance and one assistant response.
 
 **Event Log**: Structured log of voice interaction events used for debugging and performance analysis.
 
 **MCP Client**: The LLM or AI assistant that connects to MCP servers. The client uses the tools and resources provided by servers.
 
-**MCP Host**: The application that manages MCP connections between clients and servers. Examples: Claude Desktop, VS Code, Cursor. These are the AI coding assistants that users install Voice Mode into.
+**MCP Host**: The application that manages MCP connections between clients and servers. Examples: Claude Desktop, VS Code, Cursor. These are the AI coding assistants that users install Yakk into.
 
 **MCP (Model Context Protocol)**: The protocol that enables LLMs to interact with external tools and resources through a standardized interface.
 
@@ -43,7 +43,7 @@ This glossary defines key terms and concepts used throughout the Voice Mode proj
 
 **Provider**: A service that provides TTS (text-to-speech) or STT (speech-to-text) capabilities. Examples: OpenAI, Kokoro, Whisper.
 
-**MCP Server**: A program that provides tools and resources via MCP. Voice Mode is an MCP server that provides voice interaction capabilities.
+**MCP Server**: A program that provides tools and resources via MCP. Yakk is an MCP server that provides voice interaction capabilities.
 
 **Resource**: Data or content exposed by an MCP server that clients can read.
 
@@ -51,7 +51,7 @@ This glossary defines key terms and concepts used throughout the Voice Mode proj
 
 **Streaming**: Playing audio as it arrives rather than waiting for the complete file, reducing latency.
 
-**Tool**: A function exposed by an MCP server that clients can invoke. Voice Mode exposes tools like `converse`, `listen_for_speech`, etc.
+**Tool**: A function exposed by an MCP server that clients can invoke. Yakk exposes tools like `converse`, `listen_for_speech`, etc.
 
 **Transcription**: Text version of spoken audio, saved separately from audio files when enabled.
 

@@ -2,9 +2,9 @@
 
 > Natural voice conversations with Claude Code (and other MCP capable agents)
 
-[![PyPI Downloads](https://static.pepy.tech/badge/voice-mode)](https://pepy.tech/project/voice-mode)
-[![PyPI Downloads](https://static.pepy.tech/badge/voice-mode/month)](https://pepy.tech/project/voice-mode)
-[![PyPI Downloads](https://static.pepy.tech/badge/voice-mode/week)](https://pepy.tech/project/voice-mode)
+[![PyPI Downloads](https://static.pepy.tech/badge/yakk)](https://pepy.tech/project/yakk)
+[![PyPI Downloads](https://static.pepy.tech/badge/yakk/month)](https://pepy.tech/project/yakk)
+[![PyPI Downloads](https://static.pepy.tech/badge/yakk/week)](https://pepy.tech/project/yakk)
 
 > [!WARNING]
 > **Known Issue (2026-04-13):** Claude Code 2.1.105+ kills Yakk's MCP server when you press ESC to cancel a voice conversation. **Workaround:** Pin to Claude Code 2.1.104. See [discussion #349](https://github.com/mbailey/yakk/discussions/349) for details.
@@ -55,10 +55,10 @@ Installs dependencies and the Yakk Python package.
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # Run the installer (sets up dependencies and local voice services)
-uvx voice-mode-install
+uvx yakk-install
 
 # Add to Claude Code
-claude mcp add --scope user yakk -- uvx --refresh voice-mode
+claude mcp add --scope user yakk -- uvx --refresh yakk
 
 # Optional: Add OpenAI API key as fallback for local services
 export OPENAI_API_KEY=your-openai-key
@@ -208,13 +208,13 @@ export YAKK_SAVE_AUDIO=true
 - [Kokoro Setup](docs/guides/kokoro-setup.md) - Local text-to-speech
 - [Development Setup](docs/tutorials/development-setup.md) - Contributing guide
 
-Full documentation: [voice-mode.readthedocs.io](https://voice-mode.readthedocs.io)
+Full documentation: [yakk.readthedocs.io](https://yakk.readthedocs.io)
 
 ## Links
 
 - **Website**: [getyakk.com](https://getyakk.com)
 - **GitHub**: [github.com/mbailey/yakk](https://github.com/mbailey/yakk)
-- **PyPI**: [pypi.org/project/voice-mode](https://pypi.org/project/voice-mode/)
+- **PyPI**: [pypi.org/project/yakk](https://pypi.org/project/yakk/)
 - **YouTube**: [@getyakk](https://youtube.com/@getyakk)
 - **Twitter/X**: [@getyakk](https://twitter.com/getyakk)
 - **Newsletter**: [![Subscribe](https://img.shields.io/badge/Subscribe-Newsletter-orange?style=flat-square)](https://buttondown.com/yakk)

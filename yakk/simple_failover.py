@@ -1,5 +1,5 @@
 """
-Simple failover implementation for voice-mode.
+Simple failover implementation for yakk.
 
 This module provides a direct try-and-failover approach without health checks.
 Connection refused errors are instant, so there's no performance penalty.

@@ -1,7 +1,7 @@
-site_name: Voice Mode
-site_url: https://voice-mode.readthedocs.io
+site_name: Yakk
+site_url: https://yakk.readthedocs.io
 site_description: Natural voice conversations for AI assistants
-site_author: Voice Mode Team
+site_author: Yakk Team
 
 repo_name: mbailey/yakk
 repo_url: https://github.com/mbailey/yakk
@@ -117,4 +117,4 @@ extra:
     - icon: fontawesome/brands/youtube
       link: https://youtube.com/@getyakk
 
-copyright: Copyright &copy; 2025 Voice Mode - A Failmode Project
+copyright: Copyright &copy; 2025 Yakk - A Failmode Project

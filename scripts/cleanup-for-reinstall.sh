@@ -90,14 +90,14 @@ fi
 log "Checking Claude Code MCP configuration..."
 CLAUDE_CONFIG="$HOME/.config/claude-code/settings.json"
 if [[ -f "$CLAUDE_CONFIG" ]]; then
-    if grep -q "yakk\|voice-mode" "$CLAUDE_CONFIG"; then
+    if grep -q "yakk\|yakk" "$CLAUDE_CONFIG"; then
         log "Found Yakk in Claude Code config: $CLAUDE_CONFIG"
         log "You may want to manually remove the yakk MCP entry"
         if ! $DRY_RUN; then
             echo ""
             echo "WARNING: Claude Code config contains Yakk MCP entry."
             echo "You should manually edit: $CLAUDE_CONFIG"
-            echo "And remove the yakk/voice-mode MCP server entry."
+            echo "And remove the yakk/yakk MCP server entry."
             echo ""
         fi
     fi
@@ -106,7 +106,7 @@ fi
 # Also check ~/.claude.json (older location)
 CLAUDE_JSON="$HOME/.claude.json"
 if [[ -f "$CLAUDE_JSON" ]]; then
-    if grep -q "yakk\|voice-mode" "$CLAUDE_JSON"; then
+    if grep -q "yakk\|yakk" "$CLAUDE_JSON"; then
         log "Found Yakk in ~/.claude.json"
         log "You may want to manually remove the yakk MCP entry"
     fi

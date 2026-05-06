@@ -2,7 +2,7 @@
 
 import pytest
 
-from voice_mode.dj import CommandResult, MpvPlayer
+from yakk.dj import CommandResult, MpvPlayer
 
 
 class TestMpvPlayerConnection:

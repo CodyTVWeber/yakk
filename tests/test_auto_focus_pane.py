@@ -36,17 +36,17 @@ class TestIsTmux:
 
     def test_returns_true_when_tmux_env_set(self):
         with patch.dict("os.environ", {"TMUX": "/tmp/tmux-501/default,12345,0"}):
-            from voice_mode.tools.converse import is_tmux
+            from yakk.tools.converse import is_tmux
             assert is_tmux() is True
 
     def test_returns_false_when_tmux_env_missing(self):
         with patch.dict("os.environ", {}, clear=True):
-            from voice_mode.tools.converse import is_tmux
+            from yakk.tools.converse import is_tmux
             assert is_tmux() is False
 
     def test_returns_false_when_tmux_env_empty(self):
         with patch.dict("os.environ", {"TMUX": ""}):
-            from voice_mode.tools.converse import is_tmux
+            from yakk.tools.converse import is_tmux
             assert is_tmux() is False
 
 
@@ -57,7 +57,7 @@ class TestFocusTmuxPane:
         """select-window runs but select-pane does NOT (avoids stealing focus)."""
         with patch.dict("os.environ", {"TMUX_PANE": "%5"}, clear=False):
             with patch("subprocess.run", side_effect=_mk_run(clients_on_session="/dev/ttys001\n")) as mock_run:
-                from voice_mode.tools.converse import focus_tmux_pane
+                from yakk.tools.converse import focus_tmux_pane
                 focus_tmux_pane()
 
                 mock_run.assert_any_call(
@@ -76,7 +76,7 @@ class TestFocusTmuxPane:
                 display_session="worker",
                 clients_on_session="/dev/ttys003\n",
             )) as mock_run:
-                from voice_mode.tools.converse import focus_tmux_pane
+                from yakk.tools.converse import focus_tmux_pane
                 focus_tmux_pane()
 
                 # No switch-client call should have happened
@@ -93,7 +93,7 @@ class TestFocusTmuxPane:
                 clients_on_session="",
                 all_clients="/dev/ttys000 (detached)\n/dev/ttys004 (focused)\n",
             )) as mock_run:
-                from voice_mode.tools.converse import focus_tmux_pane
+                from yakk.tools.converse import focus_tmux_pane
                 focus_tmux_pane()
 
                 mock_run.assert_any_call(
@@ -104,7 +104,7 @@ class TestFocusTmuxPane:
     def test_noop_when_tmux_pane_missing(self):
         with patch.dict("os.environ", {}, clear=True):
             with patch("subprocess.run") as mock_run:
-                from voice_mode.tools.converse import focus_tmux_pane
+                from yakk.tools.converse import focus_tmux_pane
                 focus_tmux_pane()
 
                 mock_run.assert_not_called()
@@ -112,7 +112,7 @@ class TestFocusTmuxPane:
     def test_noop_when_tmux_pane_empty(self):
         with patch.dict("os.environ", {"TMUX_PANE": ""}):
             with patch("subprocess.run") as mock_run:
-                from voice_mode.tools.converse import focus_tmux_pane
+                from yakk.tools.converse import focus_tmux_pane
                 focus_tmux_pane()
 
                 mock_run.assert_not_called()
@@ -123,16 +123,16 @@ class TestFocusTmuxPane:
                 "subprocess.run",
                 side_effect=FileNotFoundError("tmux not found"),
             ):
-                from voice_mode.tools.converse import focus_tmux_pane
+                from yakk.tools.converse import focus_tmux_pane
                 # Should not raise
                 focus_tmux_pane()
 
     def test_respects_focus_hold_sentinel(self):
         """When the focus-hold sentinel is active, focus is suppressed entirely."""
         with patch.dict("os.environ", {"TMUX_PANE": "%5"}, clear=False):
-            with patch("voice_mode.tools.converse._is_focus_held", return_value=True):
+            with patch("yakk.tools.converse._is_focus_held", return_value=True):
                 with patch("subprocess.run") as mock_run:
-                    from voice_mode.tools.converse import focus_tmux_pane
+                    from yakk.tools.converse import focus_tmux_pane
                     focus_tmux_pane()
 
                     mock_run.assert_not_called()
@@ -144,16 +144,16 @@ class TestAutoFocusPaneConfig:
     def test_default_is_false(self):
         import os
         os.environ.pop("YAKK_AUTO_FOCUS_PANE", None)
-        from voice_mode.config import env_bool
+        from yakk.config import env_bool
         assert env_bool("YAKK_AUTO_FOCUS_PANE", False) is False
 
     def test_enabled_when_set_true(self):
         with patch.dict("os.environ", {"YAKK_AUTO_FOCUS_PANE": "true"}):
-            from voice_mode.config import env_bool
+            from yakk.config import env_bool
             assert env_bool("YAKK_AUTO_FOCUS_PANE", False) is True
 
     def test_enabled_with_various_truthy_values(self):
-        from voice_mode.config import env_bool
+        from yakk.config import env_bool
         for value in ("true", "1", "yes", "on", "TRUE", "True"):
             with patch.dict("os.environ", {"YAKK_AUTO_FOCUS_PANE": value}):
                 assert env_bool("YAKK_AUTO_FOCUS_PANE", False) is True, (
@@ -161,7 +161,7 @@ class TestAutoFocusPaneConfig:
                 )
 
     def test_disabled_with_falsy_values(self):
-        from voice_mode.config import env_bool
+        from yakk.config import env_bool
         for value in ("false", "0", "no", "off", ""):
             with patch.dict("os.environ", {"YAKK_AUTO_FOCUS_PANE": value}):
                 assert env_bool("YAKK_AUTO_FOCUS_PANE", False) is False, (

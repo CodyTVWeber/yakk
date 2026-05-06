@@ -1,7 +1,7 @@
 """
-Core functionality for voice-mode.
+Core functionality for yakk.
 
-This module contains the main functions used by the voice-mode script,
+This module contains the main functions used by the yakk script,
 extracted to allow for easier testing and reuse.
 """
 
@@ -499,7 +499,7 @@ async def text_to_speech(
                     
                     # Last resort: save to user's home directory for manual playback
                     try:
-                        fallback_path = Path.home() / f"voice-mode-audio-{datetime.now().strftime('%Y%m%d_%H%M%S')}.{validated_format}"
+                        fallback_path = Path.home() / f"yakk-audio-{datetime.now().strftime('%Y%m%d_%H%M%S')}.{validated_format}"
                         import shutil
                         shutil.copy(tmp_file.name, fallback_path)
                         logger.warning(f"Audio saved to {fallback_path} for manual playback")
@@ -715,7 +715,7 @@ async def play_chime_end(
 async def play_system_audio(message_key: str, fallback_text: Optional[str] = None, soundfont: str = "default") -> bool:
     """Play a pre-recorded system audio message with fallback to TTS.
 
-    System audio files should be stored in voice_mode/data/soundfonts/{soundfont}/system-messages/
+    System audio files should be stored in yakk/data/soundfonts/{soundfont}/system-messages/
     with the naming pattern: {message_key}.mp3 (or .wav, .opus, .opus, etc.)
 
     Args:
@@ -764,7 +764,7 @@ async def play_system_audio(message_key: str, fallback_text: Optional[str] = Non
     if fallback_text:
         logger.info(f"Using TTS fallback for system message '{message_key}': {fallback_text}")
         # Import here to avoid circular dependency
-        from voice_mode.simple_failover import simple_tts_failover
+        from yakk.simple_failover import simple_tts_failover
         success, metrics, config = await simple_tts_failover(
             text=fallback_text,
             voice="af_sky",  # Use AF Sky for system messages
@@ -777,7 +777,7 @@ async def play_system_audio(message_key: str, fallback_text: Optional[str] = Non
 
 async def cleanup(service_clients: dict):
     """Cleanup function to close HTTP clients and resources"""
-    logger.info("Shutting down Voice Mode Server...")
+    logger.info("Shutting down Yakk Server...")
     
     # Close HTTP clients
     try:

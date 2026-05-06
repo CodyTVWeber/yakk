@@ -1,4 +1,4 @@
-"""Unified service management tool for voice mode services."""
+"""Unified service management tool for yakk services."""
 
 import asyncio
 import logging
@@ -11,14 +11,14 @@ from typing import Literal, Optional, Dict, Any, Union
 
 import psutil
 
-from voice_mode.server import mcp
-from voice_mode.config import WHISPER_PORT, KOKORO_PORT, MLX_AUDIO_PORT, SERVICE_AUTO_ENABLE
-from voice_mode.utils.services.common import find_process_by_port, check_service_status
+from yakk.server import mcp
+from yakk.config import WHISPER_PORT, KOKORO_PORT, MLX_AUDIO_PORT, SERVICE_AUTO_ENABLE
+from yakk.utils.services.common import find_process_by_port, check_service_status
 
 # Default port for Yakk serve command (HTTP MCP server)
 YAKK_SERVE_PORT = 8765
-from voice_mode.utils.services.whisper_helpers import find_whisper_server, find_whisper_model
-from voice_mode.utils.services.kokoro_helpers import find_kokoro_fastapi, has_gpu_support, is_kokoro_starting_up
+from yakk.utils.services.whisper_helpers import find_whisper_server, find_whisper_model
+from yakk.utils.services.kokoro_helpers import find_kokoro_fastapi, has_gpu_support, is_kokoro_starting_up
 
 logger = logging.getLogger("yakk")
 
@@ -87,7 +87,7 @@ def get_service_config_vars(service_name: str) -> Dict[str, Any]:
                     start_script = script
                     break
 
-        from voice_mode.config import KOKORO_MAX_REQUESTS
+        from yakk.config import KOKORO_MAX_REQUESTS
 
         return {
             "HOME": home,
@@ -296,7 +296,7 @@ async def status_service(service_name: str) -> str:
             
             # Get version and capability info
             try:
-                from voice_mode.utils.services.whisper_version import get_whisper_version_info, check_coreml_model_exists
+                from yakk.utils.services.whisper_version import get_whisper_version_info, check_coreml_model_exists
                 version_info = get_whisper_version_info()
                 
                 if version_info.get("version"):
@@ -329,7 +329,7 @@ async def status_service(service_name: str) -> str:
         elif service_name == "kokoro":
             # Try to get version info
             try:
-                from voice_mode.utils.services.version_info import get_kokoro_version
+                from yakk.utils.services.version_info import get_kokoro_version
                 version_info = get_kokoro_version()
                 if version_info.get("api_version"):
                     extra_info_parts.append(f"API Version: {version_info['api_version']}")
@@ -351,7 +351,7 @@ async def status_service(service_name: str) -> str:
             extra_info_parts.append(f"Host: {host}")
             # Try to get version info
             try:
-                from voice_mode.version import __version__
+                from yakk.version import __version__
                 extra_info_parts.append(f"Version: {__version__}")
             except:
                 pass
@@ -502,7 +502,7 @@ async def start_service(service_name: str) -> str:
         # mlx-audio installs via ``uv tool install`` -- the entry point
         # lives at ~/.local/bin/mlx_audio.server. Pass --host/--port from
         # config so the manual ``service start`` path matches the plist.
-        from voice_mode.config import MLX_AUDIO_HOST
+        from yakk.config import MLX_AUDIO_HOST
         entry_point = Path.home() / ".local" / "bin" / "mlx_audio.server"
         if not entry_point.exists():
             return (
@@ -522,7 +522,7 @@ async def start_service(service_name: str) -> str:
         # Start yakk serve command directly
         # Use sys.executable to ensure we use the same Python that's running this script
         import sys
-        cmd = [sys.executable, "-m", "voice_mode", "serve", "--port", str(port)]
+        cmd = [sys.executable, "-m", "yakk", "serve", "--port", str(port)]
 
     else:
         return f"❌ Unknown service: {service_name}"
@@ -883,7 +883,7 @@ async def service(
     action: Literal["status", "start", "stop", "restart", "enable", "disable", "logs"] = "status",
     lines: Optional[Union[int, str]] = None
 ) -> str:
-    """Unified service management tool for voice mode services.
+    """Unified service management tool for yakk services.
 
     Manage Whisper (STT), Kokoro (TTS), and Yakk (HTTP MCP server) services.
 

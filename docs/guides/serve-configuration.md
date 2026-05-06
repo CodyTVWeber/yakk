@@ -128,7 +128,7 @@ For local development, use stdio transport directly in `.claude/mcp.json`:
   "mcpServers": {
     "yakk": {
       "command": "uvx",
-      "args": ["voice-mode"]
+      "args": ["yakk"]
     }
   }
 }

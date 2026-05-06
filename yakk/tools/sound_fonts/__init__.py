@@ -1,1 +1,1 @@
-"""Sound Fonts module for Voice Mode."""
+"""Sound Fonts module for Yakk."""

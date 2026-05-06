@@ -3,7 +3,7 @@
 #
 # Installed by: pip install yakk
 # To activate:  eval "$(sayas --completion)"
-#   or:         source $(python3 -c "from voice_mode.data.completions import get_completion_path; print(get_completion_path('sayas.bash'))")
+#   or:         source $(python3 -c "from yakk.data.completions import get_completion_path; print(get_completion_path('sayas.bash'))")
 
 _sayas_completion() {
     local cur prev voices_json

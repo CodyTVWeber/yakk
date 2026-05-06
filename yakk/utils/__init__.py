@@ -1,4 +1,4 @@
-"""Voice Mode utility modules."""
+"""Yakk utility modules."""
 
 from .event_logger import (
     EventLogger,

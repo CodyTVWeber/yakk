@@ -31,12 +31,12 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 os.environ.setdefault("YAKK_DEBUG", "true")
 os.environ.setdefault("YAKK_ENABLE_SILENCE_DETECTION", "true")
 
-from voice_mode.tools.converse import (
+from yakk.tools.converse import (
     record_audio_with_silence_detection,
     record_audio,
     VAD_AVAILABLE
 )
-from voice_mode.config import (
+from yakk.config import (
     ENABLE_SILENCE_DETECTION,
     VAD_AGGRESSIVENESS,
     SILENCE_THRESHOLD_MS,
@@ -178,7 +178,7 @@ def test_comparison():
 
 def main():
     """Main test function."""
-    print("Voice Mode - Silence Detection Manual Test")
+    print("Yakk - Silence Detection Manual Test")
     print("=========================================")
     
     if not VAD_AVAILABLE:

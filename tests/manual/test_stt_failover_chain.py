@@ -44,9 +44,9 @@ def _set_env_for_chain(stt_base_urls: str) -> None:
 
 
 def _reload_config_into(*modules):
-    """Re-read STT_MODEL / STT_BASE_URLS / STT_MODELS in voice_mode.config and
+    """Re-read STT_MODEL / STT_BASE_URLS / STT_MODELS in yakk.config and
     re-bind the names imported into each downstream module."""
-    import voice_mode.config as cfg
+    import yakk.config as cfg
     cfg.reload_configuration()
     for mod in modules:
         mod.STT_BASE_URLS = cfg.STT_BASE_URLS
@@ -60,7 +60,7 @@ async def scenario_a_full_chain():
     print("\n=== Scenario A: full chain alive (expect mlx-audio handles) ===")
     _set_env_for_chain(f"{MLX_AUDIO_URL},{WHISPER_CPP_URL},{OPENAI_URL}")
 
-    from voice_mode import simple_failover, providers
+    from yakk import simple_failover, providers
     _reload_config_into(simple_failover, providers)
 
     with open(WAV_PATH, "rb") as audio_file:
@@ -78,7 +78,7 @@ async def scenario_b_mlx_down():
     print("\n=== Scenario B: mlx-audio down (expect whisper.cpp handles) ===")
     _set_env_for_chain(f"{DEAD_URL_FOR_MLX},{WHISPER_CPP_URL},{OPENAI_URL}")
 
-    from voice_mode import simple_failover, providers
+    from yakk import simple_failover, providers
     _reload_config_into(simple_failover, providers)
 
     with open(WAV_PATH, "rb") as audio_file:
@@ -96,7 +96,7 @@ async def scenario_c_both_local_down():
     print("\n=== Scenario C: both local down (expect OpenAI handles, model='whisper-1') ===")
     _set_env_for_chain(f"{DEAD_URL_FOR_MLX},{DEAD_URL_FOR_WHISPER_CPP},{OPENAI_URL}")
 
-    from voice_mode import simple_failover, providers
+    from yakk import simple_failover, providers
     _reload_config_into(simple_failover, providers)
 
     captured = {}
@@ -118,7 +118,7 @@ async def scenario_c_both_local_down():
             return instance
         return real_aoai(*args, base_url=base_url, **kwargs)
 
-    with patch("voice_mode.simple_failover.AsyncOpenAI", side_effect=fake_aoai_factory):
+    with patch("yakk.simple_failover.AsyncOpenAI", side_effect=fake_aoai_factory):
         with open(WAV_PATH, "rb") as audio_file:
             result = await simple_failover.simple_stt_failover(audio_file=audio_file)
 

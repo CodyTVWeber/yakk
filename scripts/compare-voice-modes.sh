@@ -1,13 +1,13 @@
 #!/bin/bash
 
-# Voice Mode Comparison Script
-# Runs local voice mode vs OpenAI voice mode side-by-side for demo purposes
+# Yakk Comparison Script
+# Runs local yakk vs OpenAI yakk side-by-side for demo purposes
 #
 # This script creates two tmux panes above the current pane with different voice configurations:
 # - Left pane: OpenAI (cloud-based TTS/STT)
 # - Right pane: Local (Whisper + Kokoro)
 #
-# Usage: ./compare-voice-modes.sh [message]
+# Usage: ./compare-yakks.sh [message]
 #        message: Optional message to speak (default: provider-specific greeting)
 #        (Must be run from within a tmux session)
 
@@ -25,7 +25,7 @@ if [ -z "$TMUX" ]; then
   exit 1
 fi
 
-echo "🎬 Starting voice mode comparison demo..."
+echo "🎬 Starting yakk comparison demo..."
 echo ""
 
 # Clean up existing comparison panes if they exist
@@ -69,8 +69,8 @@ tmux select-pane -t "$RIGHT_PANE" -T "$LOCAL_PANE_NAME"
 sleep 0.3
 
 # Add visual separators to each pane
-tmux send-keys -t "$LEFT_PANE" "clear && echo '╔════════════════════════════════════╗' && echo '║      OpenAI Voice Mode (Cloud)      ║' && echo '╚════════════════════════════════════╝' && echo ''" Enter
-tmux send-keys -t "$RIGHT_PANE" "clear && echo '╔════════════════════════════════════╗' && echo '║    Local Voice Mode (Whisper+Kokoro)║' && echo '╚════════════════════════════════════╝' && echo ''" Enter
+tmux send-keys -t "$LEFT_PANE" "clear && echo '╔════════════════════════════════════╗' && echo '║      OpenAI Yakk (Cloud)      ║' && echo '╚════════════════════════════════════╝' && echo ''" Enter
+tmux send-keys -t "$RIGHT_PANE" "clear && echo '╔════════════════════════════════════╗' && echo '║    Local Yakk (Whisper+Kokoro)║' && echo '╚════════════════════════════════════╝' && echo ''" Enter
 
 sleep 0.3
 
@@ -91,14 +91,14 @@ OPENAI_CMD="YAKK_TTS_BASE_URLS=https://api.openai.com/v1 YAKK_STT_BASE_URLS=http
 # Uses local endpoints (defaults to Kokoro TTS + Whisper STT)
 LOCAL_CMD="YAKK_VOICES=af_sky yakk converse --transport local --message '$LOCAL_MESSAGE'"
 
-echo "⏳ Preparing both voice modes for simultaneous start..."
+echo "⏳ Preparing both yakks for simultaneous start..."
 # Send commands to both panes without executing yet
 tmux send-keys -t "$LEFT_PANE" "$OPENAI_CMD"
 tmux send-keys -t "$RIGHT_PANE" "$LOCAL_CMD"
 
 sleep 0.2
 
-echo "▶️  Starting both voice modes simultaneously..."
+echo "▶️  Starting both yakks simultaneously..."
 # Execute both commands at the same time (minimize timing difference)
 tmux send-keys -t "$LEFT_PANE" Enter
 tmux send-keys -t "$RIGHT_PANE" Enter
@@ -106,7 +106,7 @@ tmux send-keys -t "$RIGHT_PANE" Enter
 sleep 0.5
 
 echo ""
-echo "✅ Both voice modes initialized!"
+echo "✅ Both yakks initialized!"
 echo "📊 Comparison demo is running"
 echo ""
 echo "Pane IDs:"
@@ -127,7 +127,7 @@ echo "  ✓ No bandwidth costs"
 echo "  ✓ Full privacy (data stays local)"
 echo "  ✓ Works offline"
 echo ""
-echo "👀 Both voice modes are now running above."
+echo "👀 Both yakks are now running above."
 echo "💬 Speak naturally in either pane to test."
 echo "⏹️  Press Ctrl+C in a pane to stop it, or run: tmux kill-pane -t PANE_ID"
 echo ""

@@ -33,7 +33,7 @@ import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
-from voice_mode.config import SERVICE_AUTO_ENABLE
+from yakk.config import SERVICE_AUTO_ENABLE
 
 logger = logging.getLogger("yakk")
 
@@ -318,7 +318,7 @@ async def _update_mlx_audio_service_files(
     auto_enable: Optional[bool],
 ) -> Dict[str, Any]:
     """Render and install the launchd plist (Apple Silicon only)."""
-    from voice_mode.tools.service import create_service_file, enable_service
+    from yakk.tools.service import create_service_file, enable_service
 
     result: Dict[str, Any] = {"success": False, "updated": False}
 

@@ -1,11 +1,11 @@
-"""Provider management tools for voice-mode."""
+"""Provider management tools for yakk."""
 
 import logging
 from typing import Optional, Union, Dict, Any
 
-from voice_mode.server import mcp
-from voice_mode.provider_discovery import provider_registry, detect_provider_type, _default_stt_models
-from voice_mode.config import TTS_BASE_URLS, STT_BASE_URLS
+from yakk.server import mcp
+from yakk.provider_discovery import provider_registry, detect_provider_type, _default_stt_models
+from yakk.config import TTS_BASE_URLS, STT_BASE_URLS
 
 logger = logging.getLogger("yakk")
 
@@ -59,7 +59,7 @@ async def refresh_provider_registry(
             for url in urls:
                 if optimistic:
                     # In optimistic mode, just mark everything as available
-                    from voice_mode.provider_discovery import EndpointInfo
+                    from yakk.provider_discovery import EndpointInfo
                     from datetime import datetime
 
                     provider_registry.registry[service][url] = EndpointInfo(

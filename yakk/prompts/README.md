@@ -1,6 +1,6 @@
-# Voice Mode Prompts
+# Yakk Prompts
 
-This directory contains all the FastMCP prompt definitions for the Voice Mode server.
+This directory contains all the FastMCP prompt definitions for the Yakk server.
 
 ## Prompt Files
 
@@ -28,13 +28,13 @@ All prompts are automatically registered with FastMCP through the decorator patt
 To add a new prompt:
 
 1. Create a new file or add to an existing file in this directory
-2. Import the mcp instance: `from voice_mode.server import mcp`
+2. Import the mcp instance: `from yakk.server import mcp`
 3. Use the `@mcp.prompt()` decorator with an optional name parameter
 4. Define a function that returns a string with instructions
 
 Example:
 ```python
-from voice_mode.server import mcp
+from yakk.server import mcp
 
 @mcp.prompt(name="my-prompt")
 def my_prompt() -> str:

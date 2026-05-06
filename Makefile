@@ -38,25 +38,25 @@ help:
 	@echo ""
 	@echo "Building:"
 	@echo "  build         - Build both packages"
-	@echo "  build-package - Build voice-mode package only"
-	@echo "  build-installer - Build voice-mode-install package only"
+	@echo "  build-package - Build yakk package only"
+	@echo "  build-installer - Build yakk-install package only"
 	@echo "  build-dev     - Build development package with auto-versioning"
 	@echo "  test-package  - Test package installation"
 	@echo ""
 	@echo "Publishing to PyPI:"
 	@echo "  publish       - Publish both packages to PyPI"
-	@echo "  publish-package - Publish voice-mode package to PyPI"
-	@echo "  publish-installer - Publish voice-mode-install to PyPI"
+	@echo "  publish-package - Publish yakk package to PyPI"
+	@echo "  publish-installer - Publish yakk-install to PyPI"
 	@echo ""
 	@echo "Publishing to TestPyPI:"
 	@echo "  publish-test  - Publish both packages to TestPyPI"
-	@echo "  publish-package-test - Publish voice-mode to TestPyPI"
-	@echo "  publish-installer-test - Publish voice-mode-install to TestPyPI"
+	@echo "  publish-package-test - Publish yakk to TestPyPI"
+	@echo "  publish-installer-test - Publish yakk-install to TestPyPI"
 	@echo ""
 	@echo "Release Management:"
 	@echo "  release       - Create unified release for both packages"
-	@echo "  release-package - Release voice-mode package only"
-	@echo "  release-installer - Release voice-mode-install package only"
+	@echo "  release-package - Release yakk package only"
+	@echo "  release-installer - Release yakk-install package only"
 	@echo ""
 	@echo "Installer Testing (Local Build):"
 	@echo "  test-installer-ubuntu   - Test on fresh Ubuntu clone"
@@ -88,19 +88,19 @@ help:
 
 # Install package
 install:
-	@echo "Installing voice-mode..."
+	@echo "Installing yakk..."
 	uv pip install -e .
 	@echo "Installation complete!"
 
 # Install package with development dependencies
 dev-install:
-	@echo "Installing voice-mode with development dependencies..."
+	@echo "Installing yakk with development dependencies..."
 	uv pip install -e ".[dev,test]"
 	@echo "Development installation complete!"
 
 # Build Python package
 build-package:
-	@echo "Building voice-mode package..."
+	@echo "Building yakk package..."
 	@uv build
 	@echo "✅ Package built: dist/"
 	@ls -lh dist/
@@ -109,15 +109,15 @@ build-package:
 build-dev:
 	@echo "Building development package..."
 	@# Save current version
-	@cp voice_mode/__version__.py voice_mode/__version__.py.bak
+	@cp yakk/__version__.py yakk/__version__.py.bak
 	@# Get current version and append .dev suffix with timestamp
-	@CURRENT_VERSION=$$(uv run python -c "exec(open('voice_mode/__version__.py').read()); print(__version__)") && \
+	@CURRENT_VERSION=$$(uv run python -c "exec(open('yakk/__version__.py').read()); print(__version__)") && \
 	DEV_VERSION="$$CURRENT_VERSION.dev$$(date +%Y%m%d%H%M%S)" && \
-	echo "__version__ = \"$$DEV_VERSION\"" > voice_mode/__version__.py && \
+	echo "__version__ = \"$$DEV_VERSION\"" > yakk/__version__.py && \
 	echo "Building version $$DEV_VERSION..." && \
-	uv build || (mv voice_mode/__version__.py.bak voice_mode/__version__.py; exit 1)
+	uv build || (mv yakk/__version__.py.bak yakk/__version__.py; exit 1)
 	@# Restore original version
-	@mv voice_mode/__version__.py.bak voice_mode/__version__.py
+	@mv yakk/__version__.py.bak yakk/__version__.py
 	@echo "Development package built successfully in dist/"
 
 # Run unit tests
@@ -139,8 +139,8 @@ test-package: build-package
 	@cd /tmp && \
 	uv venv test-env && \
 	. test-env/bin/activate && \
-	uv pip install $(CURDIR)/dist/voice_mode-*.whl && \
-	voice-mode --help && \
+	uv pip install $(CURDIR)/dist/yakk-*.whl && \
+	yakk --help && \
 	deactivate && \
 	rm -rf test-env
 	@echo "Package test successful!"
@@ -158,12 +158,12 @@ publish-test: clean-dist build
 	@cd installer && uv publish --index-url https://test.pypi.org/legacy/
 	@echo "✅ Both packages published to TestPyPI!"
 
-# Publish voice-mode package to TestPyPI
+# Publish yakk package to TestPyPI
 publish-package-test:
-	@echo "Cleaning voice-mode dist..."
+	@echo "Cleaning yakk dist..."
 	@rm -rf dist/*.whl dist/*.tar.gz
 	@$(MAKE) build-package
-	@echo "Publishing voice-mode to TestPyPI..."
+	@echo "Publishing yakk to TestPyPI..."
 	@if [ -z "$$UV_PUBLISH_TOKEN" ]; then \
 		echo "❌ UV_PUBLISH_TOKEN not set!"; \
 		echo "Get a token from https://test.pypi.org/manage/account/token/"; \
@@ -190,39 +190,39 @@ publish: clean-dist build
 		exit 1; \
 	fi
 	@echo ""
-	@echo "Publishing voice-mode..."
+	@echo "Publishing yakk..."
 	@uv publish
-	@echo "✅ voice-mode published!"
+	@echo "✅ yakk published!"
 	@echo ""
-	@echo "Publishing voice-mode-install..."
+	@echo "Publishing yakk-install..."
 	@cd installer && uv publish
-	@echo "✅ voice-mode-install published!"
+	@echo "✅ yakk-install published!"
 
-# Publish voice-mode package only
+# Publish yakk package only
 publish-package:
-	@echo "Cleaning voice-mode dist..."
+	@echo "Cleaning yakk dist..."
 	@rm -rf dist/*.whl dist/*.tar.gz
 	@$(MAKE) build-package
-	@echo "Publishing voice-mode to PyPI..."
+	@echo "Publishing yakk to PyPI..."
 	@if [ -z "$$UV_PUBLISH_TOKEN" ]; then \
 		echo "❌ UV_PUBLISH_TOKEN not set!"; \
 		exit 1; \
 	fi
 	@uv publish
-	@echo "✅ voice-mode published!"
+	@echo "✅ yakk published!"
 
-# Publish voice-mode-install package only
+# Publish yakk-install package only
 publish-installer:
 	@echo "Cleaning installer dist..."
 	@rm -rf installer/dist/*.whl installer/dist/*.tar.gz
 	@$(MAKE) build-installer
-	@echo "Publishing voice-mode-install to PyPI..."
+	@echo "Publishing yakk-install to PyPI..."
 	@if [ -z "$$UV_PUBLISH_TOKEN" ]; then \
 		echo "❌ UV_PUBLISH_TOKEN not set!"; \
 		exit 1; \
 	fi
 	@cd installer && uv publish
-	@echo "✅ voice-mode-install published!"
+	@echo "✅ yakk-install published!"
 
 # Clean build artifacts - Three-tier approach for flexibility
 clean:
@@ -232,14 +232,14 @@ clean:
 	@echo "✅ All build artifacts cleaned!"
 
 clean-package:
-	@echo "Cleaning voice-mode build artifacts..."
+	@echo "Cleaning yakk build artifacts..."
 	@rm -rf dist/ build/ *.egg-info .pytest_cache __pycache__
 	@rm -rf htmlcov/ .coverage coverage.xml .coverage.*
 	@find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
 	@find . -type f -name "*.pyc" -delete
 
 clean-installer:
-	@echo "Cleaning voice-mode-install build artifacts..."
+	@echo "Cleaning yakk-install build artifacts..."
 	@rm -rf installer/dist/*.whl installer/dist/*.tar.gz
 
 # Clean only distribution artifacts (for publish safety)
@@ -251,7 +251,7 @@ clean-dist:
 
 # Release targets - Create a new release and tag
 release:
-	@echo "Creating unified release for voice-mode and voice-mode-install..."
+	@echo "Creating unified release for yakk and yakk-install..."
 	@echo ""
 	@echo "Current version: $$(uv run python scripts/release.py --current)"
 	@echo ""
@@ -263,7 +263,7 @@ release:
 	uv run python scripts/release.py $$version
 
 release-package:
-	@echo "Creating release for voice-mode package only..."
+	@echo "Creating release for yakk package only..."
 	@echo ""
 	@echo "Current version: $$(uv run python scripts/release.py --current)"
 	@echo ""
@@ -275,7 +275,7 @@ release-package:
 	uv run python scripts/release.py $$version --package package
 
 release-installer:
-	@echo "Creating release for voice-mode-install package only..."
+	@echo "Creating release for yakk-install package only..."
 	@echo ""
 	@echo "Current version: $$(uv run python scripts/release.py --current)"
 	@echo ""
@@ -418,11 +418,11 @@ test-markers:
 	@echo "Usage: uv run pytest -m 'marker_name'"
 	@echo "Example: uv run pytest -m 'not slow'"
 
-# Build voice-mode-install package (always clean first to prevent old artifacts)
+# Build yakk-install package (always clean first to prevent old artifacts)
 build-installer: clean-installer
 	@echo "Syncing dependencies.yaml to installer..."
 	@bash scripts/sync-dependencies.sh
-	@echo "Building voice-mode-install package..."
+	@echo "Building yakk-install package..."
 	@cd installer && uv build
 	@echo "✅ Package built: installer/dist/"
 	@ls -lh installer/dist/
@@ -433,8 +433,8 @@ build: build-package build-installer
 
 # Run installer locally to preview logo and output
 run-installer:
-	@echo "Running voice-mode-install from source..."
-	@cd installer && uv run voice-mode-install --dry-run --non-interactive 2>&1 | head -30 || true
+	@echo "Running yakk-install from source..."
+	@cd installer && uv run yakk-install --dry-run --non-interactive 2>&1 | head -30 || true
 
 # Test installer on fresh Ubuntu clone (default)
 test-installer-ubuntu: build-installer
@@ -444,7 +444,7 @@ test-installer-ubuntu: build-installer
 		echo "Install from: https://github.com/cirruslabs/tart"; \
 		exit 1; \
 	fi
-	@WHEEL=$$(ls -t installer/dist/voice_mode_install-*.whl | head -1); \
+	@WHEEL=$$(ls -t installer/dist/yakk_install-*.whl | head -1); \
 	if [ -z "$$WHEEL" ]; then \
 		echo "❌ Wheel file not found. Run 'make build-installer' first."; \
 		exit 1; \
@@ -460,7 +460,7 @@ test-installer-fedora: build-installer
 		echo "Install from: https://github.com/cirruslabs/tart"; \
 		exit 1; \
 	fi
-	@WHEEL=$$(ls -t installer/dist/voice_mode_install-*.whl | head -1); \
+	@WHEEL=$$(ls -t installer/dist/yakk_install-*.whl | head -1); \
 	if [ -z "$$WHEEL" ]; then \
 		echo "❌ Wheel file not found. Run 'make build-installer' first."; \
 		exit 1; \
@@ -476,7 +476,7 @@ test-installer-all: build-installer
 		echo "Install from: https://github.com/cirruslabs/tart"; \
 		exit 1; \
 	fi
-	@WHEEL=$$(ls -t installer/dist/voice_mode_install-*.whl | head -1); \
+	@WHEEL=$$(ls -t installer/dist/yakk_install-*.whl | head -1); \
 	if [ -z "$$WHEEL" ]; then \
 		echo "❌ Wheel file not found. Run 'make build-installer' first."; \
 		exit 1; \
@@ -496,7 +496,7 @@ test-installer-ci: build-installer
 		echo "❌ Docker is not installed!"; \
 		exit 1; \
 	fi
-	@WHEEL=$$(ls -t installer/dist/voice_mode_install-*.whl | head -1); \
+	@WHEEL=$$(ls -t installer/dist/yakk_install-*.whl | head -1); \
 	if [ -z "$$WHEEL" ]; then \
 		echo "❌ Wheel file not found. Run 'make build-installer' first."; \
 		exit 1; \
@@ -509,12 +509,12 @@ test-installer-ci: build-installer
 	echo "=== Testing Fedora (Docker) ==="; \
 	uv run python scripts/test_installer.py fedora --wheel "$$WHEEL" --backend docker || true
 
-# Publish voice-mode-install to TestPyPI
+# Publish yakk-install to TestPyPI
 publish-installer-test:
 	@echo "Cleaning installer dist..."
 	@rm -rf installer/dist/*.whl installer/dist/*.tar.gz
 	@$(MAKE) build-installer
-	@echo "Publishing voice-mode-install to TestPyPI..."
+	@echo "Publishing yakk-install to TestPyPI..."
 	@if [ -z "$$UV_PUBLISH_TOKEN" ]; then \
 		echo "❌ UV_PUBLISH_TOKEN not set!"; \
 		echo "Get a token from https://test.pypi.org/manage/account/token/"; \
@@ -682,7 +682,7 @@ test-installer-pypi: test-installer-pypi-all
 
 # Test installer from PyPI on Ubuntu (fresh clone)
 test-installer-pypi-ubuntu:
-	@echo "Testing latest voice-mode-install from PyPI on fresh Ubuntu clone..."
+	@echo "Testing latest yakk-install from PyPI on fresh Ubuntu clone..."
 	@if ! command -v tart >/dev/null 2>&1; then \
 		echo "❌ Tart is not installed!"; \
 		echo "Install from: https://github.com/cirruslabs/tart"; \
@@ -692,7 +692,7 @@ test-installer-pypi-ubuntu:
 
 # Test installer from PyPI on Fedora (fresh clone)
 test-installer-pypi-fedora:
-	@echo "Testing latest voice-mode-install from PyPI on fresh Fedora clone..."
+	@echo "Testing latest yakk-install from PyPI on fresh Fedora clone..."
 	@if ! command -v tart >/dev/null 2>&1; then \
 		echo "❌ Tart is not installed!"; \
 		echo "Install from: https://github.com/cirruslabs/tart"; \
@@ -702,7 +702,7 @@ test-installer-pypi-fedora:
 
 # Test installer from PyPI on all platforms (fresh clones)
 test-installer-pypi-all:
-	@echo "Testing latest voice-mode-install from PyPI on fresh clones of all platforms..."
+	@echo "Testing latest yakk-install from PyPI on fresh clones of all platforms..."
 	@if ! command -v tart >/dev/null 2>&1; then \
 		echo "❌ Tart is not installed!"; \
 		echo "Install from: https://github.com/cirruslabs/tart"; \

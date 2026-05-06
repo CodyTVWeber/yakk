@@ -1,1 +1,1 @@
-# Templates package for Voice Mode
+# Templates package for Yakk

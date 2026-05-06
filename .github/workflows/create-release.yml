@@ -47,20 +47,20 @@ jobs:
         echo "curl -LsSf https://astral.sh/uv/install.sh | sh" >> $GITHUB_OUTPUT
         echo "" >> $GITHUB_OUTPUT
         echo "# Install Yakk and configure services" >> $GITHUB_OUTPUT
-        echo "uvx voice-mode-install" >> $GITHUB_OUTPUT
+        echo "uvx yakk-install" >> $GITHUB_OUTPUT
         echo "" >> $GITHUB_OUTPUT
         echo "# Add to Claude Code MCP" >> $GITHUB_OUTPUT
-        echo "claude mcp add --scope user yakk -- uvx --refresh voice-mode" >> $GITHUB_OUTPUT
+        echo "claude mcp add --scope user yakk -- uvx --refresh yakk" >> $GITHUB_OUTPUT
         echo '```' >> $GITHUB_OUTPUT
         echo "" >> $GITHUB_OUTPUT
         echo "### Alternative: Direct Installation" >> $GITHUB_OUTPUT
         echo "" >> $GITHUB_OUTPUT
         echo '```bash' >> $GITHUB_OUTPUT
         echo "# With UV" >> $GITHUB_OUTPUT
-        echo "uv tool install voice-mode" >> $GITHUB_OUTPUT
+        echo "uv tool install yakk" >> $GITHUB_OUTPUT
         echo "" >> $GITHUB_OUTPUT
         echo "# With pip" >> $GITHUB_OUTPUT
-        echo "pip install voice-mode==${{ steps.version.outputs.VERSION }}" >> $GITHUB_OUTPUT
+        echo "pip install yakk==${{ steps.version.outputs.VERSION }}" >> $GITHUB_OUTPUT
         echo '```' >> $GITHUB_OUTPUT
         echo "" >> $GITHUB_OUTPUT
         echo "For detailed documentation, visit https://getyakk.com" >> $GITHUB_OUTPUT

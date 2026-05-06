@@ -8,12 +8,12 @@ from unittest.mock import MagicMock, patch
 import pytest
 from click.testing import CliRunner
 
-from voice_mode.cli import sayas_command
+from yakk.cli import sayas_command
 
 
-# The sayas_command imports _load_voices_json from voice_mode.tools.clone.profiles
+# The sayas_command imports _load_voices_json from yakk.tools.clone.profiles
 # at call time. Patch at the source module.
-PROFILES_MODULE = "voice_mode.tools.clone.profiles"
+PROFILES_MODULE = "yakk.tools.clone.profiles"
 
 
 @pytest.fixture
@@ -149,7 +149,7 @@ class TestSayasGeneration:
         runner = CliRunner()
         with _patch_load(voices_data), \
              patch("urllib.request.urlopen", return_value=mock_response) as mock_urlopen, \
-             patch("voice_mode.cli._play_audio") as mock_play:
+             patch("yakk.cli._play_audio") as mock_play:
             result = runner.invoke(sayas_command, ["alice", "Hello world"])
 
         assert result.exit_code == 0
@@ -192,7 +192,7 @@ class TestSayasGeneration:
         runner = CliRunner()
         with _patch_load(voices_data), \
              patch("urllib.request.urlopen", return_value=mock_response) as mock_urlopen, \
-             patch("voice_mode.cli._play_audio"):
+             patch("yakk.cli._play_audio"):
             result = runner.invoke(sayas_command, ["alice", "Hello", "world", "today"])
 
         call_args = mock_urlopen.call_args
@@ -210,7 +210,7 @@ class TestSayasGeneration:
         runner = CliRunner()
         with _patch_load(voices_data), \
              patch("urllib.request.urlopen", return_value=mock_response) as mock_urlopen, \
-             patch("voice_mode.cli._play_audio"):
+             patch("yakk.cli._play_audio"):
             result = runner.invoke(sayas_command, ["bob", "Hello"])
 
         call_args = mock_urlopen.call_args
@@ -236,8 +236,8 @@ class TestSayasPreview:
         """Test that preview shows voice info and plays ref audio."""
         runner = CliRunner()
         with _patch_load(voices_data), \
-             patch("voice_mode.cli.subprocess.run", return_value=MagicMock(returncode=0)), \
-             patch("voice_mode.cli._play_audio"):
+             patch("yakk.cli.subprocess.run", return_value=MagicMock(returncode=0)), \
+             patch("yakk.cli._play_audio"):
             result = runner.invoke(sayas_command, ["alice", "-p"])
 
         assert result.exit_code == 0
@@ -249,8 +249,8 @@ class TestSayasPreview:
         """Test that preview extracts host from base_url for scp."""
         runner = CliRunner()
         with _patch_load(voices_data), \
-             patch("voice_mode.cli.subprocess.run", return_value=MagicMock(returncode=0)) as mock_run, \
-             patch("voice_mode.cli._play_audio"):
+             patch("yakk.cli.subprocess.run", return_value=MagicMock(returncode=0)) as mock_run, \
+             patch("yakk.cli._play_audio"):
             result = runner.invoke(sayas_command, ["alice", "-p"])
 
         scp_call = mock_run.call_args
@@ -265,7 +265,7 @@ class TestSayasEntryPoint:
 
     def test_sayas_cli_callable(self):
         """Verify that sayas_cli is importable and callable."""
-        from voice_mode.cli import sayas_cli
+        from yakk.cli import sayas_cli
         assert callable(sayas_cli)
 
     def test_sayas_command_is_click_command(self):
@@ -277,34 +277,34 @@ class TestSayasEntryPoint:
 class TestPlayAudio:
     """Test the _play_audio helper."""
 
-    @patch("voice_mode.cli.shutil.which")
-    @patch("voice_mode.cli.subprocess.run")
+    @patch("yakk.cli.shutil.which")
+    @patch("yakk.cli.subprocess.run")
     def test_play_with_afplay(self, mock_run, mock_which):
         """Test that afplay is preferred on macOS."""
         mock_which.side_effect = lambda x: "/usr/bin/afplay" if x == "afplay" else None
 
-        from voice_mode.cli import _play_audio
+        from yakk.cli import _play_audio
         _play_audio("/tmp/test.mp3")
 
         mock_run.assert_called_once_with(["afplay", "/tmp/test.mp3"], check=False)
 
-    @patch("voice_mode.cli.shutil.which")
-    @patch("voice_mode.cli.subprocess.run")
+    @patch("yakk.cli.shutil.which")
+    @patch("yakk.cli.subprocess.run")
     def test_play_with_mpv(self, mock_run, mock_which):
         """Test fallback to mpv when afplay is not available."""
         mock_which.side_effect = lambda x: "/usr/bin/mpv" if x == "mpv" else None
 
-        from voice_mode.cli import _play_audio
+        from yakk.cli import _play_audio
         _play_audio("/tmp/test.mp3")
 
         mock_run.assert_called_once_with(
             ["mpv", "--no-video", "--really-quiet", "/tmp/test.mp3"], check=False
         )
 
-    @patch("voice_mode.cli.shutil.which", return_value=None)
+    @patch("yakk.cli.shutil.which", return_value=None)
     def test_play_no_player(self, mock_which):
         """Test message when no player is available."""
-        from voice_mode.cli import _play_audio
+        from yakk.cli import _play_audio
         _play_audio("/tmp/test.mp3")
 
 
@@ -314,14 +314,14 @@ class TestCompletionFile:
     def test_completion_file_exists(self):
         """Verify the completion script is bundled."""
         from importlib.resources import files
-        resource = files("voice_mode.data.completions").joinpath("sayas.bash")
+        resource = files("yakk.data.completions").joinpath("sayas.bash")
         content = resource.read_text()
         assert "_sayas_completion" in content
         assert "complete" in content
 
     def test_get_completion_path(self):
         """Test the helper function to get completion path."""
-        from voice_mode.data.completions import get_completion_path
+        from yakk.data.completions import get_completion_path
         path = get_completion_path("sayas.bash")
         assert path.endswith("sayas.bash")
         assert os.path.exists(path)

@@ -32,10 +32,10 @@ other machines) can connect to Yakk over the network. Entirely unnecessary for l
 
 | File | Lines | Action |
 |------|-------|--------|
-| `voice_mode/serve_middleware.py` | all 473 lines | **Delete entire file** |
-| `voice_mode/cli.py` | ~2188–2430 | Delete `serve` command function + all its decorators |
-| `voice_mode/cli.py` | 24–30 | Delete `SERVE_*` imports from config |
-| `voice_mode/cli.py` | 685 | Delete mention of port 8765 in service status table |
+| `yakk/serve_middleware.py` | all 473 lines | **Delete entire file** |
+| `yakk/cli.py` | ~2188–2430 | Delete `serve` command function + all its decorators |
+| `yakk/cli.py` | 24–30 | Delete `SERVE_*` imports from config |
+| `yakk/cli.py` | 685 | Delete mention of port 8765 in service status table |
 
 **Classes/functions disappearing with `serve_middleware.py`:**
 - `ANTHROPIC_CIDRS` — Anthropic IP allowlist
@@ -61,7 +61,7 @@ entirely rather than leaving a dead command.
 
 | File | Lines | Action |
 |------|-------|--------|
-| `voice_mode/cli.py` | ~2539–2546 | Delete `connect` group and its stub function |
+| `yakk/cli.py` | ~2539–2546 | Delete `connect` group and its stub function |
 
 ---
 
@@ -69,7 +69,7 @@ entirely rather than leaving a dead command.
 
 These only exist to configure the serve command. With serve gone, delete them everywhere.
 
-**In `voice_mode/config.py`:**
+**In `yakk/config.py`:**
 
 | Variable | Config key | Lines (approx) |
 |----------|-----------|----------------|
@@ -87,7 +87,7 @@ Also remove the comment block in the generated `yakk.env` template (~lines 362�
 that documents all these `YAKK_SERVE_*` env vars.
 
 **Also remove from:**
-- `voice_mode/cli.py` import block (lines 24–30): `SERVE_ALLOW_LOCAL`, `SERVE_ALLOW_ANTHROPIC`,
+- `yakk/cli.py` import block (lines 24–30): `SERVE_ALLOW_LOCAL`, `SERVE_ALLOW_ANTHROPIC`,
   `SERVE_ALLOW_TAILSCALE`, `SERVE_ALLOWED_IPS`, `SERVE_SECRET`, `SERVE_TOKEN`, `SERVE_TRANSPORT`
 
 ---
@@ -97,7 +97,7 @@ that documents all these `YAKK_SERVE_*` env vars.
 These flags exist to choose between local vs cloud providers. With cloud gone, both are always
 `True`. Replace their usage with the always-taken value and delete the variables.
 
-**In `voice_mode/config.py`:**
+**In `yakk/config.py`:**
 - Line ~161–165: Delete the comment block for `YAKK_PREFER_LOCAL` / `YAKK_ALWAYS_TRY_LOCAL`
 - Line ~521: Delete `PREFER_LOCAL = os.getenv(...)` 
 - Line ~524: Delete `ALWAYS_TRY_LOCAL = os.getenv(...)`
@@ -106,12 +106,12 @@ These flags exist to choose between local vs cloud providers. With cloud gone, b
 
 | File | Usage | Resolution |
 |------|-------|------------|
-| `voice_mode/shared.py:18` | imports `PREFER_LOCAL` | Remove import |
-| `voice_mode/tools/converse.py:38` | imports `PREFER_LOCAL` | Remove import (verify it's unused in logic) |
-| `voice_mode/tools/devices.py:101,108` | imports + displays `PREFER_LOCAL` | Remove import and status line |
-| `voice_mode/tools/devices.py:354` | exports `YAKK_PREFER_LOCAL` in env dump | Remove |
-| `voice_mode/resources/configuration.py:12,74,264,355` | imports, displays, documents `PREFER_LOCAL` and `ALWAYS_TRY_LOCAL` | Remove all four sites |
-| `voice_mode/tools/configuration_management.py:312–313` | lists both as config keys | Remove entries |
+| `yakk/shared.py:18` | imports `PREFER_LOCAL` | Remove import |
+| `yakk/tools/converse.py:38` | imports `PREFER_LOCAL` | Remove import (verify it's unused in logic) |
+| `yakk/tools/devices.py:101,108` | imports + displays `PREFER_LOCAL` | Remove import and status line |
+| `yakk/tools/devices.py:354` | exports `YAKK_PREFER_LOCAL` in env dump | Remove |
+| `yakk/resources/configuration.py:12,74,264,355` | imports, displays, documents `PREFER_LOCAL` and `ALWAYS_TRY_LOCAL` | Remove all four sites |
+| `yakk/tools/configuration_management.py:312–313` | lists both as config keys | Remove entries |
 
 ---
 
@@ -127,12 +127,12 @@ local, every call returns `True` and `max_retries` is always `0`.
 
 | File | Occurrences |
 |------|-------------|
-| `voice_mode/providers.py` | lines ~59, 98, 125, 147, 189, 208 (6×) |
-| `voice_mode/core.py` | lines ~142, 143 (2×) |
-| `voice_mode/simple_failover.py` | lines ~237, 247 (2×) |
+| `yakk/providers.py` | lines ~59, 98, 125, 147, 189, 208 (6×) |
+| `yakk/core.py` | lines ~142, 143 (2×) |
+| `yakk/simple_failover.py` | lines ~237, 247 (2×) |
 
 After removing all call sites, check if `is_local_provider` is still referenced anywhere.
-If not, delete the function from `voice_mode/provider_discovery.py` and remove the import
+If not, delete the function from `yakk/provider_discovery.py` and remove the import
 from `providers.py`, `core.py`, and `simple_failover.py`.
 
 ---
@@ -146,7 +146,7 @@ There are no actual `OPENAI_API_KEY` usages in Python source (all clients use
 |------|-------|--------|
 | `server.json` | ~22–33 | Delete entire `OPENAI_API_KEY` env var entry block |
 | `server.json` | ~43–47 | Delete `YAKK_PREFER_LOCAL` env var entry block |
-| `voice_mode/config.py` | ~145–150 | Delete `YAKK_TTS_BASE_URLS` comment that mentions OpenAI |
+| `yakk/config.py` | ~145–150 | Delete `YAKK_TTS_BASE_URLS` comment that mentions OpenAI |
 | `README.md` | ~64, 78, 90–91, 192 | Remove all OpenAI API key references |
 | `CONTRIBUTING.md` | ~38 | Remove `export OPENAI_API_KEY=your-key-here` |
 
@@ -159,9 +159,9 @@ this — clone only uses local Kokoro.
 
 | File | Lines | Action |
 |------|-------|--------|
-| `voice_mode/config.py` | ~216–222 | Delete remote clone URL config block |
-| `voice_mode/config.py` | ~224 comment | Delete `# YAKK_CLONE_BASE_URL=http://ms2:8890/v1` |
-| `voice_mode/tools/clone/profiles.py` | ~26 | Delete `DEFAULT_CLONE_BASE_URL = "http://ms2:8890/v1"` |
+| `yakk/config.py` | ~216–222 | Delete remote clone URL config block |
+| `yakk/config.py` | ~224 comment | Delete `# YAKK_CLONE_BASE_URL=http://ms2:8890/v1` |
+| `yakk/tools/clone/profiles.py` | ~26 | Delete `DEFAULT_CLONE_BASE_URL = "http://ms2:8890/v1"` |
 
 ---
 
@@ -227,24 +227,24 @@ The `keywords` field in `pyproject.toml` (line ~15) includes `"livekit"`. Remove
 | `openai` Python library | Local HTTP client for Whisper/Kokoro OpenAI-compat API |
 | `httpx` | General HTTP — used for health checks and downloads |
 | `aiohttp` | Used by Whisper/Kokoro service installers |
-| `voice_mode/core.py` | Core TTS/STT logic — keep, just simplify max_retries |
-| `voice_mode/providers.py` | Provider selection — keep, just simplify max_retries |
-| `voice_mode/provider_discovery.py` | Health checking — keep, remove `is_local_provider` if unused |
-| `voice_mode/simple_failover.py` | STT failover logic — keep, simplify max_retries |
-| `voice_mode/tools/converse.py` | Core voice loop — keep |
-| `voice_mode/tools/service.py` | Whisper/Kokoro service management — keep |
-| `voice_mode/tools/clone/` | Local voice cloning — keep, remove remote URL only |
-| `voice_mode/dj/` | Local background music — keep entirely |
-| `voice_mode/cli_commands/claude.py` | Claude Code hooks management — keep |
-| `voice_mode/cli_commands/exchanges.py` | Conversation log viewer — keep |
-| `voice_mode/cli_commands/soundfonts.py` | Soundfont toggle — keep |
-| `voice_mode/cli_commands/status.py` | Status command — keep |
-| `voice_mode/cli_commands/transcribe.py` | Local transcription — keep |
-| `voice_mode/tools/whisper/` | Whisper management — keep |
-| `voice_mode/tools/kokoro/` | Kokoro management — keep |
-| `voice_mode/tools/mlx_audio/` | MLX audio (local Apple Silicon TTS) — keep |
+| `yakk/core.py` | Core TTS/STT logic — keep, just simplify max_retries |
+| `yakk/providers.py` | Provider selection — keep, just simplify max_retries |
+| `yakk/provider_discovery.py` | Health checking — keep, remove `is_local_provider` if unused |
+| `yakk/simple_failover.py` | STT failover logic — keep, simplify max_retries |
+| `yakk/tools/converse.py` | Core voice loop — keep |
+| `yakk/tools/service.py` | Whisper/Kokoro service management — keep |
+| `yakk/tools/clone/` | Local voice cloning — keep, remove remote URL only |
+| `yakk/dj/` | Local background music — keep entirely |
+| `yakk/cli_commands/claude.py` | Claude Code hooks management — keep |
+| `yakk/cli_commands/exchanges.py` | Conversation log viewer — keep |
+| `yakk/cli_commands/soundfonts.py` | Soundfont toggle — keep |
+| `yakk/cli_commands/status.py` | Status command — keep |
+| `yakk/cli_commands/transcribe.py` | Local transcription — keep |
+| `yakk/tools/whisper/` | Whisper management — keep |
+| `yakk/tools/kokoro/` | Kokoro management — keep |
+| `yakk/tools/mlx_audio/` | MLX audio (local Apple Silicon TTS) — keep |
 | All hook data files | Claude Code integration — keep |
-| `voice_mode/conch.py` | Turn-taking for multi-agent voice — keep |
+| `yakk/conch.py` | Turn-taking for multi-agent voice — keep |
 
 ---
 
@@ -253,15 +253,15 @@ The `keywords` field in `pyproject.toml` (line ~15) includes `"livekit"`. Remove
 Ordered to avoid broken imports mid-way through the work.
 
 ### Phase 1 — Delete the serve infrastructure (eliminates the largest blob)
-1. Delete `voice_mode/serve_middleware.py` entirely
-2. In `voice_mode/cli.py`:
+1. Delete `yakk/serve_middleware.py` entirely
+2. In `yakk/cli.py`:
    a. Remove `SERVE_*` imports from the import block (lines 24–30)
    b. Delete the entire `serve` command function and all its `@click` decorators
    c. Delete the `connect` command stub
    d. Remove the port 8765 row from the service status table (~line 685)
 
 ### Phase 2 — Clean up config
-3. In `voice_mode/config.py`:
+3. In `yakk/config.py`:
    a. Delete the `SERVE_*` comment block (~lines 362–390)
    b. Delete all `SERVE_*` variable assignments (~lines 1341–1365)
    c. Delete `YAKK_PREFER_LOCAL` and `YAKK_ALWAYS_TRY_LOCAL` comment block (~lines 161–166)
@@ -269,23 +269,23 @@ Ordered to avoid broken imports mid-way through the work.
    e. Delete remote clone URL config block (~lines 216–224)
 
 ### Phase 3 — Remove PREFER_LOCAL / ALWAYS_TRY_LOCAL usage
-4. `voice_mode/shared.py` — remove `PREFER_LOCAL` from import
-5. `voice_mode/tools/converse.py` — remove `PREFER_LOCAL` from import
-6. `voice_mode/tools/devices.py` — remove import + status display line + env export line
-7. `voice_mode/resources/configuration.py` — remove all four sites (import, display, docs, export)
-8. `voice_mode/tools/configuration_management.py` — remove two config key entries
+4. `yakk/shared.py` — remove `PREFER_LOCAL` from import
+5. `yakk/tools/converse.py` — remove `PREFER_LOCAL` from import
+6. `yakk/tools/devices.py` — remove import + status display line + env export line
+7. `yakk/resources/configuration.py` — remove all four sites (import, display, docs, export)
+8. `yakk/tools/configuration_management.py` — remove two config key entries
 
 ### Phase 4 — Simplify `is_local_provider()` conditionals
-9. In `voice_mode/providers.py`, `voice_mode/core.py`, `voice_mode/simple_failover.py`:
+9. In `yakk/providers.py`, `yakk/core.py`, `yakk/simple_failover.py`:
    - Replace every `max_retries = 0 if is_local_provider(...) else 2` with `max_retries = 0`
    - Remove `is_local_provider` import from each file
 10. Verify `is_local_provider` has no remaining callers, then delete the function from
-    `voice_mode/provider_discovery.py`
+    `yakk/provider_discovery.py`
 
 ### Phase 5 — Manifests and pyproject
 11. `server.json` — delete `OPENAI_API_KEY` entry block, delete `YAKK_PREFER_LOCAL` entry block
 12. `pyproject.toml` — delete `websockets` dep, remove `livekit` from keywords
-13. `voice_mode/tools/clone/profiles.py` — delete `DEFAULT_CLONE_BASE_URL`
+13. `yakk/tools/clone/profiles.py` — delete `DEFAULT_CLONE_BASE_URL`
 
 ### Phase 6 — Skills, docs, and root files
 14. `.claude/skills/yakk/SKILL.md` — remove Tailscale section, yakk Connect references,
@@ -303,16 +303,16 @@ Run these after each phase to catch broken imports early.
 
 ```bash
 # After every phase: fast import check
-uv run python -c "import voice_mode; print('ok')"
+uv run python -c "import yakk; print('ok')"
 
 # After Phase 1: serve command must be gone
 uv run yakk --help  # must NOT show 'serve' or 'connect'
 
 # After Phase 3: PREFER_LOCAL must not appear in any source
-grep -r "PREFER_LOCAL\|ALWAYS_TRY_LOCAL" voice_mode/ --include="*.py"
+grep -r "PREFER_LOCAL\|ALWAYS_TRY_LOCAL" yakk/ --include="*.py"
 
 # After Phase 4: no more is_local_provider in providers/core/failover
-grep -r "is_local_provider" voice_mode/providers.py voice_mode/core.py voice_mode/simple_failover.py
+grep -r "is_local_provider" yakk/providers.py yakk/core.py yakk/simple_failover.py
 
 # After Phase 5: no OPENAI_API_KEY in manifests
 grep -r "OPENAI_API_KEY" server.json pyproject.toml

@@ -12,7 +12,7 @@ Install Yakk and all dependencies needed for voice conversations.
 For a fast, fully automated install on Apple Silicon:
 
 ```bash
-uvx voice-mode-install --yes
+uvx yakk-install --yes
 yakk service install whisper
 yakk service install kokoro
 ```
@@ -39,7 +39,7 @@ yakk service install kokoro
 3. **Install missing components:**
    ```bash
    # Full install (installs ffmpeg, yakk, and checks dependencies)
-   uvx voice-mode-install --yes
+   uvx yakk-install --yes
 
    # Install local services
    yakk service install whisper

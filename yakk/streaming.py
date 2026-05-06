@@ -1,5 +1,5 @@
 """
-Streaming audio playback for voice-mode.
+Streaming audio playback for yakk.
 
 This module provides progressive audio playback to reduce latency
 by playing audio chunks as they arrive from the TTS service.

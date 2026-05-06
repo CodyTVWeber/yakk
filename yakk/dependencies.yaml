@@ -6,7 +6,7 @@
 # ### Installation Tool
 # **UV (required for installation):**
 # - All platforms: UV package manager (https://astral.sh/uv)
-# - Used by install script and for `uv tool install voice-mode`
+# - Used by install script and for `uv tool install yakk`
 # - Provides consistent binary location at ~/.local/bin
 #
 # ### Core (Yakk base)
@@ -382,5 +382,5 @@ yakk:
 # - ARM64 systems may need Rust for building certain Python packages from source
 # - WSL requires PulseAudio to be running for audio support
 # - webrtcvad (C extension for silence detection) MUST be compiled during installation on all platforms
-#   This requires gcc/g++, python3-dev/python3-devel to be installed before running 'uv tool install voice-mode'
+#   This requires gcc/g++, python3-dev/python3-devel to be installed before running 'uv tool install yakk'
 # - Most other Python packages (numpy, scipy, sounddevice, etc.) have pre-built wheels for x86_64

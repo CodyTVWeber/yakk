@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Version management script for voice-mode packages."""
+"""Version management script for yakk packages."""
 
 import argparse
 import re
@@ -10,13 +10,13 @@ from pathlib import Path
 
 
 def get_current_version():
-    """Get the current version from voice_mode/__version__.py."""
-    version_file = Path("voice_mode/__version__.py")
+    """Get the current version from yakk/__version__.py."""
+    version_file = Path("yakk/__version__.py")
     content = version_file.read_text()
     match = re.search(r'^__version__ = ["\']([^"\']+)["\']', content, re.MULTILINE)
     if match:
         return match.group(1)
-    raise ValueError("Could not find version in voice_mode/__version__.py")
+    raise ValueError("Could not find version in yakk/__version__.py")
 
 
 def update_version_in_file(filepath, pattern, replacement):
@@ -79,11 +79,11 @@ def update_version(new_version, packages=None):
     # Always update main package files
     if "package" in packages:
         if update_version_in_file(
-            "voice_mode/__version__.py",
+            "yakk/__version__.py",
             r'^__version__ = ["\'][^"\']+["\']',
             f'__version__ = "{new_version}"'
         ):
-            files_updated.append("voice_mode/__version__.py")
+            files_updated.append("yakk/__version__.py")
 
         if update_version_in_file(
             "server.json",
@@ -133,14 +133,14 @@ def commit_and_tag(version, packages=None):
     if packages is None or len(packages) == 2:
         package_desc = "all packages"
     elif "installer" in packages:
-        package_desc = "voice-mode-install"
+        package_desc = "yakk-install"
     else:
-        package_desc = "voice-mode"
+        package_desc = "yakk"
 
     # Stage all changed files
     files_to_add = ["CHANGELOG.md", ".claude-plugin/plugin.json"]
     if packages is None or "package" in packages:
-        files_to_add.extend(["voice_mode/__version__.py", "server.json"])
+        files_to_add.extend(["yakk/__version__.py", "server.json"])
     if packages is None or "installer" in packages:
         files_to_add.append("installer/pyproject.toml")
 
@@ -187,17 +187,17 @@ def push_to_remote(version):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Manage versions for voice-mode packages",
+        description="Manage versions for yakk packages",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
   # Update both packages
   %(prog)s 5.1.5
 
-  # Update only voice-mode package
+  # Update only yakk package
   %(prog)s 5.1.5 --package package
 
-  # Update only voice-mode-install
+  # Update only yakk-install
   %(prog)s 5.1.5 --package installer
 
   # Update version but don't commit/tag/push
