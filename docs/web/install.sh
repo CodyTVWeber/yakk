@@ -86,13 +86,6 @@ info() {
 
 # Display Yakk logo
 # Compact 3-line version that fits in ~45 columns
-show_logo() {
-    echo ""
-    echo "${BOLD}██╗   ██╗ ██████╗ ██╗ ██████╗███████╗${RESET}"
-    echo "${BOLD}██║   ██║██╔═══██╗██║██╔════╝██╔════╝${RESET}   ${BLUE}MODE${RESET}"
-    echo "${BOLD} ╚████╔╝ ╚██████╔╝██║╚██████╗███████╗${RESET}"
-    echo ""
-}
 
 # Check if a command exists
 command_exists() {
@@ -795,7 +788,6 @@ main() {
     arch=$(detect_arch)
 
     # Display logo
-    show_logo
 
     # Install system dependencies (includes uv)
     install_system_deps "$os" "$arch"
