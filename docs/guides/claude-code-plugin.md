@@ -1,6 +1,6 @@
-# Claude Code Plugin
+# Agent CLI Plugin
 
-Yakk provides an official plugin for Claude Code that enables voice conversations directly within the CLI.
+Yakk provides an official plugin for Agent CLI that enables voice conversations directly within the CLI.
 
 ## What the Plugin Provides
 
@@ -8,21 +8,21 @@ The Yakk plugin includes:
 
 - **MCP Server** - Full voice capabilities via the `yakk-mcp` server
 - **Slash Commands** - Quick access to common operations
-- **Skill File** - Documentation and usage patterns for Claude
+- **Skill File** - Documentation and usage patterns for Agent
 - **Hooks** - Sound feedback during tool execution
 
 ## Installation
 
 ### From the Plugin Marketplace
 
-The plugin is published to the Claude Code plugin marketplace:
+The plugin is published to the Agent CLI plugin marketplace:
 
 ```bash
 # Add the marketplace
-claude plugin marketplace add https://github.com/mbailey/claude-plugins
+agent plugin marketplace add https://github.com/mbailey/agent-plugins
 
 # Install the plugin
-claude plugin install yakk@mbailey
+agent plugin install yakk@mbailey
 ```
 
 ## Prerequisites
@@ -77,7 +77,7 @@ Shows whether Whisper (STT) and Kokoro (TTS) services are running and healthy.
 
 ## MCP Tools
 
-Once installed, Claude has access to these MCP tools:
+Once installed, Agent has access to these MCP tools:
 
 - `mcp__yakk__converse` - Speak and listen for responses
 - `mcp__yakk__service` - Manage voice services
@@ -86,7 +86,7 @@ Once installed, Claude has access to these MCP tools:
 
 | Parameter | Default | Description |
 |-----------|---------|-------------|
-| `message` | (required) | Text for Claude to speak |
+| `message` | (required) | Text for Agent to speak |
 | `wait_for_response` | true | Listen for user response after speaking |
 | `listen_duration_max` | 120 | Maximum recording time (seconds) |
 | `voice` | auto | TTS voice name |
@@ -132,7 +132,7 @@ yakk kokoro service logs
 ### Speech Not Recognized
 
 1. Ensure Whisper service is running
-2. Check microphone permissions for Terminal/Claude Code
+2. Check microphone permissions for Terminal/Agent CLI
 3. Try speaking more clearly or adjusting VAD aggressiveness
 
 ## Configuration
@@ -167,8 +167,8 @@ For local development, add the plugin from your local clone:
 
 ```bash
 # Add plugin from local path
-claude plugin marketplace add /path/to/yakk
+agent plugin marketplace add /path/to/yakk
 
 # Install the plugin
-claude plugin install yakk@mbailey
+agent plugin install yakk@mbailey
 ```

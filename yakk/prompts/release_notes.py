@@ -19,7 +19,7 @@ def release_notes_prompt(versions: str = "5") -> str:
     # the cycle because server/prompts finish initializing first.
     from yakk.resources.changelog import changelog_resource
 
-    # Handle empty string from Claude Code
+    # Handle empty string from Agent CLI
     if not versions or versions == "":
         versions = "5"
 
@@ -85,5 +85,5 @@ def release_notes_prompt(versions: str = "5") -> str:
     result = '\n'.join(output).strip()
     
     # Return just the changelog entries without header/footer
-    # to match Claude Code's clean output format
+    # to match Agent CLI's clean output format
     return result

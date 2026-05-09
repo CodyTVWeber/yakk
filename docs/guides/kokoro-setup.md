@@ -27,8 +27,8 @@ Yakk includes an installation tool that handles everything:
 # Install kokoro with default settings
 yakk kokoro install
 
-# Or using Claude Code
-claude converse "Please install kokoro-fastapi"
+# Or using Agent CLI
+agent converse "Please install kokoro-fastapi"
 ```
 
 This will:

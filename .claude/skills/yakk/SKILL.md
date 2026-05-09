@@ -1,6 +1,6 @@
 ---
 name: yakk
-description: Voice interaction for Claude Code. Use when users mention yakk, speak, talk, converse, voice status, or voice troubleshooting.
+description: Voice interaction for Agent CLI. Use when users mention yakk, speak, talk, converse, voice status, or voice troubleshooting.
 ---
 
 ## First-Time Setup
@@ -11,13 +11,13 @@ If Yakk isn't working or MCP fails to connect, run:
 /yakk:install
 ```
 
-After install, reconnect MCP: `/mcp` → select yakk → "Reconnect" (or restart Claude Code).
+After install, reconnect MCP: `/mcp` → select yakk → "Reconnect" (or restart Agent CLI).
 
 ---
 
 # Yakk
 
-Natural voice conversations with Claude Code using speech-to-text (STT) and text-to-speech (TTS).
+Natural voice conversations with Agent CLI using speech-to-text (STT) and text-to-speech (TTS).
 
 **Note:** The Python package is `yakk` (hyphen), but the CLI command is `yakk` (no hyphen).
 
@@ -26,7 +26,7 @@ Natural voice conversations with Claude Code using speech-to-text (STT) and text
 | Task | Use | Why |
 |------|-----|-----|
 | Voice conversations | MCP `yakk:converse` | Faster - server already running |
-| Service start/stop | MCP `yakk:service` | Works within Claude Code |
+| Service start/stop | MCP `yakk:service` | Works within Agent CLI |
 | Installation | CLI `yakk-install` | One-time setup |
 | Configuration | CLI `yakk config` | Edit settings directly |
 | Diagnostics | CLI `yakk diag` | Administrative tasks |
@@ -265,7 +265,7 @@ yakk dj mfp play 49            # Music For Programming
 
 ## Voice Handoff Between Agents
 
-Transfer voice conversations between Claude Code agents for multi-agent workflows.
+Transfer voice conversations between Agent CLI agents for multi-agent workflows.
 
 **Use cases:**
 - Personal assistant routing to project-specific foremen
@@ -367,7 +367,7 @@ In the Yakk Connect web app settings (app.yakk.dev/settings), set:
 
 ## Soundfonts
 
-Audio feedback tones that play during Claude Code tool use. Toggle with `yakk soundfonts on/off`. See [Soundfonts Guide](../../docs/guides/soundfonts.md).
+Audio feedback tones that play during Agent CLI tool use. Toggle with `yakk soundfonts on/off`. See [Soundfonts Guide](../../docs/guides/soundfonts.md).
 
 ## Documentation Index
 
@@ -376,7 +376,7 @@ Audio feedback tones that play during Claude Code tool use. Toggle with `yakk so
 | Converse Parameters | [All Parameters](../../docs/reference/converse-parameters.md) |
 | Installation | [Getting Started](../../docs/tutorials/getting-started.md) |
 | Configuration | [Configuration Guide](../../docs/guides/configuration.md) |
-| Claude Code Plugin | [Plugin Guide](../../docs/guides/claude-code-plugin.md) |
+| Agent CLI Plugin | [Plugin Guide](../../docs/guides/agent-code-plugin.md) |
 | Whisper STT | [Whisper Setup](../../docs/guides/whisper-setup.md) |
 | Kokoro TTS | [Kokoro Setup](../../docs/guides/kokoro-setup.md) |
 | Pronunciation | [Pronunciation Guide](../../docs/guides/pronunciation.md) |

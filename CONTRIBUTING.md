@@ -69,13 +69,13 @@ The easiest way to test your changes:
 uv run yakk converse
 ```
 
-This starts a voice conversation directly, without needing Claude Code or MCP.
+This starts a voice conversation directly, without needing Agent CLI or MCP.
 
 ### Testing with MCP
 
-The repo's `.mcp.json` uses `uv run yakk`, which automatically runs your local development version when Claude Code is started in the repo directory. No configuration changes needed.
+The repo's `.mcp.json` uses `uv run yakk`, which automatically runs your local development version when Agent CLI is started in the repo directory. No configuration changes needed.
 
-1. Start Claude Code from the yakk repo directory
+1. Start Agent CLI from the yakk repo directory
 2. Your code changes are immediately available via the MCP tools
 3. Use the voice tools to verify functionality
 

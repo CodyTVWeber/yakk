@@ -55,7 +55,7 @@ yakk service install kokoro
 5. **Reconnect MCP server:**
    After installation, the Yakk MCP server needs to reconnect:
    - Run `/mcp` and select yakk, then click "Reconnect", OR
-   - Restart Claude Code
+   - Restart Agent CLI
 
 ## Whisper Model Selection
 

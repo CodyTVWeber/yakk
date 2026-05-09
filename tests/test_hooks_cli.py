@@ -1,4 +1,4 @@
-"""Tests for Claude Code hooks CLI commands."""
+"""Tests for Agent CLI hooks CLI commands."""
 
 import json
 import os
@@ -389,7 +389,7 @@ class TestHooksAddCommand:
         assert '+ Notification' in result.output
         assert '+ Stop' in result.output
         assert '+ PreCompact' in result.output
-        assert 'Restart Claude Code' in result.output
+        assert 'Restart Agent CLI' in result.output
 
         # Verify file was written
         settings_file = temp_settings_dir / 'settings.json'

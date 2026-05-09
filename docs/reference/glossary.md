@@ -29,7 +29,7 @@ This glossary defines key terms and concepts used throughout the Yakk project. I
 
 **MCP Client**: The LLM or AI assistant that connects to MCP servers. The client uses the tools and resources provided by servers.
 
-**MCP Host**: The application that manages MCP connections between clients and servers. Examples: Claude Desktop, VS Code, Cursor. These are the AI coding assistants that users install Yakk into.
+**MCP Host**: The application that manages MCP connections between clients and servers. Examples: Agent Desktop, VS Code, Cursor. These are the AI coding assistants that users install Yakk into.
 
 **MCP (Model Context Protocol)**: The protocol that enables LLMs to interact with external tools and resources through a standardized interface.
 

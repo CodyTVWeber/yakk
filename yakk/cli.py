@@ -1999,7 +1999,7 @@ yakk_main_cli.add_command(exchanges_cmd.exchanges)
 # Add unified status command
 yakk_main_cli.add_command(status_cmd.status)
 
-# Add Claude Code integration commands
+# Add Agent CLI integration commands
 yakk_main_cli.add_command(claude_cmd.claude)
 
 # Add soundfonts toggle commands
@@ -2214,10 +2214,10 @@ def serve(host: str, port: int, transport: str, log_level: str, allow_anthropic:
           secret: str | None, token: str | None):
     """Start Yakk as an HTTP/SSE server for remote access.
 
-    This enables Claude Code, Claude Desktop, Claude Cowork, or other MCP
+    This enables Agent CLI, Claude Desktop, Claude Cowork, or other MCP
     clients to connect to Yakk over HTTP instead of stdio. Useful for:
 
-    - Multiple Claude Code projects sharing one Yakk instance
+    - Multiple Agent CLI projects sharing one Yakk instance
     - Claude Cowork (runs in a sandboxed VM without audio access)
     - Claude Desktop with mcp-remote
     - Any MCP client that supports HTTP transport
@@ -2251,7 +2251,7 @@ def serve(host: str, port: int, transport: str, log_level: str, allow_anthropic:
         # Use Bearer token authentication
         yakk serve --token my-secret-token
 
-    Connect from Claude Code:
+    Connect from Agent CLI:
 
         claude mcp add --transport http yakk http://localhost:8765/mcp
     """
@@ -2367,8 +2367,8 @@ def serve(host: str, port: int, transport: str, log_level: str, allow_anthropic:
     click.echo(f"Log level: {log_level}")
     click.echo()
 
-    # Show Claude Code connection options
-    click.echo(click.style("Connect from Claude Code:", bold=True))
+    # Show Agent CLI connection options
+    click.echo(click.style("Connect from Agent CLI:", bold=True))
     click.echo()
     click.echo(f"  claude mcp add --transport http yakk {endpoint_url}")
     click.echo()

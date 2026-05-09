@@ -1,16 +1,16 @@
 # Soundfonts
 
-Audio feedback during Claude Code sessions. Sounds play when tools start and finish, giving you awareness of what Claude is doing without watching the screen.
+Audio feedback during Agent CLI sessions. Sounds play when tools start and finish, giving you awareness of what Agent is doing without watching the screen.
 
 ## Prerequisites
 
-Install Claude Code hooks:
+Install Agent CLI hooks:
 
 ```bash
-yakk claude hooks add
+yakk agent hooks add
 ```
 
-This registers Yakk's hook receiver with Claude Code. The receiver runs on each tool event and plays the appropriate sound.
+This registers Yakk's hook receiver with Agent CLI. The receiver runs on each tool event and plays the appropriate sound.
 
 ## Quick Toggle
 
@@ -29,11 +29,11 @@ yakk soundfonts on --config    # Enable + update yakk.env
 
 ## How It Works
 
-Claude Code fires hook events (`PreToolUse`, `PostToolUse`, `PreCompact`, `PermissionRequest`) during operation. Yakk's hook receiver:
+Agent CLI fires hook events (`PreToolUse`, `PostToolUse`, `PreCompact`, `PermissionRequest`) during operation. Yakk's hook receiver:
 
 1. Checks if soundfonts are disabled (sentinel file or env var)
 2. Looks up the right sound file based on the tool and event
-3. Plays it asynchronously (non-blocking, won't slow down Claude)
+3. Plays it asynchronously (non-blocking, won't slow down Agent)
 4. Skips playback during active voice conversations (except PermissionRequest, which always plays)
 5. Skips sounds for the yakk converse tool (voice provides its own audio feedback)
 
@@ -143,10 +143,10 @@ Use `yakk soundfonts status` to see which mechanisms are active.
 
 ### No sounds playing
 
-1. Check hooks are installed: `yakk claude hooks list`
+1. Check hooks are installed: `yakk agent hooks list`
 2. Check soundfonts status: `yakk soundfonts status`
 3. Check the soundfont directory exists: `ls ~/.yakk/soundfonts/current/`
-4. Enable debug mode and run a Claude Code session:
+4. Enable debug mode and run a Agent CLI session:
 
 ```bash
 export YAKK_HOOK_DEBUG=1

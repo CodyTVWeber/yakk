@@ -1,10 +1,10 @@
-# Claude Code Permissions Guide
+# Agent CLI Permissions Guide
 
-Configure Claude Code to use Yakk without constant permission prompts.
+Configure Agent CLI to use Yakk without constant permission prompts.
 
 ## Quick Setup (30 seconds)
 
-Add this to `~/.claude/settings.json`:
+Add this to `~/.agent/settings.json`:
 
 ```json
 {
@@ -83,18 +83,18 @@ Everything except installation (for power users):
 
 ### Option 1: Edit Settings File
 
-1. Open `~/.claude/settings.json` in your editor
+1. Open `~/.agent/settings.json` in your editor
 2. Add the permissions block
-3. Save and restart Claude Code
+3. Save and restart Agent CLI
 
 ```bash
 # Create or edit the file
-nano ~/.claude/settings.json
+nano ~/.agent/settings.json
 ```
 
-### Option 2: Use Claude Code UI
+### Option 2: Use Agent CLI UI
 
-1. In Claude Code, type `/permissions`
+1. In Agent CLI, type `/permissions`
 2. Add `mcp__yakk__converse` to the allow list
 3. Add `mcp__yakk__service` to the allow list
 
@@ -102,8 +102,8 @@ nano ~/.claude/settings.json
 
 ```bash
 # Create settings file with Yakk permissions
-mkdir -p ~/.claude
-cat > ~/.claude/settings.json << 'EOF'
+mkdir -p ~/.agent
+cat > ~/.agent/settings.json << 'EOF'
 {
   "permissions": {
     "allow": [
@@ -119,15 +119,15 @@ EOF
 
 ### Still Getting Permission Prompts?
 
-1. **Check file location**: Settings must be in `~/.claude/settings.json`
+1. **Check file location**: Settings must be in `~/.agent/settings.json`
 2. **Check JSON syntax**: Use a JSON validator if unsure
-3. **Restart Claude Code**: Changes require restart to take effect
+3. **Restart Agent CLI**: Changes require restart to take effect
 4. **Check tool names**: Must match exactly (case-sensitive)
 
 ### Verify Your Settings
 
 ```bash
-cat ~/.claude/settings.json
+cat ~/.agent/settings.json
 ```
 
 Should show your permissions block.
@@ -191,9 +191,9 @@ These tools always prompt (not included in recommendations):
 
 | File | Scope | Use Case |
 |------|-------|----------|
-| `~/.claude/settings.json` | All projects | Personal defaults |
-| `.claude/settings.json` | This project | Team settings (commit to git) |
-| `.claude/settings.local.json` | This project | Personal overrides (gitignored) |
+| `~/.agent/settings.json` | All projects | Personal defaults |
+| `.agent/settings.json` | This project | Team settings (commit to git) |
+| `.agent/settings.local.json` | This project | Personal overrides (gitignored) |
 
 Settings merge: global → project → local (local wins).
 

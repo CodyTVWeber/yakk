@@ -1,6 +1,6 @@
-# CLAUDE.md
+# AGENT.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Agent CLI (agent.ai/code) when working with code in this repository.
 
 ## Voice Interaction
 
@@ -8,7 +8,7 @@ Load the yakk skill for voice conversation support: `/yakk:yakk`
 
 ## Project Overview
 
-Yakk is a Python package that provides voice interaction capabilities for AI assistants through the Model Context Protocol (MCP). It enables natural voice conversations with Claude Code and other AI coding assistants by integrating speech-to-text (STT) and text-to-speech (TTS) services.
+Yakk is a Python package that provides voice interaction capabilities for AI assistants through the Model Context Protocol (MCP). It enables natural voice conversations with Agent CLI and other AI coding assistants by integrating speech-to-text (STT) and text-to-speech (TTS) services.
 
 ## Key Commands
 

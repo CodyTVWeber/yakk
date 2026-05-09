@@ -1,6 +1,6 @@
 # Voice Handoff Pattern
 
-Transfer voice conversations between Claude Code agents seamlessly.
+Transfer voice conversations between Agent CLI agents seamlessly.
 
 ## Overview
 

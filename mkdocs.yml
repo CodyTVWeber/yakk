@@ -82,14 +82,14 @@ nav:
     - Selecting Voices: guides/selecting-voices.md
     - Pronunciation: guides/pronunciation.md
     - MacBook Portable Mode: guides/macbook-portable.md
-    - Claude Code Plugin: guides/claude-code-plugin.md
+    - Agent CLI Plugin: guides/claude-code-plugin.md
     - Selective Tool Loading: guides/selective-tool-loading.md
     - Remote Access (serve): guides/serve-configuration.md
   - Yakk Connect:
     - Overview: connect/README.md
     - Architecture: connect/architecture.md
     - Setup:
-      - Claude Code: connect/setup/claude-code.md
+      - Agent CLI: connect/setup/claude-code.md
     - Reference:
       - MCP Tools: connect/reference/mcp-tools.md
   - Local Services:

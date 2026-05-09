@@ -44,7 +44,7 @@ from starlette.types import ASGIApp, Receive, Scope, Send
 logger = logging.getLogger("yakk")
 
 
-# Anthropic's outbound IP ranges for Claude Code connections
+# Anthropic's outbound IP ranges for Agent CLI connections
 # See: https://docs.anthropic.com/en/docs/resources/ip-addresses
 ANTHROPIC_CIDRS: List[str] = [
     "160.79.104.0/21",  # Primary outbound range

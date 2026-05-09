@@ -276,16 +276,16 @@ Complete the flattening by removing the now-empty services directory."
 #### 6.1 Update Tool Loading Architecture Doc
 Update `docs/reference/tool-loading-architecture.md` to reflect new structure.
 
-#### 6.2 Update CLAUDE.md
+#### 6.2 Update AGENT.md
 Update the architecture overview if it mentions services structure.
 
 #### 6.3 Commit Documentation Updates
 ```bash
 git add docs/
-git add CLAUDE.md  # if modified
+git add AGENT.md  # if modified
 git commit -m "docs: Update documentation to reflect flattened tool structure
 
-Update architecture docs and CLAUDE.md to describe the simplified
+Update architecture docs and AGENT.md to describe the simplified
 tool organization without the services/ intermediate directory."
 ```
 

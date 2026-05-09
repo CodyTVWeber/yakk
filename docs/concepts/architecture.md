@@ -8,7 +8,7 @@ Yakk is built as a Model Context Protocol (MCP) server that provides voice capab
 
 ```
 ┌─────────────────────────────────────────────┐
-│             MCP Client (Claude)             │
+│             MCP Client (Agent)             │
 └─────────────────┬───────────────────────────┘
                   │ MCP Protocol
 ┌─────────────────┴───────────────────────────┐

@@ -23,8 +23,8 @@ LOGO = """
 
 
 def print_logo():
-    """Display the Yakk logo in Claude Code orange."""
-    # Use ANSI 256-color code 208 (dark orange) which matches Claude Code orange (RGB 208, 128, 0)
+    """Display the Yakk logo in Agent CLI orange."""
+    # Use ANSI 256-color code 208 (dark orange) which matches Agent CLI orange (RGB 208, 128, 0)
     # This works on xterm-256color and other 256-color terminals
     click.echo('\033[38;5;208m' + '\033[1m' + LOGO + '\033[0m')
 
@@ -40,7 +40,7 @@ def print_success(message: str):
 
 
 def print_warning(message: str):
-    """Print a warning message in Claude Code orange."""
+    """Print a warning message in Agent CLI orange."""
     # Use ANSI 256-color code 208 (dark orange)
     click.echo('\033[38;5;208m' + f"⚠️  {message}" + '\033[0m')
 
@@ -473,7 +473,7 @@ def main(dry_run, yakk_version, skip_services, non_interactive, model):
             click.echo("Next steps:")
             click.echo("  1. Restart your terminal (or source your shell rc file)")
             click.echo("  2. Run: yakk --help")
-            click.echo("  3. Configure with Claude Code:")
+            click.echo("  3. Configure with Agent CLI:")
             click.echo("     claude mcp add --scope user yakk -- uvx yakk")
             click.echo()
             click.echo(f"Installation log: {logger.get_log_path()}")

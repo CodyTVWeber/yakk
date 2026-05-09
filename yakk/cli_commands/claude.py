@@ -1,7 +1,7 @@
-"""CLI commands for Claude Code integration.
+"""CLI commands for Agent CLI integration.
 
 Provides `yakk claude hooks add/remove/list` commands
-for managing Yakk hooks in Claude Code settings.
+for managing Yakk hooks in Agent CLI settings.
 """
 
 import copy
@@ -235,7 +235,7 @@ def remove_hooks(existing: dict, event_names: list[str] | None = None) -> tuple[
 @click.group(name='claude')
 @click.help_option('-h', '--help', help='Show this message and exit')
 def claude():
-    """Claude Code integration commands."""
+    """Agent CLI integration commands."""
     pass
 
 
@@ -243,10 +243,10 @@ def claude():
 @click.help_option('-h', '--help', help='Show this message and exit')
 @click.pass_context
 def hooks(ctx):
-    """Manage Claude Code hooks for Yakk.
+    """Manage Agent CLI hooks for Yakk.
 
-    Install, remove, and inspect Yakk hooks in Claude Code settings.
-    Hooks enable audio feedback (soundfonts) during Claude Code sessions.
+    Install, remove, and inspect Yakk hooks in Agent CLI settings.
+    Hooks enable audio feedback (soundfonts) during Agent CLI sessions.
     """
     if ctx.invoked_subcommand is None:
         # Default: show hooks list
@@ -266,7 +266,7 @@ Examples:
               default='user', show_default=True,
               help='Settings scope to install hooks into')
 def hooks_add(hook_name, scope):
-    """Add Yakk hooks to Claude Code settings.
+    """Add Yakk hooks to Agent CLI settings.
 
     Without HOOK_NAME, adds all available hooks. With HOOK_NAME,
     adds only the specified hook event.
@@ -315,7 +315,7 @@ def hooks_add(hook_name, scope):
     if all_added:
         click.echo()
         click.echo("Use --scope project for project-only installation.")
-        click.echo("Restart Claude Code for hooks to take effect.")
+        click.echo("Restart Agent CLI for hooks to take effect.")
 
 
 @hooks.command("remove", epilog="""
@@ -330,7 +330,7 @@ Examples:
               default='user', show_default=True,
               help='Settings scope to remove hooks from')
 def hooks_remove(hook_name, scope):
-    """Remove Yakk hooks from Claude Code settings.
+    """Remove Yakk hooks from Agent CLI settings.
 
     Without HOOK_NAME, removes all Yakk hooks. With HOOK_NAME,
     removes only the specified hook event.
@@ -382,7 +382,7 @@ Examples:
               default='user', show_default=True,
               help='Settings scope to inspect')
 def hooks_list(scope):
-    """Show Yakk hook status in Claude Code settings.
+    """Show Yakk hook status in Agent CLI settings.
 
     Shows which Yakk hooks are installed and in which settings scope.
     """

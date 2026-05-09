@@ -54,7 +54,7 @@ yakk serve --transport streamable-http
 # Use SSE transport (deprecated - for legacy compatibility)
 yakk serve --transport sse
 
-# Allow Anthropic's Claude.ai and Claude Cowork to connect
+# Allow Anthropic's Agent.ai and Agent Cowork to connect
 yakk serve --allow-anthropic
 
 # Custom IP allowlist
@@ -66,7 +66,7 @@ yakk serve --allow-tailscale
 # Strict Anthropic-only mode (no localhost)
 yakk serve --allow-anthropic --no-allow-local
 
-# URL secret authentication (recommended for Claude.ai)
+# URL secret authentication (recommended for Agent.ai)
 yakk serve --secret my-secret-uuid
 
 # Bearer token authentication
@@ -136,7 +136,7 @@ If you are currently using SSE transport and want to migrate to streamable-http:
 
 **IP Allowlist**
 
-The `--allow-anthropic` flag adds Anthropic's outbound IP ranges to the allowlist, enabling connections from Claude.ai and Claude Cowork. The `--allow-tailscale` flag adds the Tailscale CGNAT range (100.64.0.0/10), allowing any device on your Tailscale network to connect. Use `--allow-ip` to add custom CIDR ranges.
+The `--allow-anthropic` flag adds Anthropic's outbound IP ranges to the allowlist, enabling connections from Agent.ai and Agent Cowork. The `--allow-tailscale` flag adds the Tailscale CGNAT range (100.64.0.0/10), allowing any device on your Tailscale network to connect. Use `--allow-ip` to add custom CIDR ranges.
 
 By default, localhost connections are allowed (`--allow-local`). Use `--no-allow-local` to disable this for strict remote-only access.
 
@@ -150,7 +150,7 @@ The `--secret` option adds a secret path segment to the endpoint URL:
 - Endpoint becomes `/{base_path}/{secret}` instead of `/{base_path}`
 - Acts as a pre-shared key embedded in the URL
 - Returns 404 (not 403) for incorrect paths to avoid revealing endpoint existence
-- Ideal for Claude.ai which accepts any URL but doesn't support OAuth
+- Ideal for Agent.ai which accepts any URL but doesn't support OAuth
 
 Examples:
 - Streamable HTTP: `yakk serve --secret abc123` creates endpoint at `/mcp/abc123`
@@ -298,7 +298,7 @@ yakk livekit logs [--follow]
 ## Soundfonts
 
 ### soundfonts
-Toggle soundfont playback for Claude Code hooks
+Toggle soundfont playback for Agent CLI hooks
 
 ```bash
 # Quick toggle (session-scoped)
@@ -315,23 +315,23 @@ yakk soundfonts status       # Shows sentinel file + env var state
 
 The `off` command creates a sentinel file (`~/.yakk/soundfonts-disabled`) that the hook receiver checks before playing sounds. The `--config` flag also updates `YAKK_SOUNDFONTS_ENABLED` in `~/.yakk/yakk.env`.
 
-## Claude Code Integration
+## Agent CLI Integration
 
-### claude hooks
-Manage Claude Code hook integration
+### agent hooks
+Manage Agent CLI hook integration
 
 ```bash
 # Install hooks
-yakk claude hooks add
+yakk agent hooks add
 
 # Remove hooks
-yakk claude hooks remove
+yakk agent hooks remove
 
 # List installed hooks
-yakk claude hooks list
+yakk agent hooks list
 ```
 
-Hooks connect Claude Code's tool events to Yakk's soundfont system. The `add` command registers the hook receiver script with Claude Code's settings.
+Hooks connect Agent CLI's tool events to Yakk's soundfont system. The `add` command registers the hook receiver script with Agent CLI's settings.
 
 ## Configuration Commands
 

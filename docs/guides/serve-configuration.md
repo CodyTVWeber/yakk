@@ -1,13 +1,13 @@
 # Remote Access Configuration
 
-Yakk can run as an HTTP server, enabling remote access from Claude Desktop, Claude Code, Claude.ai, and other MCP clients. This guide covers how to configure different clients to connect to a Yakk server.
+Yakk can run as an HTTP server, enabling remote access from Agent Desktop, Agent CLI, Agent.ai, and other MCP clients. This guide covers how to configure different clients to connect to a Yakk server.
 
 ## Overview
 
 The `yakk serve` command starts Yakk as an HTTP server instead of the default stdio transport. This enables:
 
 - **Local network access** - Connect from other machines on your network
-- **Cloud access** - Connect from Claude.ai and Claude Cowork via Tailscale Funnel
+- **Cloud access** - Connect from Agent.ai and Agent Cowork via Tailscale Funnel
 - **Multiple clients** - Share one Yakk instance across devices
 
 ```bash
@@ -55,9 +55,9 @@ yakk serve --host 0.0.0.0 --allow-tailscale
 
 ## Client Configuration
 
-### Claude Desktop (via mcp-remote)
+### Agent Desktop (via mcp-remote)
 
-Claude Desktop uses stdio transport by default. To connect to a remote Yakk server, use [mcp-remote](https://github.com/anthropics/mcp-remote) as a bridge.
+Agent Desktop uses stdio transport by default. To connect to a remote Yakk server, use [mcp-remote](https://github.com/anthropics/mcp-remote) as a bridge.
 
 #### Setup
 
@@ -66,7 +66,7 @@ Claude Desktop uses stdio transport by default. To connect to a remote Yakk serv
    yakk serve
    ```
 
-2. Add to Claude Desktop's MCP configuration (`~/Library/Application Support/Claude/claude_desktop_config.json` on macOS):
+2. Add to Agent Desktop's MCP configuration (`~/Library/Application Support/Agent/agent_desktop_config.json` on macOS):
 
    ```json
    {
@@ -79,7 +79,7 @@ Claude Desktop uses stdio transport by default. To connect to a remote Yakk serv
    }
    ```
 
-3. Restart Claude Desktop.
+3. Restart Agent Desktop.
 
 #### Remote Server
 
@@ -115,13 +115,13 @@ If using token authentication:
 }
 ```
 
-### Claude Code
+### Agent CLI
 
-Claude Code can connect to Yakk in two ways: direct stdio transport (recommended for local use) or HTTP transport for remote servers.
+Agent CLI can connect to Yakk in two ways: direct stdio transport (recommended for local use) or HTTP transport for remote servers.
 
 #### Local Setup (Recommended)
 
-For local development, use stdio transport directly in `.claude/mcp.json`:
+For local development, use stdio transport directly in `.agent/mcp.json`:
 
 ```json
 {
@@ -138,14 +138,14 @@ This is simpler and doesn't require running a separate server.
 
 #### Remote Server (Built-in HTTP Transport)
 
-Claude Code has built-in HTTP transport support. To connect to a Yakk server:
+Agent CLI has built-in HTTP transport support. To connect to a Yakk server:
 
 ```bash
 # Add to current project (recommended)
-claude mcp add --scope project --transport http yakk http://127.0.0.1:8765/mcp
+agent mcp add --scope project --transport http yakk http://127.0.0.1:8765/mcp
 
 # Or add globally for all projects
-claude mcp add --scope user --transport http yakk http://127.0.0.1:8765/mcp
+agent mcp add --scope user --transport http yakk http://127.0.0.1:8765/mcp
 ```
 
 This creates a configuration like:
@@ -163,7 +163,7 @@ This creates a configuration like:
 
 #### Remote Server (Legacy mcp-remote)
 
-For older Claude Code versions, use mcp-remote:
+For older Agent CLI versions, use mcp-remote:
 
 ```json
 {
@@ -178,13 +178,13 @@ For older Claude Code versions, use mcp-remote:
 
 #### With Yakk Plugin
 
-If using the Yakk plugin for Claude Code, it automatically configures stdio transport. For remote access, disable the plugin and use the HTTP transport configuration above.
+If using the Yakk plugin for Agent CLI, it automatically configures stdio transport. For remote access, disable the plugin and use the HTTP transport configuration above.
 
-### Claude.ai and Claude Cowork
+### Agent.ai and Agent Cowork
 
-Claude.ai and Claude Cowork can connect to MCP servers via custom connectors. This requires your Yakk server to be accessible from the internet.
+Agent.ai and Agent Cowork can connect to MCP servers via custom connectors. This requires your Yakk server to be accessible from the internet.
 
-> **⚠️ Experimental**: The Claude.ai/Cowork integration via Tailscale Funnel is still being refined. The setup works but the workflow may change. Use with caution and expect updates.
+> **⚠️ Experimental**: The Agent.ai/Cowork integration via Tailscale Funnel is still being refined. The setup works but the workflow may change. Use with caution and expect updates.
 
 #### Prerequisites
 
@@ -228,7 +228,7 @@ Tailscale Funnel exposes your local server to the internet with automatic HTTPS.
    yakk serve --allow-anthropic --secret your-secret-uuid
    ```
 
-4. In Claude.ai settings, add a custom MCP connector:
+4. In Agent.ai settings, add a custom MCP connector:
    - **URL**: `https://your-machine.tail12345.ts.net/mcp/your-secret-uuid`
    - **Name**: Yakk
 
@@ -243,11 +243,11 @@ If you have a public IP and domain:
    yakk serve --allow-anthropic --token your-secret-token
    ```
 
-4. Add the custom connector in Claude.ai with your domain.
+4. Add the custom connector in Agent.ai with your domain.
 
 #### Anthropic IP Ranges
 
-The `--allow-anthropic` flag adds Anthropic's outbound IP ranges (`160.79.104.0/21`) to the allowlist. This is required for Claude.ai and Claude Cowork connections.
+The `--allow-anthropic` flag adds Anthropic's outbound IP ranges (`160.79.104.0/21`) to the allowlist. This is required for Agent.ai and Agent Cowork connections.
 
 #### Security Considerations for Tailscale Funnel
 
@@ -259,7 +259,7 @@ The `--allow-anthropic` flag adds Anthropic's outbound IP ranges (`160.79.104.0/
 2. **Use IP allowlists**: Combine `--allow-anthropic` with authentication for defense in depth
 3. **Monitor access**: Enable `--log-level debug` initially to monitor connection attempts
 4. **Rotate secrets**: Change your `--secret` UUID periodically, especially if you suspect compromise
-5. **Disable when not needed**: Stop the Funnel (`tailscale funnel off`) when not actively using Claude.ai
+5. **Disable when not needed**: Stop the Funnel (`tailscale funnel off`) when not actively using Agent.ai
 
 **What Funnel exposes**:
 - Your Yakk MCP endpoint becomes publicly accessible via HTTPS
@@ -284,7 +284,7 @@ yakk serve --allow-anthropic --secret your-secret-uuid
 
 | Method | Best For | Notes |
 |--------|----------|-------|
-| `--secret` | Claude.ai | URL-embedded secret, returns 404 for wrong path |
+| `--secret` | Agent.ai | URL-embedded secret, returns 404 for wrong path |
 | `--token` | API clients | Standard Bearer token, returns 401 for invalid |
 | Both | Maximum security | Combine for defense in depth |
 
@@ -414,9 +414,9 @@ curl http://127.0.0.1:8765/mcp
 curl https://your-machine.tail12345.ts.net/mcp
 ```
 
-### Claude.ai Cannot Connect
+### Agent.ai Cannot Connect
 
-**Symptom**: Claude.ai custom connector fails.
+**Symptom**: Agent.ai custom connector fails.
 
 **Solutions**:
 1. Verify `--allow-anthropic` flag is set
@@ -455,5 +455,5 @@ CLI options take precedence over environment variables.
 
 - [CLI Reference](../reference/cli.md) - Complete serve command documentation
 - [Configuration Guide](configuration.md) - Yakk configuration options
-- [Claude Code Plugin](claude-code-plugin.md) - Plugin installation for Claude Code
+- [Agent CLI Plugin](agent-code-plugin.md) - Plugin installation for Agent CLI
 - [Tailscale Funnel documentation](https://tailscale.com/kb/1223/funnel) - Official Tailscale Funnel setup guide

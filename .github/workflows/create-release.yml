@@ -49,7 +49,7 @@ jobs:
         echo "# Install Yakk and configure services" >> $GITHUB_OUTPUT
         echo "uvx yakk-install" >> $GITHUB_OUTPUT
         echo "" >> $GITHUB_OUTPUT
-        echo "# Add to Claude Code MCP" >> $GITHUB_OUTPUT
+        echo "# Add to Agent CLI MCP" >> $GITHUB_OUTPUT
         echo "claude mcp add --scope user yakk -- uvx --refresh yakk" >> $GITHUB_OUTPUT
         echo '```' >> $GITHUB_OUTPUT
         echo "" >> $GITHUB_OUTPUT

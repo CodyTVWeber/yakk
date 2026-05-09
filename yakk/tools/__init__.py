@@ -115,7 +115,7 @@ def determine_tools_to_load() -> tuple[set[str], str]:
     else:
         # Default - load essential tools only (converse, service)
         # This provides basic voice interaction and service management
-        # while significantly reducing token usage in Claude Code
+        # while significantly reducing token usage in Agent CLI
         default_tools = {"converse", "service"}
         tools_to_load = default_tools & all_tools  # Only load tools that exist
         return tools_to_load, f"default mode ({len(tools_to_load)} tools)"

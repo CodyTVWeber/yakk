@@ -113,7 +113,7 @@ def test_release_notes_prompt_default_versions():
 
 
 def test_release_notes_prompt_handles_empty_string():
-    """Test that the prompt handles empty string parameter from Claude Code."""
+    """Test that the prompt handles empty string parameter from Agent CLI."""
     mock_changelog = """# Changelog
 
 ## [6.0.0] - 2025-06-01
@@ -144,7 +144,7 @@ def test_release_notes_prompt_handles_empty_string():
     with patch("yakk.resources.changelog.changelog_resource") as mock_resource:
         mock_resource.fn.return_value = mock_changelog
         
-        # Test with empty string (what Claude Code sends)
+        # Test with empty string (what Agent CLI sends)
         result = release_notes_prompt.fn(versions="")
         
         # Should use default of 5 versions

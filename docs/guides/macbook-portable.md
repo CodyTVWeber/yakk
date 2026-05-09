@@ -49,7 +49,7 @@ If you're using a MacBook Air (M1, M2, M3, or M4), note that it's fanless and us
 
 ### Recommended Workflow
 
-1. **Before leaving**: Start your Claude Code session with Yakk
+1. **Before leaving**: Start your Agent CLI session with Yakk
 2. **Enable closed-lid mode**: `sudo pmset -a disablesleep 1`
 3. **Close the lid and go**: Put your MacBook in your bag
 4. **Converse**: Use your AirPods or headphones for voice interaction

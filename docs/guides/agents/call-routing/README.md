@@ -4,7 +4,7 @@ Voice conversation routing patterns for multi-agent Yakk systems.
 
 ## Overview
 
-Call routing enables sophisticated voice conversation management across multiple Claude Code agents. Inspired by traditional telephony systems, these patterns provide:
+Call routing enables sophisticated voice conversation management across multiple Agent CLI agents. Inspired by traditional telephony systems, these patterns provide:
 
 - **Seamless transfers** between agents
 - **Coordinated speaking** to prevent audio conflicts

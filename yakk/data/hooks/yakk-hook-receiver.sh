@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 set -o nounset -o pipefail -o errexit
 #
-# yakk-hook-receiver - Fast standalone hook receiver for Claude Code
+# yakk-hook-receiver - Fast standalone hook receiver for Agent CLI
 #
 # This is a high-performance alternative to 'yakk claude hooks receiver'
 # that avoids Python startup overhead (~700ms -> ~20ms).
 #
 # Usage:
-#   # Called by Claude Code hooks (reads JSON from stdin)
+#   # Called by Agent CLI hooks (reads JSON from stdin)
 #   echo '{"tool_name":"Task","hook_event_name":"PreToolUse","tool_input":{"subagent_type":"mama-bear"}}' | yakk-hook-receiver
 #
 #   # Testing with debug output
@@ -29,7 +29,7 @@ usage() {
   cat <<'EOF'
 Usage: yakk-hook-receiver [OPTIONS]
 
-Fast standalone hook receiver for Claude Code.
+Fast standalone hook receiver for Agent CLI.
 
 This is a high-performance alternative to 'yakk claude hooks receiver'
 that avoids Python startup overhead (~700ms -> ~20ms).
@@ -45,7 +45,7 @@ Environment:
     YAKK_SOUNDFONTS_ENABLED   Sound fonts enabled by default, set to 'false' to disable
     YAKK_HOOK_DEBUG           Set to '1' for debug output
 
-When called by Claude Code, JSON is read from stdin.
+When called by Agent CLI, JSON is read from stdin.
 EOF
 }
 

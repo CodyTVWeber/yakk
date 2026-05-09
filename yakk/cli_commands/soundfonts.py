@@ -1,7 +1,7 @@
 """CLI commands for soundfonts toggle.
 
 Provides `yakk soundfonts on/off/status` commands
-for enabling/disabling soundfont playback during Claude Code sessions.
+for enabling/disabling soundfont playback during Agent CLI sessions.
 
 Two mechanisms control soundfonts:
 1. Sentinel file (~/.yakk/soundfonts-disabled) — quick toggle / circuit breaker
@@ -56,7 +56,7 @@ def _get_env_var_state() -> tuple:
 
 
 def _hooks_installed() -> bool:
-    """Check if any Yakk hooks are installed in Claude Code settings."""
+    """Check if any Yakk hooks are installed in Agent CLI settings."""
     import json as _json
     settings_file = Path.home() / '.claude' / 'settings.json'
     if not settings_file.exists():
@@ -127,10 +127,10 @@ def _warn_env_var_conflict() -> None:
 @click.group(name='soundfonts')
 @click.help_option('-h', '--help', help='Show this message and exit')
 def soundfonts():
-    """Toggle soundfont playback for Claude Code hooks.
+    """Toggle soundfont playback for Agent CLI hooks.
 
-    Soundfonts provide audio feedback during Claude Code sessions.
-    They require Claude Code hooks to be installed first:
+    Soundfonts provide audio feedback during Agent CLI sessions.
+    They require Agent CLI hooks to be installed first:
 
         yakk claude hooks add
 
@@ -277,5 +277,5 @@ def soundfonts_status():
         click.echo("Hooks: installed")
     else:
         click.echo("Hooks: not installed")
-        click.echo("  Soundfonts require Claude Code hooks:")
+        click.echo("  Soundfonts require Agent CLI hooks:")
         click.echo("  yakk claude hooks add")

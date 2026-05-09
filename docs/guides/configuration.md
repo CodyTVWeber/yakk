@@ -60,7 +60,7 @@ export YAKK_DEBUG=false
 
 ### MCP Configuration
 
-When used as an MCP server, add to your Claude or other MCP client configuration:
+When used as an MCP server, add to your Agent or other MCP client configuration:
 
 ```json
 {
@@ -171,7 +171,7 @@ YAKK_MAX_RECORDING_TIME=120.0  # Maximum recording
 
 ### Multi-Agent Voice
 
-When running multiple voice agents (e.g. separate Claude Code sessions in
+When running multiple voice agents (e.g. separate Agent CLI sessions in
 different tmux panes), the "conch" mechanism serialises speech so only one
 agent talks at a time, and `YAKK_AUTO_FOCUS_PANE` can visually follow
 the speaker.
@@ -362,13 +362,13 @@ mv ~/.yakk/yakk.env ~/.yakk/yakk.env.backup
 yakk config edit
 ```
 
-## Claude Code Permissions
+## Agent CLI Permissions
 
-When using Yakk with Claude Code, you can configure automatic tool approval to skip permission prompts.
+When using Yakk with Agent CLI, you can configure automatic tool approval to skip permission prompts.
 
 ### Quick Setup
 
-Add to `.claude/settings.local.json` in your project:
+Add to `.agent/settings.local.json` in your project:
 
 ```json
 {
@@ -397,9 +397,9 @@ To also allow service management (start/stop/status):
 
 | File | Scope | Git |
 |------|-------|-----|
-| `~/.claude/settings.json` | All projects | N/A |
-| `.claude/settings.json` | Project (shared) | Commit |
-| `.claude/settings.local.json` | Project (personal) | Ignore |
+| `~/.agent/settings.json` | All projects | N/A |
+| `.agent/settings.json` | Project (shared) | Commit |
+| `.agent/settings.local.json` | Project (personal) | Ignore |
 
 ### Allowing All Yakk Tools
 
@@ -419,7 +419,7 @@ To allow all tools from the Yakk server:
 
 - `/permissions` - View and manage tool permission rules
 
-See the [Claude Code Settings documentation](https://code.claude.com/docs/en/settings) for more details.
+See the [Agent CLI Settings documentation](https://code.agent.com/docs/en/settings) for more details.
 
 ## Security Considerations
 

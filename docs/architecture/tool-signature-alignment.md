@@ -22,7 +22,7 @@ Additional tools:
 - `register_wakeable(team_name, agent_name, agent_platform)` — register as wakeable via Connect
 - Various admin tools (devices, providers, diagnostics, etc.)
 
-### Yakk Connect (`mcp__claude_ai_yakk-connect__*`)
+### Yakk Connect (`mcp__agent_ai_yakk-connect__*`)
 - `converse(message, wait_for_response, voice, speed, ...)` — TTS + STT via remote web/mobile client
 - `status(include_voices)` — list connected devices
 

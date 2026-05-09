@@ -1,12 +1,12 @@
 # Selective Tool Loading
 
-Yakk supports selective tool loading to reduce token usage in Claude Code and other MCP clients.
+Yakk supports selective tool loading to reduce token usage in Agent CLI and other MCP clients.
 
 > **Technical Details**: For information about how the tool loading system works internally, see the [Tool Loading Architecture](../reference/tool-loading-architecture.md) documentation.
 
 ## Why Use Selective Loading?
 
-By default, Yakk loads only essential tools (`converse`, `service`), which consumes approximately 7,000 tokens in your Claude Code context. If you need additional tools, you can enable them selectively. Loading all tools (~40+ tools) would consume approximately 25,000 tokens.
+By default, Yakk loads only essential tools (`converse`, `service`), which consumes approximately 7,000 tokens in your Agent CLI context. If you need additional tools, you can enable them selectively. Loading all tools (~40+ tools) would consume approximately 25,000 tokens.
 
 ## Loading Modes
 
@@ -39,7 +39,7 @@ export YAKK_TOOLS_DISABLED=whisper_install,kokoro_install,livekit_install
 ### Method 1: Environment Variable
 ```bash
 export YAKK_TOOLS_ENABLED=converse,service
-claude  # Start Claude Code
+agent  # Start Agent CLI
 ```
 
 ### Method 2: .yakk.env File (Recommended)
@@ -82,7 +82,7 @@ Edit your `.mcp.json` file:
 - `livekit_*` - LiveKit-related tools
 
 ### Utility Tools
-- `claude_thinking` - Claude thinking mode tools
+- `agent_thinking` - Agent thinking mode tools
 - `dependencies` - Dependency checking
 - `diagnostics` - System diagnostics
 - `voice_registry` - Voice registry management
@@ -167,15 +167,15 @@ print(loaded)
 3. **Development**: Load all tools during development, or use blacklist mode to exclude a few
 4. **Documentation**: Document which tools your workflow requires
 
-## Integration with Claude Code
+## Integration with Agent CLI
 
-When using Claude Code, the token savings from selective loading gives you more room for:
+When using Agent CLI, the token savings from selective loading gives you more room for:
 - Larger codebases
 - More conversation history
 - Additional MCP servers
 - Custom agents and tools
 
-The default configuration (`converse,service`) provides optimal Claude Code performance with minimal token usage.
+The default configuration (`converse,service`) provides optimal Agent CLI performance with minimal token usage.
 
 ## Legacy Variable
 

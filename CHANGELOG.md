@@ -22,17 +22,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- **ESC during converse no longer kills the MCP server** (VM-1026, [#337](https://github.com/mbailey/yakk/issues/337), [#339](https://github.com/mbailey/yakk/pull/339)) -- Pressing ESC while a `converse` call was in flight used to take the entire yakk MCP server offline, requiring `/mcp` reconnect. The tool now catches `CancelledError`, cleans up audio state, and returns control to Claude without bringing the server down.
+- **ESC during converse no longer kills the MCP server** (VM-1026, [#337](https://github.com/mbailey/yakk/issues/337), [#339](https://github.com/mbailey/yakk/pull/339)) -- Pressing ESC while a `converse` call was in flight used to take the entire yakk MCP server offline, requiring `/mcp` reconnect. The tool now catches `CancelledError`, cleans up audio state, and returns control to Agent without bringing the server down.
 - **Circular import in changelog/release_notes under pytest 9** -- Deferred `yakk.resources.changelog` import inside `release_notes_prompt` so `tests/test_changelog_resource.py` collects cleanly under pytest 9's stricter import rules. No behavioural change; the resource is still registered at import time.
 - **Star notification failures on multiline bios** -- GitHub user bios containing newlines no longer break the star notification script.
 
 ### Changed
 
-- **Channel server extracted to its own plugin** -- The bundled `channel/` TypeScript server has been removed from this repo and now lives at [mbailey/yakk-channel](https://github.com/mbailey/yakk-channel). Install with `claude plugin install yakk-channel@mbailey` to receive inbound voice calls from phone or web app clients.
+- **Channel server extracted to its own plugin** -- The bundled `channel/` TypeScript server has been removed from this repo and now lives at [mbailey/yakk-channel](https://github.com/mbailey/yakk-channel). Install with `agent plugin install yakk-channel@mbailey` to receive inbound voice calls from phone or web app clients.
 
 ### Removed
 
-- **Legacy Yakk Connect Python integration** (VM-958) -- Removed the Python-based WebSocket client, agent registry, inbox symlinks, and filesystem message delivery that pre-dated the Claude Code channel system. Superseded by the `yakk-channel` plugin.
+- **Legacy Yakk Connect Python integration** (VM-958) -- Removed the Python-based WebSocket client, agent registry, inbox symlinks, and filesystem message delivery that pre-dated the Agent CLI channel system. Superseded by the `yakk-channel` plugin.
   - Deleted: `yakk/connect/`, `yakk/connect_registry.py`, `yakk/tools/connect_status.py`, 10 Connect hook scripts + JSON configs, 11 Connect test files, `docs/connect/`, Connect service templates.
   - Cleaned: `config.py` (`CONNECT_ENABLED`, `CONNECT_WS_URL`, `CONNECT_USERS`, etc.), `cli.py` (`yakk connect` command group — `connect auth` subcommands restored separately by VM-992), `server.py` (Connect WebSocket lifespan handler), `service.py` (`connect` service entry).
 - **Stale Connect hook references from `plugin.json`** (VM-958) -- Cleaned up dangling hook entries left behind by the legacy Connect removal.
@@ -57,7 +57,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### PermissionRequest Notification Sound (VM-892)
 
-- **PermissionRequest hook event** - Plays an audio notification when Claude Code needs user approval for a tool, so you don't miss permission prompts while away from the screen
+- **PermissionRequest hook event** - Plays an audio notification when Agent CLI needs user approval for a tool, so you don't miss permission prompts while away from the screen
 - **Bypasses conch lock** - PermissionRequest sounds play even during active voice conversations, ensuring you always hear when approval is needed
 
 #### Mute Converse Sounds (VM-898)
@@ -77,7 +77,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Connect Lifecycle Hooks (VM-816, VM-820)
 
-- **SessionEnd cleanup hook** (VM-820) - Automatically removes inbox-live symlink and session identity file when a Claude Code session ends; subagent-safe (only team leads clean up)
+- **SessionEnd cleanup hook** (VM-820) - Automatically removes inbox-live symlink and session identity file when a Agent CLI session ends; subagent-safe (only team leads clean up)
 - **Inbox-live symlink validation** (VM-816) - `connect_status` validates that inbox-live belongs to the current session's team before setting "available" presence, preventing cross-session message routing
 
 #### Shell Completions (VM-832)
@@ -87,7 +87,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Documentation (VM-242)
 
 - **Soundfonts guide** - New `docs/guides/soundfonts.md` covering usage, directory structure, sound lookup order, customization, and troubleshooting
-- **CLI reference updates** - Added soundfonts and claude hooks commands to `docs/reference/cli.md`
+- **CLI reference updates** - Added soundfonts and agent hooks commands to `docs/reference/cli.md`
 - **Environment reference updates** - Added `YAKK_SOUNDFONTS_ENABLED` and `YAKK_HOOK_DEBUG` to `docs/reference/environment.md`
 
 ### Changed
@@ -112,16 +112,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`yakk diag dependencies`** (VM-830) - Redundant with `yakk deps`
 - **`yakk connect up/down` commands** (VM-824) - Replaced by agent-driven presence via `connect_status` MCP tool
 
-## [8.3.0] - 2026-02-24 - Happy 1st Birthday, Claude Code!
+## [8.3.0] - 2026-02-24 - Happy 1st Birthday, Agent CLI!
 
-_February 24, 2026 — One year since Claude Code launched. This release celebrates with
-Yakk Connect: make inbound voice calls to your Claude Code agents from anywhere._
+_February 24, 2026 — One year since Agent CLI launched. This release celebrates with
+Yakk Connect: make inbound voice calls to your Agent CLI agents from anywhere._
 
 ### Added
 
 #### Yakk Connect — Inbound Voice Calls
 
-- **connect_status MCP tool** (VM-770) - Manage agent presence directly from Claude Code conversations; always-on visibility on the yakk.dev dashboard
+- **connect_status MCP tool** (VM-770) - Manage agent presence directly from Agent CLI conversations; always-on visibility on the yakk.dev dashboard
 - **Auto-connect on startup** (VM-766) - WebSocket connection established automatically when the MCP server starts, so agents appear online without manual steps
 - **Deterministic device ID and scoped capabilities** (VM-768) - Stable device identity across restarts with fine-grained capability declarations
 - **User-based mailbox system** (VM-724) - Modular Connect architecture with per-user message routing, replacing the previous monolithic approach
@@ -162,9 +162,9 @@ Yakk Connect: make inbound voice calls to your Claude Code agents from anywhere.
 - **Simultaneous agent speech** - Conch now properly prevents multiple agents from speaking at the same time in multi-agent setups
 - **Listen duration timing overrides** (VM-746) - Agents can no longer accidentally override silence detection timing defaults
 - **Register race condition on startup** - Resolved a race condition where agents could fail to register as available during rapid startup sequences
-- **Claude Code inbox format** - Fixed message format for live delivery to match Claude Code's expected inbox structure
+- **Agent CLI inbox format** - Fixed message format for live delivery to match Agent CLI's expected inbox structure
 - **WebSocket connection state in connect_status** - Properly await WebSocket connection before checking state, preventing false "disconnected" reports
-- **Session ID discovery** - Falls back to session file scanning when CLAUDE_SESSION_ID is not available in the MCP environment
+- **Session ID discovery** - Falls back to session file scanning when AGENT_SESSION_ID is not available in the MCP environment
 - **Username auto-discovery** - Automatically discovers username from session files instead of prompting users in hooks
 - **Consistent auth login guidance** - All Connect error messages now include clear instructions for running `yakk connect auth login`
 - **Input sanitization and lifespan error handling** - Improved robustness of the MCP server startup and shutdown lifecycle
@@ -172,7 +172,7 @@ Yakk Connect: make inbound voice calls to your Claude Code agents from anywhere.
 
 ### Removed
 
-- **Claude Code agent templates** - Removed built-in agent templates in favor of the plugin-based agent system
+- **Agent CLI agent templates** - Removed built-in agent templates in favor of the plugin-based agent system
 - **Standby command** (VM-734) - Replaced by the simpler `connect up/down` workflow
 - **MCP connect tools module** (VM-724, VM-734) - Connect functionality moved to hook-based architecture; the old MCP tools module has been removed
 - **Wakeable terminology** (VM-724) - Renamed to "available" throughout the codebase for clarity
@@ -182,10 +182,10 @@ Yakk Connect: make inbound voice calls to your Claude Code agents from anywhere.
 ### Added
 
 - **STT Prompt for Vocabulary Biasing** - Set `YAKK_STT_PROMPT` to hint Whisper on frequently misrecognized words (e.g., proper nouns, technical terms)
-- **Claude Code Hooks CLI** (VM-618) - `yakk claude hooks add/remove/status` to manage soundfont hooks without manual JSON editing
+- **Agent CLI Hooks CLI** (VM-618) - `yakk agent hooks add/remove/status` to manage soundfont hooks without manual JSON editing
 - **Yakk Connect Device Visibility** (VM-633) - WebSocket connection shows your device on the yakk.dev dashboard with online/offline status
 - **Latest Audio Symlinks** (VM-614) - `~/.yakk/audio/latest-tts.*` and `latest-stt.*` symlinks for quick access to most recent recordings
-- **Yakk Marketplace** - `claude install yakk@yakk` plugin distribution via marketplace
+- **Yakk Marketplace** - `agent install yakk@yakk` plugin distribution via marketplace
 - **Yakk Connect Skill** (VM-595) - Bundled skill and documentation for remote voice via mobile/web clients
 
 ### Fixed
@@ -193,7 +193,7 @@ Yakk Connect: make inbound voice calls to your Claude Code agents from anywhere.
 - **Soundfonts silently disabled for all users** - Hook receiver returned false when `YAKK_SOUNDFONTS_ENABLED` was commented out (the default) instead of falling through to enabled
 - **Whisper CoreML hang on M1 Max** (VM-640) - Startup timeout (120s) with auto-fallback to Metal-only when CoreML compilation hangs on incompatible hardware
 - **webrtcvad broken with setuptools>=81** - Switched to `webrtcvad-wheels` fork which uses `importlib.metadata` instead of removed `pkg_resources`
-- **Hook receiver not installed** (VM-621) - `yakk claude hooks add` now installs the bash hook receiver and symlinks it correctly
+- **Hook receiver not installed** (VM-621) - `yakk agent hooks add` now installs the bash hook receiver and symlinks it correctly
 - **Connect auto-enabled by default** (VM-633) - Changed `CONNECT_AUTO_ENABLED` to default false so devices don't appear on dashboard without opt-in
 
 ## [8.1.0] - 2026-02-02
@@ -221,9 +221,9 @@ Yakk Connect: make inbound voice calls to your Claude Code agents from anywhere.
 ### Fixed
 
 - **Agent Reliability**
-  - Send multiple Ctrl-C signals to reliably stop Claude Code
+  - Send multiple Ctrl-C signals to reliably stop Agent CLI
   - Poll for readiness before sending messages
-  - Pass initial message directly to claude command
+  - Pass initial message directly to agent command
 
 ## [8.0.8] - 2026-01-29
 
@@ -272,7 +272,7 @@ _Note: Fix files not committed - use 8.0.6_
 ### Fixed
 
 - **Plugin Hook Path**
-  - Fixed path to hook receiver for PreCompact in claude-plugin
+  - Fixed path to hook receiver for PreCompact in agent-plugin
 
 ## [8.0.2] - 2026-01-25
 
@@ -320,8 +320,8 @@ _Note: Fix files not committed - use 8.0.6_
   - Three-tier chapter lookup: local cache → bundled package → GitHub repository
   - `yakk dj mfp sync` for checksum-based sync (preserves user modifications)
 
-- **Support for All Claude Products** (VM-434, VM-458, VM-462)
-  - Yakk now works with Claude.ai, Claude Desktop, Claude Cowork, and Claude Mobile
+- **Support for All Agent Products** (VM-434, VM-458, VM-462)
+  - Yakk now works with Agent.ai, Agent Desktop, Agent Cowork, and Agent Mobile
   - New `yakk serve` command exposes Yakk as HTTP MCP server
   - **Transport options:**
     - `--transport` / `-t` to select protocol: `streamable-http` (default) or `sse`
@@ -387,7 +387,7 @@ _Note: Fix files not committed - use 8.0.6_
   - Disable with `YAKK_SOUNDFONTS_ENABLED=false` in `~/.yakk/yakk.env`
 
 - **Plugin directory structure** (VM-329)
-  - Hook receiver moved to `scripts/` per Claude Code plugin conventions
+  - Hook receiver moved to `scripts/` per Agent CLI plugin conventions
   - `hooks/` now contains only configuration files
 
 - **Release automation**
@@ -415,8 +415,8 @@ _Note: Fix files not committed - use 8.0.6_
   - More focused and actionable content
 
 - **Plugin Distribution**
-  - Removed marketplace - now use `mbailey/claude-plugins` repository
-  - Updated claude-plugin version
+  - Removed marketplace - now use `mbailey/agent-plugins` repository
+  - Updated agent-plugin version
   - Added script to prepare for reinstall
 
 ### Removed
@@ -449,7 +449,7 @@ _Note: Fix files not committed - use 8.0.6_
 ### Changed
 
 - **CLI Simplification** (VM-305, VM-306)
-  - Removed deprecated `yakk claude` command group (use Claude Code hooks instead)
+  - Removed deprecated `yakk agent` command group (use Agent CLI hooks instead)
   - Removed deprecated `yakk audio` command group
   - Moved `transcribe` command to top-level: `yakk transcribe` (was `yakk audio transcribe`)
 
@@ -477,10 +477,10 @@ _Note: Fix files not committed - use 8.0.6_
 
 ### Added
 
-- **Claude Code Skill Loading in Voice Conversations** (VM-286)
+- **Agent CLI Skill Loading in Voice Conversations** (VM-286)
   - Added voice_skills_instructions to converse tool to ensure skills are checked during voice interactions
   - Voice requests arrive as tool results rather than user messages, causing skill triggers to be missed
-  - New BLOCKING REQUIREMENT instructs Claude to check for relevant skills before acting on voice requests
+  - New BLOCKING REQUIREMENT instructs Agent to check for relevant skills before acting on voice requests
   - Example: Saying "search for tasks" now properly triggers the taskmaster skill
 
 ## [7.1.1] - 2025-12-25
@@ -509,7 +509,7 @@ _Note: Fix files not committed - use 8.0.6_
 
 ### Added
 
-- **Yakk Plugin for Claude Code** (VM-227)
+- **Yakk Plugin for Agent CLI** (VM-227)
   - Install via: `/plugin marketplace add mbailey/yakk` then `/plugin install yakk`
   - Includes MCP server integration, slash commands, skill, and hooks
   - Commands: `/yakk:install`, `/yakk:converse`, `/yakk:status`, `/yakk:start`, `/yakk:stop`
@@ -522,7 +522,7 @@ _Note: Fix files not committed - use 8.0.6_
   - Added `--model` flag to specify Whisper model
   - Auto-detects non-interactive environment and warns if --yes not specified
   - Auto-installs Homebrew in non-interactive mode if needed
-  - Enables Claude Code automation and CI/CD pipeline installation
+  - Enables Agent CLI automation and CI/CD pipeline installation
 
 - **Fast Hook Receiver with Enhanced Soundfont Support** (VM-258)
   - New yakk-hook-receiver script for improved performance
@@ -548,7 +548,7 @@ _Note: Fix files not committed - use 8.0.6_
   - Prevents whisper server from falling back to wrong model after config update
 
 - **Benchmark Script** (VM-258)
-  - Use stdin for `claude -p` in benchmark script
+  - Use stdin for `agent -p` in benchmark script
   - Improved benchmark reliability
 
 - **Audio Quality Preservation** (VM-240)
@@ -561,13 +561,13 @@ _Note: Fix files not committed - use 8.0.6_
 
 ### Removed
 
-- **Benchmark Script** - Removed claude-hooks/benchmark-hooks.sh (development testing only)
+- **Benchmark Script** - Removed agent-hooks/benchmark-hooks.sh (development testing only)
 
 ### Changed
 
 - **Documentation** (VM-232)
   - Improved configuration guide clarity
-  - Added Claude Code permissions section to configuration guide
+  - Added Agent CLI permissions section to configuration guide
   - Removed duplicate command reference (clarified /permissions is alias for /allowed-tools)
 
 - **Code Quality**
@@ -693,7 +693,7 @@ Yakk now understands natural voice commands during conversations:
   - Fallback to TTS if audio files unavailable
   - Audio stored in `yakk/data/soundfonts/default/system-messages/`
 
-- **Claude Code Skill for Yakk** (VM-210)
+- **Agent CLI Skill for Yakk** (VM-210)
   - New SKILL.md with comprehensive voice interaction instructions
   - Triggers on "yakk" or "yakk" mentions
   - Includes parallel operation guidelines for natural conversations
@@ -762,9 +762,9 @@ Yakk now understands natural voice commands during conversations:
 
 ### Fixed
 
-- **Installer Color** - Now uses proper Claude Code orange (ANSI color 208)
+- **Installer Color** - Now uses proper Agent CLI orange (ANSI color 208)
   - Changed to ANSI escape code `\033[38;5;208m` for proper orange color
-  - Previous `bright_yellow` was not the correct Claude Code orange
+  - Previous `bright_yellow` was not the correct Agent CLI orange
   - Works on all 256-color terminals including xterm-256color
 - **Installer Version Check** - Fixed "unable to check" latest version error
   - Changed from non-existent `uv pip index versions` command to PyPI JSON API
@@ -1106,7 +1106,7 @@ Yakk now understands natural voice commands during conversations:
 - **Core ML Improvements**
   - Enhanced Core ML specification with pre-built model download strategy
   - Simplified voice selection guide by removing redundant examples
-  - Clarified ~/claude directory usage (sandbox for testing, not projects)
+  - Clarified ~/agent directory usage (sandbox for testing, not projects)
 
 ## [4.7.1] - 2025-09-23
 
@@ -1161,8 +1161,8 @@ Yakk now understands natural voice commands during conversations:
 
 - **Installation Flow**
   - Remove local services prompt from initial setup (moved to post-install docs)
-  - Focus installation on getting users to Claude Code quickly
-  - Update Claude Code configuration to use `uvx --refresh` for latest version
+  - Focus installation on getting users to Agent CLI quickly
+  - Update Agent CLI configuration to use `uvx --refresh` for latest version
   - Use long flags in install script for better clarity
 
 - **Code Organization**
@@ -1260,8 +1260,8 @@ Yakk now understands natural voice commands during conversations:
 ### Fixed
 
 - Fix broken documentation links after refactor
-- Restore minimal claude command group for hook support
-- Fix Claude settings.json path configuration
+- Restore minimal agent command group for hook support
+- Fix Agent settings.json path configuration
 
 ## [4.3.2] - 2025-09-03
 
@@ -1269,7 +1269,7 @@ Yakk now understands natural voice commands during conversations:
 
 - Add missing pyyaml dependency to pyproject.toml
 - Remove macOS-only restriction from package
-- Add Claude hooks configuration to repository settings
+- Add Agent hooks configuration to repository settings
 
 ## [4.3.1] - 2025-09-03
 
@@ -1289,7 +1289,7 @@ Yakk now understands natural voice commands during conversations:
 
 - **🧠 Think Out Loud Mode - AI Reasoning Made Audible**
   - Revolutionary feature that transforms AI's internal thinking into spoken performances
-  - Extracts and voices Claude's reasoning blocks using multiple personas
+  - Extracts and voices Agent's reasoning blocks using multiple personas
   - Herman's Head / Inside Out style multi-voice performances for different reasoning types
   - Theditor agent that orchestrates thinking performances with distinct voices
   - Makes AI decision-making transparent and engaging through voice
@@ -1297,7 +1297,7 @@ Yakk now understands natural voice commands during conversations:
 - **🔊 Sound Fonts Integration - Audio Feedback for Every Action**
   - Play custom sounds for tool operations, errors, and completions
   - Filesystem-based sound font system with automatic discovery
-  - Claude Code integration via receiver for hook-based audio
+  - Agent CLI integration via receiver for hook-based audio
   - CLI command `play-sound` with theme, action, and sound selection
   - Enhances user experience with auditory feedback during operations
   - MP3 support added for 90% file size reduction over WAV
@@ -1305,11 +1305,11 @@ Yakk now understands natural voice commands during conversations:
   - Three Bears sound fonts for baby-bear, mama-bear, and papa-bear agents
   - Sound fonts disabled by default (YAKK_SOUNDFONTS_ENABLED=false)
 
-- **🎭 Claude Code Deep Integration**
-  - Extract and analyze Claude's conversation logs in real-time
-  - Access Claude's internal thinking blocks for transparency
+- **🎭 Agent CLI Deep Integration**
+  - Extract and analyze Agent's conversation logs in real-time
+  - Access Agent's internal thinking blocks for transparency
   - CLI commands for message extraction with multiple output formats
-  - Automatic context detection for Claude Code sessions
+  - Automatic context detection for Agent CLI sessions
   - Foundation for advanced AI introspection features
 
 ### Changed
@@ -1322,14 +1322,14 @@ Yakk now understands natural voice commands during conversations:
 
 ### Removed
 
-- **Redundant get_claude_thinking MCP tool**
-  - Consolidated into more powerful get_claude_messages tool
+- **Redundant get_agent_thinking MCP tool**
+  - Consolidated into more powerful get_agent_messages tool
 
 ### Documentation
 
 - **Comprehensive Think Out Loud Documentation**
   - Agent specifications for theditor
-  - Claude orchestration instructions
+  - Agent orchestration instructions
   - Voice persona mapping guide
   - Integration patterns and examples
 
@@ -1515,11 +1515,11 @@ Yakk now understands natural voice commands during conversations:
   - Updated Quick Start to use `curl -O && bash install.sh` for proper interactive prompts
   - Clarified OpenAI API key is optional and serves as backup when local services unavailable
   - Added comprehensive list of what the installer automatically configures
-  - Changed example to use `claude converse` instead of interactive prompt
+  - Changed example to use `agent converse` instead of interactive prompt
   - Updated README to use `/yakk:converse` for consistent voice usage
 
 - **Configuration updates**
-  - Added yakk MCP to Claude Code configuration for easier integration
+  - Added yakk MCP to Agent CLI configuration for easier integration
 
 ## [2.32.0] - 2025-08-25
 
@@ -1580,7 +1580,7 @@ Yakk now understands natural voice commands during conversations:
   - Clear instructions for enabling CoreML later if initially skipped
 
 - **Beautiful installer experience**
-  - Added Yakk ASCII art in Claude Code orange color
+  - Added Yakk ASCII art in Agent CLI orange color
   - Enhanced preamble with clear value proposition and privacy messaging
   - Early system detection with special recognition for Apple Silicon
   - Professional presentation with centered text and visual hierarchy
@@ -1602,7 +1602,7 @@ Yakk now understands natural voice commands during conversations:
   - Fixed port parameters in kokoro_install and livekit_install
   - Fixed lines parameter in service management tool
   - All numeric parameters now properly convert strings to integers
-  - Addresses systemic issue where Claude Code MCP client passes strings
+  - Addresses systemic issue where Agent CLI MCP client passes strings
 
 - **Installer script uvx command corrections**
   - Fixed MCP configuration to use correct command `uvx yakk` (without --refresh)
@@ -1987,10 +1987,10 @@ Yakk now understands natural voice commands during conversations:
 ### Added
 
 - **MCP prompt command: /release-notes**
-  - New command to display recent changelog entries directly in Claude Code
+  - New command to display recent changelog entries directly in Agent CLI
   - Shows 5 most recent versions by default (configurable with parameter)
   - Parses and formats CHANGELOG.md for easy reading
-  - Inspired by Claude Code's own /release-notes feature
+  - Inspired by Agent CLI's own /release-notes feature
   - Includes comprehensive test coverage
 
 ### Fixed
@@ -2001,7 +2001,7 @@ Yakk now understands natural voice commands during conversations:
 
 ### Changed
 
-- Release notes output format now matches Claude Code's clean, minimal style
+- Release notes output format now matches Agent CLI's clean, minimal style
 - Removed decorative headers and footers for cleaner terminal output
 - Release notes displayed in chronological order (oldest first)
 
@@ -2030,7 +2030,7 @@ Yakk now understands natural voice commands during conversations:
   - Improved installer output formatting when Yakk is already configured
   - Fixed installer test that was failing due to complex mock setup
   - GitHub release notes now feature universal installer as primary installation method
-  - Manual installation methods (pip, claude mcp) moved to subsection
+  - Manual installation methods (pip, agent mcp) moved to subsection
 
 ## [2.17.2] - 2025-07-29
 
@@ -2040,7 +2040,7 @@ Yakk now understands natural voice commands during conversations:
   - Single command installation: `curl -O https://getyakk.com/install.sh && bash install.sh`
   - Cross-platform support: Linux (Ubuntu/Fedora), macOS, and Windows WSL
   - Automatic dependency installation (Node.js, audio libraries, etc.)
-  - Claude Code installation and Yakk MCP configuration
+  - Agent CLI installation and Yakk MCP configuration
   - WSL2-specific audio setup and troubleshooting guidance
   - Symlink in project root for easy access: `./install.sh`
 - **Centralized GPU detection utility**
@@ -2057,10 +2057,10 @@ Yakk now understands natural voice commands during conversations:
 - **Installation improvements**
   - Installer now detects `ffmpeg` by command presence on Fedora (handles RPM Fusion installs)
   - Fixed installer exiting early due to `dnf check-update` exit codes
-  - Automatic fallback for older Claude Code versions without `--scope` flag support
+  - Automatic fallback for older Agent CLI versions without `--scope` flag support
   - Better handling of existing Yakk configurations
 - **Documentation updates**
-  - README now emphasizes Claude Code and AI code editors as primary audience
+  - README now emphasizes Agent CLI and AI code editors as primary audience
   - Quick Start section leads with automatic installer
   - Clarified that OpenAI API key is optional (local services available)
   - Added clear explanation of free, open-source alternatives
@@ -2070,9 +2070,9 @@ Yakk now understands natural voice commands during conversations:
 - **Configuration directory creation**
   - Removed redundant `config/` directory creation (config stored in `yakk.env`)
   - Fixed issue where services created unexpected directory structures
-- **Claude Code compatibility**
-  - Fixed `claude mcp list` and `claude mcp add` for versions without `--scope` support
-  - Installer now works with all Claude Code versions
+- **Agent CLI compatibility**
+  - Fixed `agent mcp list` and `agent mcp add` for versions without `--scope` support
+  - Installer now works with all Agent CLI versions
 
 ### Developer
 
@@ -2277,7 +2277,7 @@ Yakk now understands natural voice commands during conversations:
 
 ### Changed
 
-- Updated convention paths from `.conventions/` to `docs/conventions/` in CLAUDE.md
+- Updated convention paths from `.conventions/` to `docs/conventions/` in AGENT.md
 - Enhanced language voice selection documentation with explicit requirements
 
 ### Documentation
@@ -2467,7 +2467,7 @@ Yakk now understands natural voice commands during conversations:
 ### Planned
 
 - In-memory buffer for conversation timing metrics
-  - Track full conversation lifecycle including Claude response times
+  - Track full conversation lifecycle including Agent response times
   - Maintain recent interaction history without persistent storage
   - Enable better performance analysis and debugging
 - Sentence-based TTS streaming
@@ -2513,7 +2513,7 @@ Yakk now understands natural voice commands during conversations:
   - Kokoro (127.0.0.1:8880) prioritized over OpenAI
   - Default voices: af_sky, alloy (available on both providers)
   - Model preference order: gpt-4o-mini-tts, tts-1-hd, tts-1
-- Voice parameter selection guidelines added to CLAUDE.md
+- Voice parameter selection guidelines added to AGENT.md
   - Encourages auto-selection over manual specification
   - Clear examples of when to specify parameters
 
@@ -2534,7 +2534,7 @@ Yakk now understands natural voice commands during conversations:
 - Comprehensive uv/uvx documentation (`docs/uv.md`)
   - Installation and version management guide
   - Development setup instructions
-  - Integration with Claude Desktop
+  - Integration with Agent Desktop
 - Documentation section in README with organized links to all guides
 - WSL2 microphone troubleshooting guide and diagnostic script
 - Test script for direct STT verification
@@ -2734,7 +2734,7 @@ This change reflects our vision for the project's future. While MCP (Model Conte
   - `kokoro-stop` - Stop the local Kokoro TTS service
   - `kokoro-status` - Check the status of Kokoro service
   - `voice-status` - Check comprehensive status of all voice services
-- Instructions in CLAUDE.md for AI assistants on when to use Kokoro tools
+- Instructions in AGENT.md for AI assistants on when to use Kokoro tools
 
 ## [0.1.27] - 2025-06-17
 

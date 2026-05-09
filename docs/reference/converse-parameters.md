@@ -195,7 +195,7 @@ If STT fails but audio was recorded, manually transcribe:
 whisper-cli ~/.yakk/audio/latest-STT.wav
 ```
 
-See [STT Recovery](../../.claude/skills/yakk/SKILL.md#stt-recovery---manual-transcription) and [Troubleshooting - No Speech Detected](../../troubleshooting/index.md#1-no-speech-detected) for details.
+See [STT Recovery](../../.agent/skills/yakk/SKILL.md#stt-recovery---manual-transcription) and [Troubleshooting - No Speech Detected](../../troubleshooting/index.md#1-no-speech-detected) for details.
 
 ### chime_enabled
 **Type:** boolean | string (optional)

@@ -1,15 +1,15 @@
 # Yakk
 
-> Natural voice conversations with Claude Code (and other MCP capable agents)
+> Natural voice conversations with Agent CLI (and other MCP capable agents)
 
 [![PyPI Downloads](https://static.pepy.tech/badge/yakk)](https://pepy.tech/project/yakk)
 [![PyPI Downloads](https://static.pepy.tech/badge/yakk/month)](https://pepy.tech/project/yakk)
 [![PyPI Downloads](https://static.pepy.tech/badge/yakk/week)](https://pepy.tech/project/yakk)
 
 > [!WARNING]
-> **Known Issue (2026-04-13):** Claude Code 2.1.105+ kills Yakk's MCP server when you press ESC to cancel a voice conversation. **Workaround:** Pin to Claude Code 2.1.104. See [discussion #349](https://github.com/mbailey/yakk/discussions/349) for details.
+> **Known Issue (2026-04-13):** Agent CLI 2.1.105+ kills Yakk's MCP server when you press ESC to cancel a voice conversation. **Workaround:** Pin to Agent CLI 2.1.104. See [discussion #349](https://github.com/mbailey/yakk/discussions/349) for details.
 
-Yakk enables natural voice conversations with Claude Code. Voice isn't about replacing typing - it's about being available when typing isn't.
+Yakk enables natural voice conversations with Agent CLI. Voice isn't about replacing typing - it's about being available when typing isn't.
 
 **Perfect for:**
 
@@ -26,16 +26,16 @@ Yakk enables natural voice conversations with Claude Code. Voice isn't about rep
 
 **Requirements:** Computer with microphone and speakers
 
-### Option 1: Claude Code Plugin (Recommended)
+### Option 1: Agent CLI Plugin (Recommended)
 
-The fastest way for Claude Code users to get started:
+The fastest way for Agent CLI users to get started:
 
 ```bash
 # Add the Yakk marketplace
-claude plugin marketplace add mbailey/yakk
+agent plugin marketplace add mbailey/yakk
 
 # Install Yakk plugin
-claude plugin install yakk@yakk
+agent plugin install yakk@yakk
 
 ## Install dependencies (CLI, Local Voice Services)
 
@@ -56,14 +56,14 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 # Run the installer (sets up dependencies and local voice services)
 uvx yakk-install
 
-# Add to Claude Code
-claude mcp add --scope user yakk -- uvx --refresh yakk
+# Add to Agent CLI
+agent mcp add --scope user yakk -- uvx --refresh yakk
 
 # Optional: Add OpenAI API key as fallback for local services
 export OPENAI_API_KEY=your-openai-key
 
 # Start a conversation
-claude converse
+agent converse
 ```
 
 For manual setup, see the [Getting Started Guide](docs/tutorials/getting-started.md).
@@ -97,7 +97,7 @@ See the [Configuration Guide](docs/guides/configuration.md) for all options.
 
 ## Permissions Setup (Optional)
 
-To use Yakk without permission prompts, add to `~/.claude/settings.json`:
+To use Yakk without permission prompts, add to `~/.agent/settings.json`:
 
 ```json
 {

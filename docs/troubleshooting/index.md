@@ -84,7 +84,7 @@ This recovery technique allows you to retrieve the transcription without asking 
 ### Setup & Configuration
 - **API Authentication** - OpenAI key issues (coming soon)
 - **Missing Dependencies** - FFmpeg, Python packages (coming soon)
-- **MCP Connection** - Claude Code integration (coming soon)
+- **MCP Connection** - Agent CLI integration (coming soon)
 
 ### Service Issues
 - **Provider Selection** - Failover and discovery (coming soon)

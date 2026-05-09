@@ -1,7 +1,7 @@
 """
 Hook Handler for Sound Fonts
 
-Handles parsing of Claude Code hook data and extracting relevant information
+Handles parsing of Agent CLI hook data and extracting relevant information
 for sound playback.
 """
 
@@ -12,10 +12,10 @@ from typing import Dict, Any, Optional
 
 def parse_claude_code_hook(hook_data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
     """
-    Parse Claude Code hook data to extract sound-relevant information.
+    Parse Agent CLI hook data to extract sound-relevant information.
     
     Args:
-        hook_data: Raw hook data from Claude Code
+        hook_data: Raw hook data from Agent CLI
         
     Returns:
         Dict with tool_name, action, subagent_type, and metadata
@@ -102,10 +102,10 @@ def parse_hook_arguments(args: list) -> Optional[Dict[str, Any]]:
 
 def extract_subagent_from_metadata(metadata: Dict[str, Any]) -> Optional[str]:
     """
-    Extract subagent_type from Claude Code hook metadata.
+    Extract subagent_type from Agent CLI hook metadata.
     
     For Task tool calls, the subagent_type might be in various places
-    depending on how Claude Code structures the hook data.
+    depending on how Agent CLI structures the hook data.
     """
     if not metadata:
         return None

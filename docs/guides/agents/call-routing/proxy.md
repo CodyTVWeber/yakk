@@ -56,7 +56,7 @@ An agent on a remote server can't access local audio devices:
 
 ```python
 # Assistant connects to remote agent via SSH
-remote_response = Bash(command='ssh server "claude --query \"What is the status?\""')
+remote_response = Bash(command='ssh server "agent --query \"What is the status?\""')
 
 # Assistant speaks the response locally
 yakk:converse(f"The remote agent reports: {remote_response}")

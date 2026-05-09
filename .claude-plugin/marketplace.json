@@ -1,7 +1,7 @@
 {
   "name": "yakk",
   "metadata": {
-    "description": "Yakk - Voice conversations for Claude Code",
+    "description": "Yakk - Voice conversations for Agent CLI",
     "version": "1.1.0"
   },
   "owner": {
@@ -11,7 +11,7 @@
   "plugins": [
     {
       "name": "yakk",
-      "description": "Voice conversations with Claude Code using local speech-to-text and text-to-speech. Includes support for remote agents via mobile, web and CLI.",
+      "description": "Voice conversations with Agent CLI using local speech-to-text and text-to-speech. Includes support for remote agents via mobile, web and CLI.",
       "author": {
         "name": "Mike Bailey",
         "email": "mike@yakk.dev"

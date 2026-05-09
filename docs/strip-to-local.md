@@ -25,7 +25,7 @@ fallback. No connect features.
 
 ### 1. Remote HTTP/SSE Serve Feature
 
-The `serve` command starts an HTTP/SSE server so remote MCP clients (Claude Cowork, mcp-remote,
+The `serve` command starts an HTTP/SSE server so remote MCP clients (Agent Cowork, mcp-remote,
 other machines) can connect to Yakk over the network. Entirely unnecessary for local use.
 
 **Files:**
@@ -185,20 +185,20 @@ The `keywords` field in `pyproject.toml` (line ~15) includes `"livekit"`. Remove
 
 ---
 
-### 10. .claude/skills and Commands Documentation
+### 10. .agent/skills and Commands Documentation
 
 | File | Section/Lines | Action |
 |------|--------------|--------|
-| `.claude/skills/yakk/SKILL.md` | "Sharing Voice Services Over Tailscale" section | Delete entire section |
-| `.claude/skills/yakk/SKILL.md` | "Related Skills" → Yakk Connect line | Delete |
-| `.claude/skills/yakk/SKILL.md` | app.yakk.dev CORS line in DJ section | Delete |
-| `.claude/skills/yakk/SKILL.md` | "Use with Yakk Connect" subsection | Delete |
-| `.claude/skills/yakk/SKILL.md` | Service table row: `yakk \| 8765 \| HTTP/SSE server` | Delete |
-| `.claude/skills/yakk/SKILL.md` | CLI cheat sheet `serve` examples | Delete |
+| `.agent/skills/yakk/SKILL.md` | "Sharing Voice Services Over Tailscale" section | Delete entire section |
+| `.agent/skills/yakk/SKILL.md` | "Related Skills" → Yakk Connect line | Delete |
+| `.agent/skills/yakk/SKILL.md` | app.yakk.dev CORS line in DJ section | Delete |
+| `.agent/skills/yakk/SKILL.md` | "Use with Yakk Connect" subsection | Delete |
+| `.agent/skills/yakk/SKILL.md` | Service table row: `yakk \| 8765 \| HTTP/SSE server` | Delete |
+| `.agent/skills/yakk/SKILL.md` | CLI cheat sheet `serve` examples | Delete |
 
 ---
 
-### 11. CLAUDE.md Project Overview
+### 11. AGENT.md Project Overview
 
 | Lines | Action |
 |-------|--------|
@@ -235,7 +235,7 @@ The `keywords` field in `pyproject.toml` (line ~15) includes `"livekit"`. Remove
 | `yakk/tools/service.py` | Whisper/Kokoro service management — keep |
 | `yakk/tools/clone/` | Local voice cloning — keep, remove remote URL only |
 | `yakk/dj/` | Local background music — keep entirely |
-| `yakk/cli_commands/claude.py` | Claude Code hooks management — keep |
+| `yakk/cli_commands/agent.py` | Agent CLI hooks management — keep |
 | `yakk/cli_commands/exchanges.py` | Conversation log viewer — keep |
 | `yakk/cli_commands/soundfonts.py` | Soundfont toggle — keep |
 | `yakk/cli_commands/status.py` | Status command — keep |
@@ -243,7 +243,7 @@ The `keywords` field in `pyproject.toml` (line ~15) includes `"livekit"`. Remove
 | `yakk/tools/whisper/` | Whisper management — keep |
 | `yakk/tools/kokoro/` | Kokoro management — keep |
 | `yakk/tools/mlx_audio/` | MLX audio (local Apple Silicon TTS) — keep |
-| All hook data files | Claude Code integration — keep |
+| All hook data files | Agent CLI integration — keep |
 | `yakk/conch.py` | Turn-taking for multi-agent voice — keep |
 
 ---
@@ -288,12 +288,12 @@ Ordered to avoid broken imports mid-way through the work.
 13. `yakk/tools/clone/profiles.py` — delete `DEFAULT_CLONE_BASE_URL`
 
 ### Phase 6 — Skills, docs, and root files
-14. `.claude/skills/yakk/SKILL.md` — remove Tailscale section, yakk Connect references,
+14. `.agent/skills/yakk/SKILL.md` — remove Tailscale section, yakk Connect references,
     app.yakk.dev, serve port from services table
-15. `CLAUDE.md` — remove suite entries and yakk-connect skill reference
+15. `AGENT.md` — remove suite entries and yakk-connect skill reference
 16. `README.md` — remove all OpenAI API key references and "cloud services" mentions
 17. `CONTRIBUTING.md` — remove `OPENAI_API_KEY` from dev setup instructions
-18. `.claude-plugin/marketplace.json` — update description, replace yakk.dev emails
+18. `.agent-plugin/marketplace.json` — update description, replace yakk.dev emails
 
 ---
 

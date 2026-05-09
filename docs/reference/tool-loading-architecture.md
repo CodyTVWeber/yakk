@@ -184,7 +184,7 @@ Service tools follow the pattern `{service}_{action}`:
 
 ### Token Usage
 
-- Full tool loading: ~25,000 tokens in Claude Code context
+- Full tool loading: ~25,000 tokens in Agent CLI context
 - Selective loading (converse only): ~5,000 tokens
 - 20,000 token savings with selective loading
 

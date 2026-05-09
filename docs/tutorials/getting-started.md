@@ -1,18 +1,18 @@
 # Getting Started with Yakk
 
-Yakk brings voice conversations to AI coding assistants. It works as both an MCP server for Claude Code and as a standalone CLI tool.
+Yakk brings voice conversations to AI coding assistants. It works as both an MCP server for Agent CLI and as a standalone CLI tool.
 
 ## What is Yakk?
 
 Yakk provides:
 
-- **MCP Server**: Adds voice tools to Claude Code - no installation needed
+- **MCP Server**: Adds voice tools to Agent CLI - no installation needed
 - **CLI Tool**: Use Yakk's tools directly from your terminal
 - **Local Services**: Optional privacy-focused speech processing
 
-## Quick Start: Using with Claude Code
+## Quick Start: Using with Agent CLI
 
-The fastest way to get started is using Yakk with Claude Code.
+The fastest way to get started is using Yakk with Agent CLI.
 
 ### Installation
 
@@ -25,8 +25,8 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 # Install Yakk and configure services
 uvx yakk-install
 
-# Add to Claude Code MCP
-claude mcp add --scope user yakk -- uvx --refresh yakk
+# Add to Agent CLI MCP
+agent mcp add --scope user yakk -- uvx --refresh yakk
 ```
 
 The installer will:
@@ -55,14 +55,14 @@ Or add it to your shell configuration file (`~/.bashrc`, `~/.zshrc`, etc.)
 
 ```bash
 # Check that Yakk is connected
-claude mcp list
+agent mcp list
 ```
 
 You should see `yakk` in the list of connected servers.
 
 ### 4. Configure Permissions (Optional)
 
-By default, Claude Code prompts for permission each time Yakk tools are used. To enable automatic approval, add to `~/.claude/settings.json`:
+By default, Agent CLI prompts for permission each time Yakk tools are used. To enable automatic approval, add to `~/.agent/settings.json`:
 
 ```json
 {
@@ -79,12 +79,12 @@ This allows voice conversations and service management without prompts. For more
 
 ### 5. Start Using Voice
 
-In Claude Code, simply type:
+In Agent CLI, simply type:
 ```
 converse
 ```
 
-Speak when you hear the chime, and Claude will respond with voice!
+Speak when you hear the chime, and Agent will respond with voice!
 
 ## Alternative: Using as a CLI Tool
 
@@ -201,11 +201,11 @@ Learn more: [Configuration Guide](../guides/configuration.md)
 
 ## Troubleshooting
 
-### Voice Not Working in Claude?
+### Voice Not Working in Agent?
 
 1. **Check MCP connection**:
    ```bash
-   claude mcp list
+   agent mcp list
    ```
    
 2. **Verify OPENAI_API_KEY** is set in your MCP configuration

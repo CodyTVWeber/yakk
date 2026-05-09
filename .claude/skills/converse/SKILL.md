@@ -40,6 +40,6 @@ If the MCP server isn't connected or the tool isn't available:
    ```
 
 4. **Reconnect MCP server after install:**
-   Run `/mcp`, select yakk, click "Reconnect" (or restart Claude Code)
+   Run `/mcp`, select yakk, click "Reconnect" (or restart Agent CLI)
 
 For complete documentation, load the `yakk` skill.
