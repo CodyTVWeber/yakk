@@ -16,7 +16,7 @@ from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 import numpy as np
-from fastmcp import Client
+from mcp import ClientSession as Client
 
 # Import the yakk module components
 import sys

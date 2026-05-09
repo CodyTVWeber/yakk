@@ -21,7 +21,6 @@ Yakk enables natural voice conversations with Claude Code. Voice isn't about rep
 
 ## See It In Action
 
-[![Yakk Demo](https://img.youtube.com/vi/cYdwOD_-dQc/maxresdefault.jpg)](https://www.youtube.com/watch?v=cYdwOD_-dQc)
 
 ## Quick Start
 
