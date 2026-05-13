@@ -18,20 +18,20 @@ class MLManager {
   private transcriber: any = null;
   private tts: any = null;
 
-  private gemmaModelId = 'gemma-2b-it-q4f16_1-MLC';
+  private llmModelId = 'Qwen3.5-2B-q4f16_1-MLC';
   private whisperModelId = 'Xenova/whisper-tiny.en';
   private kokoroModelId = 'onnx-community/Kokoro-82M-v1.0-ONNX';
 
   async checkCacheStatus() {
     const status = {
-      gemma: false,
+      gemma: false, // We'll keep the key as 'gemma' for compatibility with App.tsx, but it refers to the LLM
       whisper: false,
       kokoro: false
     };
 
     try {
-      // Check Gemma (Web-LLM) using the default config
-      status.gemma = await hasModelInCache(this.gemmaModelId);
+      // Check LLM using the default config
+      status.gemma = await hasModelInCache(this.llmModelId);
 
       // Check Transformers.js models
       // We check for a key file in the transformers-cache
@@ -54,33 +54,32 @@ class MLManager {
   async initGemma(onProgress: (text: string) => void) {
     if (this.engine) return;
 
-    const isCached = await hasModelInCache(this.gemmaModelId);
+    const isCached = await hasModelInCache(this.llmModelId);
     if (isCached) {
-      onProgress("Gemma found in cache, loading...");
+      onProgress("Qwen 3.5 2B found in cache, loading...");
     } else {
-      onProgress("Initializing Gemma 2B model (downloading)...");
+      onProgress("Initializing Qwen 3.5 2B model (downloading)...");
     }
 
     // Create the engine using the pre-built model list
     this.engine = await CreateMLCEngine(
-      this.gemmaModelId,
+      this.llmModelId,
       {
         initProgressCallback: (progress) => {
-          onProgress(`Loading Gemma: ${Math.round(progress.progress * 100)}%`);
+          onProgress(`Loading LLM: ${Math.round(progress.progress * 100)}%`);
         }
       }
     );
-    onProgress("Gemma initialized successfully.");
+    onProgress("Qwen 3.5 2B initialized successfully.");
   }
-
 
   async initWhisper(onProgress: (text: string) => void) {
     if (this.transcriber) return;
-    
+
     // Check cache for logging
     const cache = await caches.open('transformers-cache');
     const isCached = await cache.match(`https://huggingface.co/${this.whisperModelId}/resolve/main/config.json`);
-    
+
     if (isCached) {
       onProgress("Whisper found in cache, loading...");
     } else {
@@ -89,7 +88,7 @@ class MLManager {
 
     // Initialize the whisper model via transformers.js
     this.transcriber = await pipeline('automatic-speech-recognition', this.whisperModelId, {
-      dtype: 'fp32',
+      dtype: 'fp16',
       device: 'webgpu',
       progress_callback: (progress: any) => {
         if (progress.status === 'progress') {
@@ -102,11 +101,11 @@ class MLManager {
 
   async initKokoro(onProgress: (text: string) => void) {
     if (this.tts) return;
-    
+
     // Check cache for logging
     const cache = await caches.open('transformers-cache');
     const isCached = await cache.match(`https://huggingface.co/${this.kokoroModelId}/resolve/main/config.json`);
-    
+
     if (isCached) {
       onProgress("Kokoro found in cache, loading...");
     } else {
@@ -116,7 +115,7 @@ class MLManager {
     // Initialize kokoro-js
     try {
       this.tts = await KokoroTTS.from_pretrained(this.kokoroModelId, {
-        dtype: 'fp32',
+        dtype: 'fp16',
         device: 'webgpu'
       });
       onProgress("Kokoro initialized successfully.");
@@ -146,33 +145,36 @@ class MLManager {
   async chat(messages: {role: 'user' | 'assistant' | 'system', content: string}[]): Promise<string> {
     console.log("[MLManager] chat called with messages:", JSON.stringify(messages, null, 2));
     if (!this.engine) {
-      console.error("[MLManager] Gemma not initialized");
-      throw new Error("Gemma not initialized");
+      console.error("[MLManager] LLM not initialized");
+      throw new Error("LLM not initialized");
     }
     try {
-      // Gemma models often struggle with explicit 'system' roles. 
-      // It is safer to prepend instructions to the first user message.
-      const systemInstruction = "Instructions: You are a helpful, concise AI voice assistant. Speak conversationally. Keep answers very brief. Do not use markdown or emojis.\n\n";
-      
       // Filter out any empty assistant messages to prevent context poisoning
       const sanitizedMessages = messages.filter(m => m.content.trim() !== '');
-      
-      const fullMessages = [...sanitizedMessages];
-      if (fullMessages.length > 0 && fullMessages[0].role === 'user') {
-         fullMessages[0] = { ...fullMessages[0], content: systemInstruction + fullMessages[0].content };
-      }
-      
+
+      const systemPrompt = {
+        role: 'system' as const,
+        content: "Do not think. Just say."
+      };
+
+      const fullMessages = [systemPrompt, ...sanitizedMessages];
+
       console.log("[MLManager] Sending to LLM:", JSON.stringify(fullMessages, null, 2));
-      
+
       const reply = await this.engine.chat.completions.create({
         messages: fullMessages,
         temperature: 0.5,
-        repetition_penalty: 1.0, // Removing repetition penalty as it often causes gibberish in quantized models
+        repetition_penalty: 1.0,
         max_tokens: 512,
       });
       console.log("[MLManager] LLM Reply:", reply);
-      
+
       let responseText = reply.choices[0].message.content || "";
+      
+      // Safety net: Strip <think> tags and their content from the final output 
+      // (in case the model ignores the system prompt or gets cut off)
+      responseText = responseText.replace(/<think>[\s\S]*?(?:<\/think>|$)/gi, '').trim();
+
       if (responseText.trim() === '') {
         console.warn("[MLManager] LLM returned empty string. Using fallback.");
         responseText = "I'm sorry, I didn't quite catch how to respond to that.";

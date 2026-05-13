@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Send, Mic, MicOff, Settings, Download } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 import { mlManager } from './mlManager';
 import './App.css';
 
@@ -111,8 +112,9 @@ function App() {
         setLoadingStatus('Generating speech...');
         initAudioContext();
         
-        // Strip markdown and emojis for speech synthesis
+        // Strip markdown, emojis, and <think> tags for speech synthesis
         const spokenText = aiResponse
+          .replace(/<think>[\s\S]*?<\/think>/g, '') // Remove <think> reasoning blocks entirely
           .replace(/[*_~`#]/g, '') // Remove basic markdown symbols
           .replace(/\[(.*?)\]\(.*?\)/g, '$1') // Extract text from links
           .replace(/[\u{1F300}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F000}-\u{1F02F}\u{1F0A0}-\u{1F0FF}\u{1F100}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{1F910}-\u{1F96B}\u{1F980}-\u{1F9E0}]/gu, ''); // Remove emojis
@@ -381,13 +383,13 @@ function App() {
               className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               <div
-                className={`max-w-[80%] rounded-2xl px-5 py-3 text-sm md:text-base ${
+                className={`max-w-[80%] rounded-2xl px-5 py-3 text-sm md:text-base prose prose-sm max-w-none ${
                   msg.role === 'user'
-                    ? 'bg-blue-600 text-white rounded-br-none'
+                    ? 'bg-blue-600 text-white rounded-br-none prose-invert'
                     : 'bg-white text-gray-800 shadow-sm border border-gray-100 rounded-bl-none'
                 }`}
               >
-                {msg.text}
+                 <ReactMarkdown>{msg.text}</ReactMarkdown>
               </div>
             </div>
           ))
