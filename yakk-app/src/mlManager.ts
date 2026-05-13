@@ -168,7 +168,7 @@ class MLManager {
         messages: fullMessages,
         temperature: 0.5,
         repetition_penalty: 1.0, // Removing repetition penalty as it often causes gibberish in quantized models
-        max_tokens: 150,
+        max_tokens: 512,
       });
       console.log("[MLManager] LLM Reply:", reply);
       

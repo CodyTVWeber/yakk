@@ -110,7 +110,14 @@ function App() {
         console.log("[App] Voice mode active, synthesizing speech...");
         setLoadingStatus('Generating speech...');
         initAudioContext();
-        const audioData = await mlManager.speak(aiResponse);
+        
+        // Strip markdown and emojis for speech synthesis
+        const spokenText = aiResponse
+          .replace(/[*_~`#]/g, '') // Remove basic markdown symbols
+          .replace(/\[(.*?)\]\(.*?\)/g, '$1') // Extract text from links
+          .replace(/[\u{1F300}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F000}-\u{1F02F}\u{1F0A0}-\u{1F0FF}\u{1F100}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{1F910}-\u{1F96B}\u{1F980}-\u{1F9E0}]/gu, ''); // Remove emojis
+
+        const audioData = await mlManager.speak(spokenText);
         if (audioData && audioContextRef.current) {
           console.log("[App] Speech synthesis successful, playing audio...");
           const buffer = audioContextRef.current.createBuffer(1, audioData.length, 24000);
