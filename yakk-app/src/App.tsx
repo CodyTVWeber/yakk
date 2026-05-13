@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Send, Mic, MicOff, Settings, Download } from 'lucide-react';
 import { mlManager } from './mlManager';
 import './App.css';
@@ -21,6 +21,23 @@ function App() {
   const audioChunksRef = useRef<Blob[]>([]);
   const audioContextRef = useRef<AudioContext | null>(null);
 
+  // Check cache on mount
+  useEffect(() => {
+    const checkCache = async () => {
+      const status = await mlManager.checkCacheStatus();
+      const cached = [];
+      if (status.gemma) cached.push('Gemma');
+      if (status.whisper) cached.push('Whisper');
+      if (status.kokoro) cached.push('Kokoro');
+      
+      if (cached.length > 0) {
+        setLoadingStatus(`Found in cache: ${cached.join(', ')}`);
+        setTimeout(() => setLoadingStatus(''), 5000);
+      }
+    };
+    checkCache();
+  }, []);
+
   const initAudioContext = () => {
     if (!audioContextRef.current || audioContextRef.current.state === 'closed') {
       audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)({
@@ -42,9 +59,9 @@ function App() {
       setModelsLoaded(true);
       setLoadingStatus('All models loaded successfully!');
       setTimeout(() => setLoadingStatus(''), 3000);
-    } catch (err) {
-      console.error(err);
-      setLoadingStatus('Failed to load models. Check console.');
+    } catch (err: any) {
+      console.error('Model loading error:', err);
+      setLoadingStatus(`Error: ${err.message || 'Failed to load models'}. Please check your connection and try again.`);
     }
   };
 
