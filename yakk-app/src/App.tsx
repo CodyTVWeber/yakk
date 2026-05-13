@@ -119,11 +119,12 @@ function App() {
           .replace(/\[(.*?)\]\(.*?\)/g, '$1') // Extract text from links
           .replace(/[\u{1F300}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F000}-\u{1F02F}\u{1F0A0}-\u{1F0FF}\u{1F100}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{1F910}-\u{1F96B}\u{1F980}-\u{1F9E0}]/gu, ''); // Remove emojis
 
-        const audioData = await mlManager.speak(spokenText);
-        if (audioData && audioContextRef.current) {
-          console.log("[App] Speech synthesis successful, playing audio...");
-          const buffer = audioContextRef.current.createBuffer(1, audioData.length, 24000);
-          buffer.getChannelData(0).set(audioData);
+        const result = await mlManager.speak(spokenText);
+        if (result && result.audio && audioContextRef.current) {
+          const { audio, sampling_rate } = result;
+          console.log(`[App] Playing audio with length ${audio.length} at ${sampling_rate}Hz`);
+          const buffer = audioContextRef.current.createBuffer(1, audio.length, sampling_rate);
+          buffer.getChannelData(0).set(audio);
           const source = audioContextRef.current.createBufferSource();
           source.buffer = buffer;
           source.connect(audioContextRef.current.destination);

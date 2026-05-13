@@ -115,7 +115,7 @@ class MLManager {
     // Initialize kokoro-js
     try {
       this.tts = await KokoroTTS.from_pretrained(this.kokoroModelId, {
-        dtype: 'fp16',
+        dtype: 'fp32',
         device: 'webgpu'
       });
       onProgress("Kokoro initialized successfully.");
@@ -154,7 +154,7 @@ class MLManager {
 
       const systemPrompt = {
         role: 'system' as const,
-        content: "Do not think. Just say."
+        content: "You are a helpful, concise AI voice assistant. Speak conversationally. Keep answers very brief. Do not use markdown or emojis. Only output your final spoken response."
       };
 
       const fullMessages = [systemPrompt, ...sanitizedMessages];
@@ -166,6 +166,9 @@ class MLManager {
         temperature: 0.5,
         repetition_penalty: 1.0,
         max_tokens: 512,
+        extra_body: {
+          enable_thinking: false
+        }
       });
       console.log("[MLManager] LLM Reply:", reply);
 
@@ -186,7 +189,7 @@ class MLManager {
     }
   }
 
-  async speak(text: string): Promise<Float32Array | null> {
+  async speak(text: string): Promise<{audio: Float32Array, sampling_rate: number} | null> {
     console.log("[MLManager] speak called with text:", text);
     if (!this.tts) {
       console.error("[MLManager] Kokoro not initialized");
@@ -195,11 +198,26 @@ class MLManager {
     try {
       const result = await this.tts.generate(text, { voice: 'af_heart' });
       console.log("[MLManager] TTS Result keys:", Object.keys(result));
-      if (result && result.audio) {
-         console.log("[MLManager] TTS audio length:", result.audio.length);
+      
+      let audioData = result.audio;
+      // If audio is an array of chunks, concatenate them
+      if (Array.isArray(audioData)) {
+        console.log("[MLManager] Concatenating", audioData.length, "audio chunks");
+        const totalLength = audioData.reduce((acc, chunk) => acc + chunk.length, 0);
+        const concatenated = new Float32Array(totalLength);
+        let offset = 0;
+        for (const chunk of audioData) {
+          concatenated.set(chunk, offset);
+          offset += chunk.length;
+        }
+        audioData = concatenated;
       }
-      // The result is an object containing 'audio' which is the Float32Array (or array of them)
-      return result.audio;
+
+      console.log("[MLManager] TTS final audio length:", audioData.length);
+      return {
+        audio: audioData,
+        sampling_rate: result.sampling_rate || 24000
+      };
     } catch (error) {
       console.error("[MLManager] TTS synthesis error:", error);
       return null;
