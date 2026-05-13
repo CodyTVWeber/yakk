@@ -1,0 +1,11 @@
+#!/bin/bash
+# Pre-push hook to run JS tests before pushing
+
+# Run JS tests if directory exists
+if [ -d "yakk-app" ]; then
+    echo "Running JS tests in yakk-app directory..."
+    cd yakk-app && npm run test -- --run || { echo "JavaScript tests failed. Push aborted."; exit 1; }
+fi
+
+echo "All tests passed. Proceeding with push."
+exit 0
