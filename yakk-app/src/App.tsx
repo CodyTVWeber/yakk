@@ -20,6 +20,19 @@ function App() {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const audioContextRef = useRef<AudioContext | null>(null);
+  const analyserRef = useRef<number | null>(null);
+
+  // Refs for closures
+  const isVoiceModeRef = useRef(isVoiceMode);
+  const messagesRef = useRef(messages);
+
+  useEffect(() => {
+    isVoiceModeRef.current = isVoiceMode;
+  }, [isVoiceMode]);
+
+  useEffect(() => {
+    messagesRef.current = messages;
+  }, [messages]);
 
   // Check cache on mount
   useEffect(() => {
@@ -66,39 +79,72 @@ function App() {
   };
 
   const processChat = async (userText: string) => {
+    if (!userText.trim()) return; // Prevent empty user messages
+
+    console.log("[App] processChat started with text:", userText);
     setIsProcessing(true);
     try {
-      // Create chat context
-      const chatMessages = messages.map(m => ({
+      // Create chat context using the latest messages from ref
+      const chatMessages = messagesRef.current.map(m => ({
         role: m.role,
         content: m.text
       }));
       chatMessages.push({ role: 'user', content: userText });
+      console.log("[App] Chat context constructed:", chatMessages);
 
       // Get AI response
+      console.log("[App] Calling mlManager.chat...");
       const aiResponse = await mlManager.chat(chatMessages);
+      console.log("[App] AI Response received:", aiResponse);
       setMessages(prev => [...prev, { role: 'assistant', text: aiResponse }]);
 
       // If in voice mode, speak the response
-      if (isVoiceMode) {
+      if (isVoiceModeRef.current) {
+        if (!aiResponse.trim()) {
+           console.log("[App] AI response is empty, skipping TTS and restarting recording.");
+           if (isVoiceModeRef.current) startRecording();
+           setIsProcessing(false);
+           return;
+        }
+
+        console.log("[App] Voice mode active, synthesizing speech...");
         setLoadingStatus('Generating speech...');
         initAudioContext();
         const audioData = await mlManager.speak(aiResponse);
         if (audioData && audioContextRef.current) {
+          console.log("[App] Speech synthesis successful, playing audio...");
           const buffer = audioContextRef.current.createBuffer(1, audioData.length, 24000);
           buffer.getChannelData(0).set(audioData);
           const source = audioContextRef.current.createBufferSource();
           source.buffer = buffer;
           source.connect(audioContextRef.current.destination);
+          
+          source.onended = () => {
+            console.log("[App] Audio playback ended, restarting recording...");
+            if (isVoiceModeRef.current) {
+              startRecording();
+            }
+          };
+          
           source.start();
+        } else {
+          console.warn("[App] Speech synthesis failed or no audio context. Restarting recording...");
+          if (isVoiceModeRef.current) {
+             startRecording();
+          }
         }
         setLoadingStatus('');
       }
     } catch (err) {
-      console.error(err);
+      console.error("[App] Error in processChat:", err);
       setLoadingStatus('Error processing chat');
       setTimeout(() => setLoadingStatus(''), 3000);
+      if (isVoiceModeRef.current) {
+        console.log("[App] Restarting recording after error...");
+        startRecording();
+      }
     } finally {
+      console.log("[App] processChat finished");
       setIsProcessing(false);
     }
   };
@@ -127,6 +173,50 @@ function App() {
       mediaRecorderRef.current = mediaRecorder;
       audioChunksRef.current = [];
 
+      // VAD setup
+      const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const sourceNode = audioCtx.createMediaStreamSource(stream);
+      const analyser = audioCtx.createAnalyser();
+      analyser.minDecibels = -60;
+      analyser.smoothingTimeConstant = 0.8;
+      sourceNode.connect(analyser);
+
+      const dataArray = new Uint8Array(analyser.frequencyBinCount);
+      let silenceStart = Date.now();
+      let hasSpoken = false;
+
+      let lastLogTime = Date.now();
+
+      const checkSilence = () => {
+        if (!mediaRecorderRef.current || mediaRecorderRef.current.state === 'inactive') return;
+        
+        analyser.getByteFrequencyData(dataArray);
+        let peak = 0;
+        for (let i = 0; i < dataArray.length; i++) {
+          if (dataArray[i] > peak) peak = dataArray[i];
+        }
+        
+        const now = Date.now();
+        // Log peak volume every second so we don't spam the console too much, but enough to see what VAD sees
+        if (now - lastLogTime > 1000) {
+           console.log(`[VAD] Peak volume: ${peak}, hasSpoken: ${hasSpoken}`);
+           lastLogTime = now;
+        }
+
+        if (peak > 40) { // Voice detected
+          if (!hasSpoken) console.log("[VAD] Voice detected! Waiting for silence...");
+          hasSpoken = true;
+          silenceStart = Date.now();
+        } else if (hasSpoken) {
+          if (now - silenceStart > 2500) { // 2.5s of silence after speaking
+            console.log("[VAD] 2.5s of silence detected, stopping recording...");
+            stopRecording();
+            return;
+          }
+        }
+        analyserRef.current = requestAnimationFrame(checkSilence);
+      };
+
       mediaRecorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
           audioChunksRef.current.push(event.data);
@@ -134,36 +224,49 @@ function App() {
       };
 
       mediaRecorder.onstop = async () => {
+        console.log("[App] mediaRecorder.onstop triggered");
         setIsProcessing(true);
         setLoadingStatus('Transcribing audio...');
         try {
           const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+          console.log("[App] Audio blob size:", audioBlob.size);
           const arrayBuffer = await audioBlob.arrayBuffer();
-          // We need a context to decode the audio
           initAudioContext();
           const audioContext = audioContextRef.current;
           if (!audioContext) throw new Error("AudioContext not initialized");
           const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-          const audioData = audioBuffer.getChannelData(0); // Float32Array
+          const audioData = audioBuffer.getChannelData(0);
 
+          console.log("[App] Calling transcribeAudio...");
           const text = await mlManager.transcribeAudio(audioData);
+          console.log("[App] Transcribed text:", text);
           if (text.trim()) {
             setMessages(prev => [...prev, { role: 'user', text }]);
             processChat(text);
           } else {
+            console.log("[App] No speech detected in transcribed text.");
             setLoadingStatus('No speech detected');
             setTimeout(() => setLoadingStatus(''), 2000);
             setIsProcessing(false);
+            if (isVoiceModeRef.current) {
+               console.log("[App] Restarting recording after empty transcription...");
+               startRecording();
+            }
           }
         } catch (err) {
-          console.error("Transcription error:", err);
+          console.error("[App] Transcription error in onstop:", err);
           setLoadingStatus('Transcription failed');
           setIsProcessing(false);
+          if (isVoiceModeRef.current) {
+             console.log("[App] Restarting recording after transcription error...");
+             startRecording();
+          }
         }
       };
 
       mediaRecorder.start();
       setIsRecording(true);
+      checkSilence();
     } catch (err) {
       console.error("Microphone access denied:", err);
       setLoadingStatus('Microphone access denied');
@@ -171,7 +274,11 @@ function App() {
   };
 
   const stopRecording = () => {
-    if (mediaRecorderRef.current && isRecording) {
+    if (analyserRef.current) {
+      cancelAnimationFrame(analyserRef.current);
+      analyserRef.current = null;
+    }
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
       mediaRecorderRef.current.stop();
       mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
       setIsRecording(false);

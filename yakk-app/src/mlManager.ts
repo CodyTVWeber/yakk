@@ -18,23 +18,9 @@ class MLManager {
   private transcriber: any = null;
   private tts: any = null;
 
-  private gemmaModelId = 'gemma-4-E2B-it-q4f16_1-MLC';
+  private gemmaModelId = 'gemma-2b-it-q4f16_1-MLC';
   private whisperModelId = 'Xenova/whisper-tiny.en';
   private kokoroModelId = 'onnx-community/Kokoro-82M-v1.0-ONNX';
-
-  private gemmaAppConfig: AppConfig = {
-    model_list: [
-      {
-        model: "https://huggingface.co/welcoma/gemma-4-E2B-it-q4f16_1-MLC",
-        model_id: 'gemma-4-E2B-it-q4f16_1-MLC',
-        model_lib: "https://huggingface.co/welcoma/gemma-4-E2B-it-q4f16_1-MLC/resolve/main/libs/gemma-4-E2B-it-q4f16_1-MLC-webgpu.wasm",
-        overrides: {
-          sliding_window_size: -1
-        }
-      }
-    ],
-    cacheBackend: "indexeddb"
-  };
 
   async checkCacheStatus() {
     const status = {
@@ -44,8 +30,8 @@ class MLManager {
     };
 
     try {
-      // Check Gemma (Web-LLM)
-      status.gemma = await hasModelInCache(this.gemmaModelId, this.gemmaAppConfig);
+      // Check Gemma (Web-LLM) using the default config
+      status.gemma = await hasModelInCache(this.gemmaModelId);
 
       // Check Transformers.js models
       // We check for a key file in the transformers-cache
@@ -68,21 +54,20 @@ class MLManager {
   async initGemma(onProgress: (text: string) => void) {
     if (this.engine) return;
 
-    const isCached = await hasModelInCache(this.gemmaModelId, this.gemmaAppConfig);
+    const isCached = await hasModelInCache(this.gemmaModelId);
     if (isCached) {
       onProgress("Gemma found in cache, loading...");
     } else {
-      onProgress("Initializing Gemma 4 E2B model (downloading)...");
+      onProgress("Initializing Gemma 2B model (downloading)...");
     }
 
-    // Create the engine
+    // Create the engine using the pre-built model list
     this.engine = await CreateMLCEngine(
       this.gemmaModelId,
       {
         initProgressCallback: (progress) => {
           onProgress(`Loading Gemma: ${Math.round(progress.progress * 100)}%`);
-        },
-        appConfig: this.gemmaAppConfig
+        }
       }
     );
     onProgress("Gemma initialized successfully.");
@@ -105,6 +90,7 @@ class MLManager {
     // Initialize the whisper model via transformers.js
     this.transcriber = await pipeline('automatic-speech-recognition', this.whisperModelId, {
       dtype: 'fp32',
+      device: 'webgpu',
       progress_callback: (progress: any) => {
         if (progress.status === 'progress') {
           onProgress(`Loading Whisper: ${Math.round(progress.progress)}%`);
@@ -130,7 +116,8 @@ class MLManager {
     // Initialize kokoro-js
     try {
       this.tts = await KokoroTTS.from_pretrained(this.kokoroModelId, {
-        dtype: 'fp32'
+        dtype: 'fp32',
+        device: 'webgpu'
       });
       onProgress("Kokoro initialized successfully.");
     } catch (error) {
@@ -141,29 +128,78 @@ class MLManager {
   }
 
   async transcribeAudio(audioData: Float32Array): Promise<string> {
-    if (!this.transcriber) throw new Error("Whisper not initialized");
-    const result = await this.transcriber(audioData);
-    return result.text;
+    console.log("[MLManager] transcribeAudio called with audioData length:", audioData.length);
+    if (!this.transcriber) {
+      console.error("[MLManager] Whisper not initialized");
+      throw new Error("Whisper not initialized");
+    }
+    try {
+      const result = await this.transcriber(audioData);
+      console.log("[MLManager] STT Result:", result);
+      return result.text;
+    } catch (e) {
+      console.error("[MLManager] transcribeAudio error:", e);
+      throw e;
+    }
   }
 
   async chat(messages: {role: 'user' | 'assistant' | 'system', content: string}[]): Promise<string> {
-    if (!this.engine) throw new Error("Gemma not initialized");
-    const reply = await this.engine.chat.completions.create({
-      messages,
-      temperature: 0.7,
-      max_tokens: 512,
-    });
-    return reply.choices[0].message.content || "";
+    console.log("[MLManager] chat called with messages:", JSON.stringify(messages, null, 2));
+    if (!this.engine) {
+      console.error("[MLManager] Gemma not initialized");
+      throw new Error("Gemma not initialized");
+    }
+    try {
+      // Gemma models often struggle with explicit 'system' roles. 
+      // It is safer to prepend instructions to the first user message.
+      const systemInstruction = "Instructions: You are a helpful, concise AI voice assistant. Speak conversationally. Keep answers very brief. Do not use markdown or emojis.\n\n";
+      
+      // Filter out any empty assistant messages to prevent context poisoning
+      const sanitizedMessages = messages.filter(m => m.content.trim() !== '');
+      
+      const fullMessages = [...sanitizedMessages];
+      if (fullMessages.length > 0 && fullMessages[0].role === 'user') {
+         fullMessages[0] = { ...fullMessages[0], content: systemInstruction + fullMessages[0].content };
+      }
+      
+      console.log("[MLManager] Sending to LLM:", JSON.stringify(fullMessages, null, 2));
+      
+      const reply = await this.engine.chat.completions.create({
+        messages: fullMessages,
+        temperature: 0.5,
+        repetition_penalty: 1.0, // Removing repetition penalty as it often causes gibberish in quantized models
+        max_tokens: 150,
+      });
+      console.log("[MLManager] LLM Reply:", reply);
+      
+      let responseText = reply.choices[0].message.content || "";
+      if (responseText.trim() === '') {
+        console.warn("[MLManager] LLM returned empty string. Using fallback.");
+        responseText = "I'm sorry, I didn't quite catch how to respond to that.";
+      }
+      return responseText;
+    } catch (err) {
+      console.error("[MLManager] LLM Chat Error:", err);
+      throw err;
+    }
   }
 
   async speak(text: string): Promise<Float32Array | null> {
-    if (!this.tts) throw new Error("Kokoro not initialized");
+    console.log("[MLManager] speak called with text:", text);
+    if (!this.tts) {
+      console.error("[MLManager] Kokoro not initialized");
+      throw new Error("Kokoro not initialized");
+    }
     try {
-      // Basic synthesis. Options may depend on kokoro-js version
-      const audio = await this.tts.synthesize(text, { voice: 'af_heart' });
-      return audio;
+      const result = await this.tts.generate(text, { voice: 'af_heart' });
+      console.log("[MLManager] TTS Result keys:", Object.keys(result));
+      if (result && result.audio) {
+         console.log("[MLManager] TTS audio length:", result.audio.length);
+      }
+      // The result is an object containing 'audio' which is the Float32Array (or array of them)
+      return result.audio;
     } catch (error) {
-      console.error("TTS synthesis error:", error);
+      console.error("[MLManager] TTS synthesis error:", error);
       return null;
     }
   }
