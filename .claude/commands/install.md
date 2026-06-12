@@ -12,7 +12,12 @@ Install Yakk and all dependencies needed for voice conversations.
 For a fast, fully automated install on Apple Silicon:
 
 ```bash
+# If yakk is already cloned locally:
+uv tool install /path/to/yakk
+
+# Or from PyPI (when a release is available):
 uvx yakk-install --yes
+
 yakk service install whisper
 yakk service install kokoro
 ```
@@ -52,10 +57,13 @@ yakk service install kokoro
    yakk service status kokoro
    ```
 
-5. **Reconnect MCP server:**
-   After installation, the Yakk MCP server needs to reconnect:
-   - Run `/mcp` and select yakk, then click "Reconnect", OR
-   - Restart Claude Code
+5. **Register MCP server with Claude Code:**
+   ```bash
+   claude mcp add yakk --scope user -- $(which yakk)
+   ```
+   This writes to `~/.claude.json` (the correct global config). Restart Claude Code after running.
+
+   > **Note:** Adding `mcpServers` to `~/.claude/settings.json` does **not** work — use `claude mcp add` instead.
 
 ## Whisper Model Selection
 

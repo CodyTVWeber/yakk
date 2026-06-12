@@ -54,13 +54,25 @@ Use default converse tool parameters unless there's a good reason not to. Timing
 
 For all parameters, see [Converse Parameters](../../docs/reference/converse-parameters.md).
 
+## Chat Transcript — Show Every Exchange as an Explicit Message
+
+After **every** `converse` call, output a visible text message to the chat so the conversation is readable in the transcript. Format:
+
+```
+🔊 **Claude:** <what you said>
+🎤 **User:** <transcribed response, or "(no response)" if wait_for_response=False>
+```
+
+This makes voice sessions readable to anyone reviewing the chat history and ensures the user always knows what was captured.
+
 ## Best Practices
 
-1. **Narrate without waiting** - Use `wait_for_response=False` when announcing actions
-2. **One question at a time** - Don't bundle multiple questions in yakk
-3. **Check status first** - Verify services are running before starting conversations
-4. **Let Yakk auto-select** - Don't hardcode providers unless user has preference
-5. **First run is slow** - Model downloads happen on first start (2-5 min), then instant
+1. **Always post transcript** - Output the exchange as text after every converse call (see above)
+2. **Narrate without waiting** - Use `wait_for_response=False` when announcing actions
+3. **One question at a time** - Don't bundle multiple questions in yakk
+4. **Check status first** - Verify services are running before starting conversations
+5. **Let Yakk auto-select** - Don't hardcode providers unless user has preference
+6. **First run is slow** - Model downloads happen on first start (2-5 min), then instant
 
 ## Parallel Tool Calls (Zero Dead Air)
 

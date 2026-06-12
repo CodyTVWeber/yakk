@@ -182,6 +182,20 @@ def load_service_template(service_name: str) -> str:
     return template_path.read_text()
 
 
+def _extra_launchd_paths() -> list[str]:
+    """Detect extra PATH dirs that launchd won't inherit (e.g. nix, homebrew)."""
+    candidates = [
+        # Nix per-user profile (nix-darwin / home-manager)
+        f"/etc/profiles/per-user/{os.environ.get('USER', os.path.basename(os.path.expanduser('~')))}/bin",
+        # Nix system profile
+        "/nix/var/nix/profiles/default/bin",
+        # Homebrew on Apple Silicon
+        "/opt/homebrew/bin",
+        "/opt/homebrew/sbin",
+    ]
+    return [p for p in candidates if os.path.isdir(p)]
+
+
 def create_service_file(service_name: str) -> tuple[Path, str]:
     """Create service file content from template with config vars.
 
@@ -205,6 +219,19 @@ def create_service_file(service_name: str) -> tuple[Path, str]:
 
     # Format template with config vars
     content = template.format(**config_vars)
+
+    # On macOS, inject any extra PATH dirs (nix, homebrew) that launchd won't
+    # inherit from the user shell.  We prepend them to the existing PATH string
+    # already present in the template so that tools like `uv` and `cargo` are
+    # found when the service starts.
+    if system == "Darwin":
+        extra = _extra_launchd_paths()
+        if extra:
+            extra_str = ":".join(extra)
+            content = content.replace(
+                f"{home}/.local/bin:",
+                f"{extra_str}:{home}/.local/bin:",
+            )
 
     # Map service name to file name (yakk -> serve, mlx_audio -> mlx-audio).
     file_name = _service_file_name(service_name)
